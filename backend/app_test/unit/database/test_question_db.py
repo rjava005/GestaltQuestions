@@ -1,6 +1,6 @@
 from src.api.database import question as qdb
 import pytest
-from src.api.models.models import Question
+from src.api.models.question import Question
 from src.api.core.logging import logger
 from src.api.models.question import QuestionData, QuestionMeta
 

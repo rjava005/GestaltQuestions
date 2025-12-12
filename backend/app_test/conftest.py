@@ -10,7 +10,7 @@ from src.api.core import logger, in_test_ctx
 from src.api.core.config import get_settings
 from src.api.database.database import Base, get_session
 from src.api.main import get_application
-from src.api.models import FileData
+from src.api.response_models import FileData
 from src.storage.base import StorageService
 from src.api.service.question_manager import (
     QuestionManager,

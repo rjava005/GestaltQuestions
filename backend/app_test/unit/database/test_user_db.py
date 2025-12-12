@@ -2,8 +2,7 @@ import pytest
 import src.api.database.user as user_db
 import src.api.database.question as question_db
 
-from src.api.models import UserBase
-from src.api.models.models import UserRole
+from src.api.models.users import User,UserRoles
 
 
 @pytest.fixture

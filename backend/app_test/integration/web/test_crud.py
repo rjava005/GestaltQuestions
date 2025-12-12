@@ -1,8 +1,7 @@
 from uuid import uuid4
 from src.api.core import logger
 from src.utils import pick
-from src.api.models.models import Question
-from src.api.models import QuestionMeta, QuestionData
+from src.api.models.question import Question,QuestionBase,QuestionMeta,QuestionData
 import pytest
 
 QUESTION_KEYS = [
