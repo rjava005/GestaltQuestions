@@ -1,11 +1,16 @@
 # Standard library
 from uuid import UUID, uuid4
 from enum import Enum
-from typing import List, Optional, Literal
+from typing import List, Optional, Literal, TYPE_CHECKING
 
 # Third-party libraries
 from sqlmodel import Field, SQLModel, Relationship, Column
 from pydantic import BaseModel, field_validator
+from .hybrid import QuestionOwnership
+
+if TYPE_CHECKING:
+    
+    from .question import Question
 
 
 class UserRoles(str, Enum):
@@ -32,6 +37,7 @@ class Institution(SQLModel, table=True):
 
 # Create a link between a user a many to many relationship
 class UserRoleLink(SQLModel, table=True):
+    __tablename__="user_role_link" # type: ignore
     role_id: UUID | None = Field(default=None, foreign_key="role.id", primary_key=True)
     # References the user.id column
     user_id: UUID | None = Field(default=None, foreign_key="user.id", primary_key=True)
@@ -47,11 +53,14 @@ class User(SQLModel, table=True):
     email: str = Field(index=True)
 
     # Define the relationship
-    roles: List["Role"] = Relationship(
-        back_populates="users", link_model=UserRoleLink
-    )
+    role: "Role" = Relationship(back_populates="users", link_model=UserRoleLink)
     institution_id: Optional[UUID] = Field(default=None, foreign_key="institution.id")
-    institution: Institution|None = Relationship(back_populates="users")
+    institution: Institution | None = Relationship(back_populates="users")
+
+    # Relationship to questions
+    created_questions: List["Question"] = Relationship(
+        back_populates="created_by", link_model=QuestionOwnership
+    )
 
 
 # Role table

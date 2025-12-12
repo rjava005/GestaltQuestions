@@ -7,7 +7,7 @@ from src.utils import convert_uuid
 from src.api.core import logger
 from src.api.database.database import SessionDep
 from src.api.models.users import User, UserRoles
-from src.api.models.models import (
+from src.api.models.question import (
     Question,
 )
 from src.utils import convert_uuid

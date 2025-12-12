@@ -1,4 +1,4 @@
-from src.api.database import SessionDep
+from src.api.database.database import SessionDep
 from src.api.models.models import Language, QType, Topic
 from src.api.database.generic_db import create_or_resolve
 
