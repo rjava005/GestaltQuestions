@@ -9,7 +9,6 @@ from pydantic import BaseModel, field_validator
 from .hybrid import QuestionOwnership
 
 if TYPE_CHECKING:
-    
     from .question import Question
 
 
@@ -37,7 +36,7 @@ class Institution(SQLModel, table=True):
 
 # Create a link between a user a many to many relationship
 class UserRoleLink(SQLModel, table=True):
-    __tablename__="user_role_link" # type: ignore
+    __tablename__ = "user_role_link"  # type: ignore
     role_id: UUID | None = Field(default=None, foreign_key="role.id", primary_key=True)
     # References the user.id column
     user_id: UUID | None = Field(default=None, foreign_key="user.id", primary_key=True)

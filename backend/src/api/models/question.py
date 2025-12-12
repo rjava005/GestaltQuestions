@@ -111,6 +111,8 @@ class QuestionType(SQLModel, table=True):
     )
 
 
+
+# Base Models
 class QuestionBase(BaseModel):
     id: str | UUID | None = None
     title: Optional[str] = None
