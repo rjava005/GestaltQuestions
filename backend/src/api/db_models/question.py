@@ -50,7 +50,7 @@ class Question(SQLModel, table=True):
     title: Optional[str] = SQLField(default=None, index=True)
 
     # General Flags
-    is_adaptive: bool = SQLField(default=False)
+    isAdaptive: bool = SQLField(default=False)
     ai_generated: bool = SQLField(default=False)
 
     # Storage where the question is saved
@@ -71,7 +71,7 @@ class Question(SQLModel, table=True):
     )
 
     # handle ownership
-    created_by: "User" = Relationship(
+    created_by: Optional["User"] = Relationship(
         back_populates="created_questions", link_model=QuestionOwnership
     )
 
@@ -111,7 +111,6 @@ class QuestionType(SQLModel, table=True):
     )
 
 
-
 # Base Models
 class QuestionBase(BaseModel):
     id: str | UUID | None = None
@@ -124,8 +123,8 @@ class QuestionBase(BaseModel):
 
 class QuestionMeta(QuestionBase):
     topics: List["Topic"] = Field(default_factory=list)
-    languages: List[AllowedLanguages] = Field(default_factory=list)
-    qtypes: List[str] = Field(default_factory=list)
+    languages: List["Language"] = Field(default_factory=list)
+    qtypes: List["QuestionType"] = Field(default_factory=list)
 
 
 class QRelationshipData(BaseModel):

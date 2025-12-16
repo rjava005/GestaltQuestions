@@ -1,3 +1,4 @@
+import api from "../../services/api/client";
 import {
   useEffect,
   useMemo,
@@ -5,8 +6,8 @@ import {
   useCallback,
   type FormEvent,
 } from "react";
-import { useAdaptiveParams } from "../../api";
-import { useRawQuestionHTML, useParsedQuestionHTML } from "../../api";
+import { useAdaptiveParams } from "../../services";
+import { useRawQuestionHTML, useParsedQuestionHTML } from "../../services";
 import { useQuestionContext } from "../../context/QuestionContext";
 import { useQuestionRuntime } from "../../context/QuestionAnswerContext";
 import { trueish } from "../../utils";
@@ -16,6 +17,7 @@ import { QuestionHeader } from "./QuestionHeader";
 import { QuestionButtons } from "./QuestionButtons";
 import DisplayCorrectAnswer from "./DisplayCorrectAnswer";
 import QuestionHTMLToReact from "../QuestionComponents/ParseQuestionHTML";
+
 
 
 export default function QuestionEngine() {
@@ -50,9 +52,11 @@ export default function QuestionEngine() {
     }
   }, [parsed, questionHtml, solutionHTML, setSolution]);
 
-  const handleSubmit = (e: FormEvent) => {
+  const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     console.log("Saving the question answers", answers);
+    const data = await api.post("/run_server/submit", answers)
+    console.log("This is the response", data)
     setIsSubmitted(true);
   };
 

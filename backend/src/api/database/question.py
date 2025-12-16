@@ -155,16 +155,22 @@ async def get_question_data(
     Raises:
         HTTPException(404): If the question is not found.
     """
-    question = get_question(id, session)
-    if not question:
-        logger.info("Question is none")
-        raise ValueError("Could not get question data question is None")
-    relationship_data = gdb.get_all_model_relationship_data(question, Question)
-    logger.info("Getting relationship data %s", relationship_data)
-    question_data = question.model_dump()
-    q = QuestionMeta(**question_data, **relationship_data)
-    logger.info("Getting data complete %s", q)
-    return q
+    try:
+        question = get_question(id, session)
+        if not question:
+            logger.info("Question is none")
+            raise ValueError("Could not get question data question is None")
+
+        relationship_data = gdb.get_all_model_relationship_data(question, Question)
+        logger.debug("Getting relationship data %s", relationship_data)
+
+        question_data = question.model_dump()
+        q = QuestionMeta(**question_data, **relationship_data)
+        logger.debug("Getting data complete %s", q)
+        return q
+    except ValidationError as e:
+        logger.error("Failed to dump Question model", exc_info=True)
+        raise ValueError(f"Invalid question data {e}")
 
 
 async def get_all_question_data(

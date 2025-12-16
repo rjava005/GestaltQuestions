@@ -1,8 +1,8 @@
-import api from "./client";
+import api from "../services/api/client";
 import type {
   UnsyncedQuestion,
   FolderCheckMetrics,
-  SyncResponse
+  SyncResponse,
 } from "../types/syncTypes";
 
 export class QuestionSyncAPI {

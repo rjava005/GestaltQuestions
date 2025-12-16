@@ -1,4 +1,4 @@
-import type { AllowedRoles } from "../api/userAPI";
+import type { AllowedRoles } from "../services/api/backend/userAPI";
 
 export type BaseNavRoutes = {
   name: string;

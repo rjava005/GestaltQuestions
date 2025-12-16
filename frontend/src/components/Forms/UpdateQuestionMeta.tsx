@@ -3,7 +3,7 @@ import type { QuestionMeta } from "../../types/questionTypes";
 import { InputTextForm } from "./InputComponents";
 import { useState, type FormEvent } from "react";
 import { MyButton } from "../Base/Button";
-import { QuestionAPI } from "../../api/questionAPI";
+import { QuestionAPI } from "../../services/api/backend/questionAPI";
 import type { QuestionData } from "../../types/questionTypes";
 import { toast } from "react-toastify";
 

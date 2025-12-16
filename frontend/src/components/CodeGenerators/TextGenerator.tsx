@@ -6,7 +6,7 @@ import { AddQuestionInput } from "./AddQuestionInput";
 import {
   AIWorkspaceAPI,
   type QuestionDataText,
-} from "../../api/aiWorkspaceAPI";
+} from "../../services/api/ai_workspace/aiWorkspaceAPI";
 
 // Examples for the input container
 const examples = [

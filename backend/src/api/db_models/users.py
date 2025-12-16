@@ -1,11 +1,10 @@
 # Standard library
 from uuid import UUID, uuid4
 from enum import Enum
-from typing import List, Optional, Literal, TYPE_CHECKING
+from typing import List, Optional, TYPE_CHECKING
 
 # Third-party libraries
-from sqlmodel import Field, SQLModel, Relationship, Column
-from pydantic import BaseModel, field_validator
+from sqlmodel import Field, SQLModel, Relationship
 from .hybrid import QuestionOwnership
 
 if TYPE_CHECKING:
@@ -68,4 +67,4 @@ class Role(SQLModel, table=True):
     name: UserRoles = Field(index=True)
     description: str | None = None
 
-    users: List["User"] = Relationship(back_populates="roles", link_model=UserRoleLink)
+    users: List["User"] = Relationship(back_populates="role", link_model=UserRoleLink)
