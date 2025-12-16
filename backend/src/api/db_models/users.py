@@ -2,6 +2,7 @@
 from uuid import UUID, uuid4
 from enum import Enum
 from typing import List, Optional, TYPE_CHECKING
+from sqlalchemy import Enum as SAEnum, Column
 
 # Third-party libraries
 from sqlmodel import Field, SQLModel, Relationship
@@ -65,7 +66,14 @@ class User(SQLModel, table=True):
 # Role table
 class Role(SQLModel, table=True):
     id: UUID = Field(default_factory=uuid4, primary_key=True)
-    name: UserRoles = Field(index=True)
+    name: UserRoles = Field(
+        sa_column=Column(
+            SAEnum(UserRoles, name="user_roles"),
+            nullable=False,
+            index=True,
+            unique=True,
+        )
+    )
     description: str | None = None
 
     users: List["User"] = Relationship(back_populates="role", link_model=UserRoleLink)

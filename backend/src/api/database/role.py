@@ -40,10 +40,11 @@ def seed_roles(session: SessionDep) -> None:
 
 def create_role(
     session: SessionDep,
-    role: UserRoles = UserRoles.STUDENT,
+    role: UserRoles,
     description: str | None = "",
 ) -> Optional[Role]:
     try:
+        logger.info("This is the role %s ", role)
         r = Role(name=role, description=description)
         session.add(role)
         session.commit()
@@ -67,3 +68,7 @@ def does_role_exist(
         session.rollback()
         logger.error(f"[DB] Failed to get role: {e}")
         return None
+
+
+def get_role(role: str, session: SessionDep) -> Role | None:
+    return session.exec(select(Role).where(Role.name == role)).first()

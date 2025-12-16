@@ -1,10 +1,11 @@
 from datetime import datetime, timezone
 from typing import Any, Dict, List, Optional
 from uuid import UUID, uuid4
-
+from pydantic import BaseModel, Field
 from pydantic import BaseModel
 from sqlalchemy import Column, DateTime, func
 from sqlmodel import SQLModel, Field as SQLField
+from sqlalchemy.types import JSON
 
 
 class QuizData(BaseModel):
@@ -12,10 +13,11 @@ class QuizData(BaseModel):
     correct_answers: Dict[str, Any]
     intermediate: Optional[Dict[str, Any]] = None
     test_results: Optional[Dict[str, Any]] = None
-    logs: List[Any] = []
+    logs: List[Any] = Field(default_factory=list)
     nDigits: Optional[int] = 3
     sigfigs: Optional[int] = 3
-    model_config = {"extra": "allow"}  # Ignore unexpected fields and missing ones
+
+    model_config = {"extra": "allow"}
 
 
 class QuestionAttempt(SQLModel, table=True):
@@ -28,8 +30,8 @@ class QuestionAttempt(SQLModel, table=True):
     user_id: UUID | None = SQLField(
         default=None, foreign_key="user.id", primary_key=True
     )
-    quiz_data: QuizData
-    submitted_answer: Dict[str, Any]
+    quiz_data: QuizData = SQLField(sa_column=Column(JSON, nullable=False))
+    submitted_answer: Dict[str, Any] = SQLField(sa_column=Column(JSON, nullable=False))
     attemption_time: datetime = SQLField(
         sa_column=Column(
             DateTime(timezone=True), server_default=func.now(), nullable=False
