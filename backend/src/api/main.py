@@ -6,7 +6,6 @@ from contextlib import asynccontextmanager
 # Third-party imports
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.openapi.utils import get_openapi
 from fastapi.routing import APIRouter
 from fastapi.staticfiles import StaticFiles
 from pathlib import Path
@@ -16,6 +15,9 @@ from src.api.core import logger
 from src.api.database.database import create_db_and_tables
 from src.api.web import routes
 from src.api.core.config import get_settings
+from src.api.database.role import seed_roles
+from src.api.database.database import Session
+
 
 settings = get_settings()
 
@@ -23,7 +25,11 @@ settings = get_settings()
 ## Intializes the database
 @asynccontextmanager
 async def on_startup(app: FastAPI):
-    create_db_and_tables()
+    engine = create_db_and_tables()
+    # Ensures that the roles are present at startup
+    with Session(engine) as session:
+        seed_roles(session)
+        session.commit()
     yield
 
 
@@ -62,32 +68,6 @@ def get_application(test_mode: bool = False):
         name="questions",
     )
     logger.info("Serving static files from: %s", question_dir)
-
-    # Define a custom OpenAPI schema that uses your token URL at /auth/login
-    def custom_openapi():
-        if app.openapi_schema:
-            return app.openapi_schema
-        openapi_schema = get_openapi(
-            title=app.title,
-            version="1.0.0",  # Update version as needed
-            description="API documentation with OAuth2 security",
-            routes=app.routes,
-        )
-        openapi_schema["components"]["securitySchemes"] = {
-            "OAuth2PasswordBearer": {
-                "type": "oauth2",
-                "flows": {
-                    "password": {
-                        "tokenUrl": settings.AUTH_URL,
-                        "scopes": {},
-                    }
-                },
-            }
-        }
-        app.openapi_schema = openapi_schema
-        return app.openapi_schema
-
-    app.openapi = custom_openapi
 
     return app
 

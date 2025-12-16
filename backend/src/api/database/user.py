@@ -6,7 +6,7 @@ from sqlmodel import select
 from src.utils import convert_uuid
 from src.api.core import logger
 from src.api.database.database import SessionDep
-from src.api.db_models.users import User, UserRoles
+from src.api.db_models.users import User, UserRoles, UserBase
 from src.api.db_models.question import (
     Question,
 )
@@ -14,20 +14,18 @@ from src.utils import convert_uuid
 
 
 def create_user(
-    uid: str,
-    first_name: str,
-    last_name: str,
-    email: str,
-    username: str,
+    data: UserBase,
     session: SessionDep,
+    role: UserRoles = UserRoles.STUDENT,
 ) -> Optional[User]:
     try:
         user = User(
-            fb_id=uid,
-            first_name=first_name,
-            last_name=last_name,
-            email=email,
-            username=username,
+            fb_id=data.fb_id,
+            first_name=data.first_name,
+            last_name=data.last_name,
+            email=data.email,
+            username=data.username,
+            role=role
         )
         session.add(user)
         session.commit()
