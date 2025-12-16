@@ -1,11 +1,12 @@
+from typing import Dict, Optional
+
 from sqlalchemy.exc import SQLAlchemyError
 from sqlmodel import select
-from typing import Optional, Dict
-
-from src.api.db_models.users import Role, UserRoles
-from src.api.database.database import SessionDep
 
 from src.api.core import logger
+from src.api.database.database import SessionDep
+from src.api.db_models.users import Role, UserRoles
+
 
 
 def seed_roles(session: SessionDep) -> None:
@@ -44,9 +45,8 @@ def create_role(
     description: str | None = "",
 ) -> Optional[Role]:
     try:
-        logger.info("This is the role %s ", role)
-        r = Role(name=role, description=description)
-        session.add(role)
+        r = Role(name=role.value, description=description)
+        session.add(r)
         session.commit()
         session.refresh(r)
         logger.debug("[DB] Role created successfully")
@@ -63,7 +63,7 @@ def does_role_exist(
     role: UserRoles,
 ) -> bool | None:
     try:
-        return bool(session.exec(select(Role).where(Role.name == role)).first())
+        return bool(session.exec(select(Role).where(Role.name == role.value)).first())
     except SQLAlchemyError as e:
         session.rollback()
         logger.error(f"[DB] Failed to get role: {e}")

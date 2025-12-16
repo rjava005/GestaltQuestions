@@ -1,5 +1,6 @@
 from uuid import UUID
 from enum import Enum
+
 # Third-party libraries
 from sqlmodel import Field as SQLField, SQLModel
 
@@ -32,6 +33,3 @@ class QuestionReview(SQLModel, table=True):
     )
     reviewed: bool = False
     # TODO: Add actual metrics for what i want to grade
-
-
-
