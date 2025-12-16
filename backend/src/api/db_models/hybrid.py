@@ -1,6 +1,5 @@
-from uuid import UUID, uuid4
+from uuid import UUID
 from enum import Enum
-
 # Third-party libraries
 from sqlmodel import Field as SQLField, SQLModel
 
@@ -35,16 +34,4 @@ class QuestionReview(SQLModel, table=True):
     # TODO: Add actual metrics for what i want to grade
 
 
-class QuestionAttempt(SQLModel, table=True):
-    __tablename__ = "question_attempt_link"  # type: ignore
-    # Id for the attemp history
-    id: UUID | None = SQLField(default_factory=uuid4, primary_key=True, index=True)
-    question_id: UUID | None = SQLField(
-        default=None, foreign_key="question.id", primary_key=True
-    )
-    user_id: UUID | None = SQLField(
-        default=None, foreign_key="user.id", primary_key=True
-    )
 
-    quiz_data: QuizData
-    submitted_data: Submitted
