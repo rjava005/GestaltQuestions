@@ -7,7 +7,6 @@ from sqlalchemy import Column, DateTime, func
 from sqlmodel import SQLModel, Field as SQLField
 
 
-
 class QuizData(BaseModel):
     params: Dict[str, Any]
     correct_answers: Dict[str, Any]

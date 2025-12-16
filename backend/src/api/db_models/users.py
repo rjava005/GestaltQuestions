@@ -5,6 +5,7 @@ from typing import List, Optional, TYPE_CHECKING
 
 # Third-party libraries
 from sqlmodel import Field, SQLModel, Relationship
+from pydantic import BaseModel
 from .hybrid import QuestionOwnership
 
 if TYPE_CHECKING:
@@ -68,3 +69,16 @@ class Role(SQLModel, table=True):
     description: str | None = None
 
     users: List["User"] = Relationship(back_populates="role", link_model=UserRoleLink)
+
+
+# Base Model for reading users
+class UserRead(BaseModel):
+    first_name: str
+    last_name: str
+    username: str | None
+    email: str
+
+
+# This model is used for when we add users
+class UserBase(UserRead):
+    fb_id: str | None
