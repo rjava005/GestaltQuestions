@@ -1,5 +1,6 @@
 import pytest
 import src.api.database.user as user_db
+import src.api.database.role as role_db
 import src.api.database.question as question_db
 from src.api.core import logger
 from src.api.db_models.users import User, UserRoles, UserBase, UserUpdate
@@ -90,3 +91,15 @@ async def test_set_user_questions(create_user, question_payload_full_dict, db_se
     print(f"These are the results {result}")
     assert result
     assert len(result) == 3
+
+
+@pytest.mark.parametrize(
+    "role", [UserRoles.ADMIN, UserRoles.DEVELOPER, UserRoles.STUDENT, UserRoles.TEACHER]
+)
+def test_set_user_role(create_user, role, db_session):
+    r = role_db.create_role(db_session, role, "")
+    assert r
+    user = user_db.set_user_role(create_user.id, role, db_session)
+    print(f"This is the returned user {user}")
+    assert user
+    assert user.role.name == role.value

@@ -1,16 +1,16 @@
 from typing import Optional, Sequence
 from uuid import UUID
-from .role import get_role
+
 from sqlalchemy.exc import SQLAlchemyError
 from sqlmodel import select
-from src.utils import convert_uuid
+
 from src.api.core import logger
 from src.api.database.database import SessionDep
-from src.api.db_models.users import User, UserRoles, UserBase, UserUpdate
-from src.api.db_models.question import (
-    Question,
-)
+from src.api.db_models.question import Question
+from src.api.db_models.users import User, UserBase, UserRoles, UserUpdate
 from src.utils import convert_uuid
+
+from .role import get_role
 
 
 def create_user(
@@ -138,6 +138,13 @@ def get_user_created_questions(user_id: str | UUID, session: SessionDep):
     return session.exec(stmt).all()
 
 
+# -------------------------
+# --------Hybrid-----------
+# -------------------------
+
+# these are database stuff that usually deals with relationship and or some other stuff
+
+
 def set_user_created_questions(
     user_id: str | UUID, question: Question, session: SessionDep
 ):
@@ -150,3 +157,17 @@ def set_user_created_questions(
         session.rollback()
         logger.error(f"[DB] Failed to set question to user: {e}")
         raise ValueError("[DB] Failed to set question to user: {e}")
+
+
+def set_user_role(user_id: str | UUID, role: UserRoles, session: SessionDep) -> User:
+    try:
+        r = get_role(role.value, session)
+        if r is None:
+            raise ValueError(f"Role {r} not present in database ")
+        user = get_user(user_id, session)
+        if user is None:
+            raise ValueError(f"Could not retrieve user {user}")
+        user.role = r
+        return user
+    except Exception:
+        raise
