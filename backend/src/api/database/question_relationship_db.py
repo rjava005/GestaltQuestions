@@ -1,10 +1,10 @@
-from src.api.database import SessionDep
-from src.api.models.models import Language, QType, Topic
+from src.api.database.database import SessionDep
+from src.api.db_models.question import Language, QuestionType, Topic
 from src.api.database.generic_db import create_or_resolve
 
 
-def create_qtype(name: str, session: SessionDep) -> QType:
-    return create_or_resolve(QType, name, session)[0]
+def create_qtype(name: str, session: SessionDep) -> QuestionType:
+    return create_or_resolve(QuestionType, name, session)[0]
 
 
 def create_qtopic(name: str, session: SessionDep) -> Topic:

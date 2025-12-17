@@ -1,8 +1,7 @@
 from uuid import uuid4
 from src.api.core import logger
 from src.utils import pick
-from src.api.models.models import Question
-from src.api.models import QuestionMeta, QuestionData
+from src.api.db_models.question import Question, QuestionMeta, QuestionData
 import pytest
 
 QUESTION_KEYS = [
@@ -116,7 +115,7 @@ def test_get_all_questions_metadata(api_client, create_question_and_return_quest
     question_data = response.json()
     logger.info("This is the response from the get all %s", question_data)
     assert response.status_code == 200
-    
+
     assert QuestionMeta.model_validate(question_data)
 
 
@@ -222,9 +221,7 @@ async def test_filter_questions_no_match(
 
 
 @pytest.mark.asyncio
-async def test_question_filter_by_title(
-    api_client, create_multiple_question_responses
-):
+async def test_question_filter_by_title(api_client, create_multiple_question_responses):
     """
     Filter questions by a substring in the title.
     Expects at least one match from create_multiple_questions fixture.
@@ -245,7 +242,7 @@ async def test_question_filter_by_title(
 async def test_update_question(api_client, create_question_and_return_question):
     question = create_question_and_return_question
     updates = QuestionData(title="Updated Title", isAdaptive=True)
-    
+
     logger.info("This is the question %s", question)
 
     patch_resp = api_client.put(

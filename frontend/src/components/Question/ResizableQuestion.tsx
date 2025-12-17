@@ -7,7 +7,7 @@ import {
 } from "react-resizable-panels";
 import { MyButton } from "./../Base/Button";
 import QuestionCodeEditor from "../CodeEditor/QuestionCodeEditor";
-import QuestionEngine from "../QuestionEngine/QuestionEngine";
+import QuestionEngine from "../../features/questionEngine/QuestionEngine";
 import { useQuestionRuntime } from "../../context/QuestionAnswerContext";
 import QuestionHTMLToReact from "../QuestionComponents/ParseQuestionHTML";
 

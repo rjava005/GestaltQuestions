@@ -1,12 +1,13 @@
 # --- Third-Party ---
 from fastapi import APIRouter, HTTPException
 from starlette import status
+from typing import Sequence
 
 # --- Internal ---
 from src.api.core import logger
 from src.api.service.question_manager import QuestionManagerDependency
 from src.api.service.storage_manager import StorageDependency
-from src.api.models.models import Question
+from src.api.db_models.question import Question, QuestionData, QuestionMeta
 from src.api.models import *
 from src.utils import safe_dir_name
 from src.api.dependencies import StorageTypeDep

@@ -2,9 +2,8 @@
 from fastapi import APIRouter
 
 # --- Internal ---
-from src.api.models import UserBase
+from src.api.db_models.users import User
 from src.api.service.user import UserManagerDependeny
-from src.api.models.models import User
 from src.api.core.logging import logger
 from src.api.dependencies import FireBaseToken
 from fastapi import HTTPException
@@ -19,7 +18,7 @@ initialize_firebase_app()
 async def create_user(
     user_manager: UserManagerDependeny,
     fb_token: FireBaseToken,
-    data: UserBase,
+    data: User,
 ) -> User:
     """
     Create a new user in the system.
@@ -138,7 +137,7 @@ async def delete_user(
 async def update_user(
     user_manager: UserManagerDependeny,
     token: FireBaseToken,
-    data: UserBase,
+    data: User,
 ) -> User:
     """
     Update an existing user's information.

@@ -6,6 +6,7 @@ import httpx
 from pydantic import ValidationError
 import json
 from starlette import status
+from typing import Dict, Any
 
 # Third-party libraries
 from fastapi import APIRouter, HTTPException
@@ -149,3 +150,9 @@ async def run_server(
     )
 
     return quiz_data
+
+
+@router.post("/submit")
+async def submit_answers(data: Dict[str, Any]):
+    logger.info("Got quiz data", data)
+    return {"status": "okay"}

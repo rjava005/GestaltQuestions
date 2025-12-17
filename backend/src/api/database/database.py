@@ -25,7 +25,8 @@ else:
     raise ValueError(f"Unknown environment: {app_settings.MODE}")
 
 
-logger.info(f"[DATABASE Intialization]: Database path set to {DATABASE_URL}")
+logger.debug(f"[DATABASE Intialization]: Database path set to {DATABASE_URL}")
+
 try:
     connect_args = {}
     if app_settings.MODE == "dev" and DATABASE_URL.startswith("sqlite"):
@@ -52,3 +53,7 @@ def get_session() -> Generator[Session, None, None]:
 
 
 SessionDep = Annotated[Session, Depends(get_session)]
+
+
+if __name__ == "__main__":
+    create_db_and_tables()

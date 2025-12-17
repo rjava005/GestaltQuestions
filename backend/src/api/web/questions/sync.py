@@ -1,6 +1,6 @@
 from src.api.service import sync
 from fastapi.routing import APIRouter
-from src.api.models import *
+from src.api.db_models import *
 from src.api.models.sync_models import *
 from src.api.service.question_manager import QuestionManagerDependency
 from src.api.service.storage_manager import StorageDependency

@@ -4,9 +4,10 @@ from src.api.core import logger
 from fastapi import Depends, HTTPException
 from starlette import status
 
-from src.api.database import SessionDep, user as udb
-from src.api.models import UserBase
-from src.api.models.models import User
+from src.api.database.database import SessionDep
+from src.api.database import user as udb
+from src.api.db_models.users import User
+
 
 
 class UserManager:
@@ -76,7 +77,7 @@ class UserManager:
                 detail=f"Could not delete user {e}",
             )
 
-    def update_user(self, id: str | UUID, data: UserBase) -> User:
+    def update_user(self, id: str | UUID, data: User) -> User:
         try:
             user = udb.update_user(id, data, self.session)
             assert user

@@ -2,7 +2,7 @@
 import { useState, useCallback, useEffect, } from "react";
 import type { QuestionParams } from "../types/questionTypes";
 import { useCodeEditorContext } from "../context/CodeEditorContext";
-import { QuestionAPI } from "../api/questionAPI";
+import { QuestionAPI } from "../services/api/backend/questionAPI";
 import type { QuestionData } from "../types/questionTypes";
 import { useQuestionContext } from "../context/QuestionContext";
 import applyPlaceHolders from "../utils/flattenParams";

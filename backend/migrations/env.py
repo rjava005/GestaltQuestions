@@ -6,7 +6,18 @@ from sqlmodel import SQLModel
 from pathlib import Path
 from alembic import context
 from dotenv import load_dotenv
-from src.api.models import *
+from src.api.db_models.question import (
+    Question,
+    QuestionLanguageLink,
+    QuestionTopicLink,
+    QuestionQTypeLink,
+    Topic,
+    Language,
+    QuestionType,
+)
+from src.api.db_models.users import Institution, UserRoleLink, User, Role
+from src.api.db_models.hybrid import QuestionOwnership, QuestionReview
+from src.api.db_models.question_attempt import QuestionAttempt
 from src.api.core.config import AppSettings
 import os
 
@@ -15,6 +26,7 @@ import os
 config = context.config
 
 from src.api.database.database import DATABASE_URL
+
 config.set_main_option("sqlalchemy.url", DATABASE_URL)
 
 
@@ -73,7 +85,9 @@ def run_migrations_online() -> None:
     )
 
     with connectable.connect() as connection:
-        context.configure(connection=connection, target_metadata=target_metadata,render_as_batch=True)
+        context.configure(
+            connection=connection, target_metadata=target_metadata, render_as_batch=True
+        )
 
         with context.begin_transaction():
             context.run_migrations()

@@ -3,17 +3,21 @@ import asyncio
 import json
 from collections import defaultdict
 from typing import List, Literal, Sequence, Union, Tuple
+from pathlib import Path
 
 # --- Third-Party ---
 from pydantic import ValidationError
 
 # --- Internal ---
 from src.api.core import logger
-from src.api.models import *
-from src.api.models.models import Question
-from src.api.models.sync_models import *
+from src.api.db_models.question import Question, QuestionData
 from src.api.service.question_manager import (
     QuestionManagerDependency,
+)
+from src.api.models.sync_models import (
+    UnsyncedQuestion,
+    SyncMetrics,
+    FolderCheckMetrics,
 )
 from src.utils import to_serializable
 from src.api.service.storage_manager import StorageDependency
@@ -237,7 +241,7 @@ async def sync_question(
         return UnsyncedQuestion(
             question_name=unsynced.question_name,
             question_path=unsynced.question_path,
-            detail="Failed to sync question {e}",
+            detail=f"Failed to sync question {e}",
             status="failed to create question",
             metadata=unsynced.metadata,
         )

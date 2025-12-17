@@ -1,13 +1,13 @@
 import AuthBase from "./AuthBase";
 import { toast } from "react-toastify";
 import { FirebaseError } from "firebase/app";
-import { UserAPI } from "../../api/userAPI";
+import { UserAPI } from "../../services/api/backend/userAPI";
 
 import {
     createUserWithEmailAndPassword,
     sendEmailVerification,
 } from "firebase/auth";
-import { auth } from "../../config/firebaseClient";
+import { auth } from "../../../config/firebaseClient";
 
 export function SignUpForm() {
     const handleSubmit = async (email: string, password: string, username?: string) => {

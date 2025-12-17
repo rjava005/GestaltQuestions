@@ -1,4 +1,4 @@
-import api from "./client";
+import api from "../services/api/client";
 import type {
   UnsyncedQuestion,
   FolderCheckMetrics,

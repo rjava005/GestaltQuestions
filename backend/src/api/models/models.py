@@ -1,126 +1,63 @@
-# Standard library
-from typing import List, Optional, Union
-from uuid import UUID, uuid4
-from enum import Enum
+# --- Standard Library ---
+from pathlib import Path
+from typing import Any, List, Union
+from uuid import UUID
 
-# Third-party libraries
-from sqlmodel import Field, Relationship, SQLModel
+# --- Third-Party ---
+from pydantic import BaseModel, Field
 
-
-# ENUMS
-class UserRole(str, Enum):
-    ADMIN = "admin"
-    TEACHER = "teacher"
-    DEVELOPER = "developer"
-    STUDENT = "student"
+# --- Internal ---
 
 
-class QuestionStatus(str, Enum):
-    PUBLIC = "public"
-    PRIVATE = "private"
+class FileData(BaseModel):
+    filename: str
+    content: dict | str | Any | bytes
+    mime_type: str = "application/octet-stream"
 
 
-# Actual SQLModels
+class FilesData(BaseModel):
+    files: List[FileData]
 
 
-class QuestionTopicLink(SQLModel, table=True):
-    question_id: UUID | None = Field(
-        default=None, foreign_key="question.id", primary_key=True
+class SuccessfulResponse(BaseModel):
+    """Base success response shared by all API responses."""
+
+    status: int  # keep this strict (HTTP status codes are int)
+    detail: str
+
+
+class SuccessDataResponse(SuccessfulResponse):
+    """Success response with a file system path included."""
+
+    data: Union[str, bytes, None] = None
+
+
+class SuccessFileResponse(SuccessfulResponse):
+    """Success response with one or more file objects."""
+
+    filedata: List[FileData] = Field(
+        default_factory=list,
+        description="List of file objects or file strings",
     )
-    topic_id: UUID | None = Field(
-        default=None, foreign_key="topic.id", primary_key=True
-    )
-
-
-class QuestionLanguageLink(SQLModel, table=True):
-    question_id: UUID | None = Field(
-        default=None, foreign_key="question.id", primary_key=True
-    )
-    language_id: UUID | None = Field(
-        default=None, foreign_key="language.id", primary_key=True
-    )
-
-
-class QuestionQTypeLink(SQLModel, table=True):
-    question_id: UUID | None = Field(
-        default=None, foreign_key="question.id", primary_key=True
-    )
-    qtype_id: UUID | None = Field(
-        default=None, foreign_key="qtype.id", primary_key=True
+    filenames: List[str] | List[Path] = Field(
+        default_factory=list,
+        description="List of relative file paths",
     )
 
-
-# --------------------------------------------
-# -----------------Users----------------------
-# --------------------------------------------
+    class Config:
+        populate_by_name = True  # allows using both aliases & python names
 
 
-class User(SQLModel, table=True):
-    id: UUID = Field(default_factory=uuid4, primary_key=True)
-    username: str | None
-    email: str | None
-    role: UserRole = UserRole.STUDENT
-    institution: str | None = None
-    fb_id: str | None = None
+class Response(BaseModel):
+    status: int
+    detail: str
 
 
-class Question(SQLModel, table=True):
-    id: UUID | None = Field(default_factory=uuid4, primary_key=True, index=True)
-    # Question metadata contains basic fields
-    title: Optional[str] = Field(default=None, index=True)
-    topics: List["Topic"] = Relationship(
-        back_populates="questions", link_model=QuestionTopicLink
-    )
-    languages: List["Language"] = Relationship(
-        back_populates="questions", link_model=QuestionLanguageLink
-    )
-    qtypes: List["QType"] = Relationship(
-        back_populates="questions", link_model=QuestionQTypeLink
-    )
-
-    # Question status
-    ai_generated: bool = False
-    isAdaptive: bool = False
-    status: QuestionStatus = Field(default=QuestionStatus.PRIVATE)
-
-    # Storage
-    local_path: Optional[str] = None
-    blob_path: Optional[str] = None
-
-    created_by_id: UUID | None = Field(default=None, foreign_key="user.id")
+class UpdateFile(BaseModel):
+    question_id: str | UUID
+    filename: str
+    new_content: str | dict
 
 
-# Question metadata
-
-
-class Language(SQLModel, table=True):
-    id: UUID = Field(default_factory=uuid4, primary_key=True)
-    name: str = Field(index=True, unique=True)
-
-    questions: List[Question] = Relationship(
-        back_populates="languages",
-        link_model=QuestionLanguageLink,
-    )
-
-
-class QType(SQLModel, table=True):
-
-    id: UUID = Field(default_factory=uuid4, primary_key=True)
-    name: str = Field(index=True, unique=True)
-
-    questions: List[Question] = Relationship(
-        back_populates="qtypes",
-        link_model=QuestionQTypeLink,
-    )
-
-
-class Topic(SQLModel, table=True):
-    __tablename__ = "topic"  # type: ignore
-
-    id: UUID = Field(default_factory=uuid4, primary_key=True, index=True)
-    name: str = Field(index=True, unique=True)
-
-    questions: List[Question] = Relationship(
-        back_populates="topics",
-        link_model=QuestionTopicLink,
-    )
+class SuccessFileServiceResponse(SuccessfulResponse):
+    path: str | Path

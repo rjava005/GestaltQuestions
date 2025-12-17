@@ -1,6 +1,6 @@
 import { Navigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
-import type { AllowedRoles } from "../../api/userAPI";
+import type { AllowedRoles } from "../../services/api/backend/userAPI";
 
 export default function ProtectedRoute({
     children,
