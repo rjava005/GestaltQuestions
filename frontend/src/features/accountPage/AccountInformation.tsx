@@ -6,7 +6,7 @@ import { MyButton } from "../../components/Base/Button";
 import AccountFieldContainer from "./AccountFieldContainer";
 import { updateEmail, updatePassword } from "firebase/auth";
 import { UserAPI } from "../../services/api/backend/userAPI";
-import type { UserDB } from "../../services/api/backend/userAPI";
+import type { UserUpdate } from "../../types/userTypes";
 import { toast } from "react-toastify";
 
 export default function AccountInformation() {
@@ -39,7 +39,7 @@ export default function AccountInformation() {
 
       // Update your database only if username or email changed
       if (username !== userData.username || email !== userData.email) {
-        const data: UserDB = { email, username };
+        const data: UserUpdate = { email, username };
         await UserAPI.updateUser(user, data);
       }
 

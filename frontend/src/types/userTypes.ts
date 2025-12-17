@@ -26,3 +26,10 @@ export type UserRead = {
   institution: ValidInstitutions | null;
   role: UserRole;
 };
+
+export type UserUpdate = {
+  first_name?: string;
+  last_name?: string;
+  username?: string;
+  email?: string;
+};

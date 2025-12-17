@@ -7,6 +7,7 @@ import type {
   AllowedRoles,
   UserBase,
   UserRead,
+  UserUpdate
 } from "../../../types/userTypes";
 
 export class UserAPI {
@@ -78,7 +79,7 @@ export class UserAPI {
     return response.data;
   }
 
-  static async updateUser(user: User, data: UserBase): Promise<UserBase> {
+  static async updateUser(user: User, data: UserUpdate): Promise<UserBase> {
     const token = await getIdToken(user);
 
     const response = await api.put<UserBase>(`${this.base}/`, data, {
