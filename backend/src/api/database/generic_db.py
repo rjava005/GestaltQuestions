@@ -50,7 +50,6 @@ def create_or_resolve(
         f"Object of type '{target_cls.__name__}' with {lookup_field}='{target_value}' not found "
         f"and create_field=False"
     )
-    
 
 
 def get_all_model_relationships(model: Type[SQLModel]) -> Dict[str, Type[SQLModel]]:
@@ -69,7 +68,9 @@ def get_all_model_relationship_data(
     for r in all_relationships:
         if r in excluded_relationship:
             continue
+        logger.debug(f"[Generic DB] This is the relationship info {r}")
         data[r] = getattr(model, r)
+        logger.debug(f"[Generic DB] This is the relationship data {data[r]}")
     return data
 
 

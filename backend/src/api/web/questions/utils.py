@@ -7,8 +7,8 @@ from fastapi import UploadFile, HTTPException
 # --- Internal ---
 from src.api.core.config import get_settings
 from src.api.core import logger
-from src.api.models.models import Question
-from src.api.models import *
+from src.api.db_models.models import Question
+from src.api.db_models import *
 from src.api.service.file_service import FileService
 from src.utils import serialized_to_dict
 

@@ -1,5 +1,4 @@
-
-import { aiApi } from "./client";
+import { aiApi } from "../client";
 
 export type QuestionDataText = {
   question: string;

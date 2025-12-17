@@ -7,7 +7,7 @@ import { MyButton } from "../Base/Button";
 import { PopUpHelpIcon } from "../Base/PopUpHelper";
 
 // Local utilities / API / types
-import { QuestionSyncAPI } from "../../api/questionSync";
+import { QuestionSyncAPI } from "../../services/api/backend/questionSyncAPI";
 import { downloadJson } from "../../utils/downloadUtils";
 import type {
   FolderCheckMetrics,

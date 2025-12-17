@@ -2,7 +2,7 @@
 from fastapi import APIRouter
 
 # --- Internal ---
-from src.api.models.users import User
+from src.api.db_models.users import User
 from src.api.service.user import UserManagerDependeny
 from src.api.core.logging import logger
 from src.api.dependencies import FireBaseToken

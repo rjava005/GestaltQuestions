@@ -1,5 +1,4 @@
 import SectionContainer from "../components/Base/SectionContainer";
-import profilePic from "../assets/react.svg"
 import AccountPageHeader from "../components/Account/AccountPageHeader";
 import AccountProfilePic from "../components/Account/AccountProfilePic";
 import AccountInformation from "../components/Account/AccountInformation";
@@ -29,7 +28,7 @@ export default function AccountPage() {
           <AccountPageHeader />
           <div className=" bg-white dark:bg-neutral-900 shadow-sm rounded-xl p-6 border border-gray-200 dark:border-neutral-700">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-baseline">
-              <AccountProfilePic src={profilePic} />
+              <AccountProfilePic src={""} />
               <AccountInformation />
             </div>
             <AccountOptions />

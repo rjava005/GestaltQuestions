@@ -5,8 +5,8 @@ import { InputTextForm } from "../Forms/InputComponents";
 import { MyButton } from "../Base/Button";
 import AccountFieldContainer from "./AccountFieldContainer";
 import { updateEmail, updatePassword } from "firebase/auth";
-import { UserAPI } from "../../api/userAPI";
-import type { UserDB } from "../../api/userAPI";
+import { UserAPI } from "../../services/api/backend/userAPI";
+import type { UserDB } from "../../services/api/backend/userAPI";
 import { toast } from "react-toastify"
 
 export default function AccountInformation() {

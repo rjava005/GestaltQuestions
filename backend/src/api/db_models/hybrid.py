@@ -33,15 +33,3 @@ class QuestionReview(SQLModel, table=True):
     )
     reviewed: bool = False
     # TODO: Add actual metrics for what i want to grade
-
-
-class QuestionAttempt(SQLModel, table=True):
-    __tablename__ = "question_attempt_link"  # type: ignore
-    question_id: UUID | None = SQLField(
-        default=None, foreign_key="question.id", primary_key=True
-    )
-    user_id: UUID | None = SQLField(
-        default=None, foreign_key="user.id", primary_key=True
-    )
-    attempts: int = SQLField(default=0)
-    completed: bool = SQLField(default=False)

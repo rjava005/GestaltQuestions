@@ -11,7 +11,7 @@ from pydantic_settings import BaseSettings
 # --- Internal ---
 from src.api.service import code_generation as cd
 from src.api.core.logging import logger
-from src.api.models import QuestionData
+from src.api.db_models import QuestionData
 
 
 class TestConfig(BaseSettings):

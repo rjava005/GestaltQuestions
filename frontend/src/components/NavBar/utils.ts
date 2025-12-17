@@ -1,5 +1,5 @@
 
-import type { UserRole } from "../../api/userAPI";
+import type { UserRole } from "../../services/api/backend/userAPI";
 import type { NavigationItem } from "../../types/navbarTypes";
 import type { User } from "firebase/auth";
 

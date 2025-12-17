@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import ModGenerators from "./BaseTemplate";
 import { toast } from "react-toastify";
 import UploadFilesButton from "../Forms/UploadFileComponent";
-import { AIWorkspaceAPI } from "../../api/aiWorkspaceAPI";
+import { AIWorkspaceAPI } from "../../services/api/ai_workspace/aiWorkspaceAPI";
 const ImageGeneratorConst = {
     name: "Visual Extract",
 };

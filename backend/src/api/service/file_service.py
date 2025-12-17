@@ -10,7 +10,7 @@ from starlette import status
 import mimetypes
 from typing import cast
 from src.api.core import logger
-from src.api.response_models import SuccessFileServiceResponse, FileData
+from src.api.models import SuccessFileServiceResponse, FileData
 from .config import *
 
 

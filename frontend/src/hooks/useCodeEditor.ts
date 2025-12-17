@@ -3,7 +3,7 @@ import { toast } from "react-toastify";
 
 import { useCodeEditorContext } from "../context/CodeEditorContext";
 import { useQuestionContext } from "../context/QuestionContext";
-import { QuestionAPI } from "../api/questionAPI";
+import { QuestionAPI } from "../services/api/backend/questionAPI";
 
 import type { FileData } from "../types/questionTypes";
 
