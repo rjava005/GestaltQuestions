@@ -2,48 +2,63 @@ import api from "../client";
 import type { User } from "firebase/auth";
 import { getIdToken } from "firebase/auth";
 
-
-export type UserRole = "admin" | "teacher" | "developer" | "student";
-export type AllowedRoles = readonly UserRole[];
-
-export type UserDB = {
-  id?: string;
-  username?: string;
-  email?: string;
-  role?: UserRole;
-  fb_id?: string;
-  storage_path?: string;
-};
+import type {
+  ValidInstitutions,
+  AllowedRoles,
+  UserBase,
+  UserRead,
+  UserUpdate
+} from "../../../types/userTypes";
 
 export class UserAPI {
   private static readonly base = "/users";
 
-  static async getCurrentUser(token: string): Promise<UserDB> {
-    const response = await api.get<UserDB>(this.base, {
+  static async getCurrentUser(token: string): Promise<UserBase> {
+    const response = await api.get<UserBase>(this.base, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
     });
+    return response.data;
+  }
+  // Create a user simple deprecated technically
+  static async createUser(data: UserBase, user: User): Promise<UserBase> {
+    const token = await getIdToken(user);
 
-    console.log(token);
-
-    console.log("[Frontend] User fetched:");
+    const response = await api.post<UserBase>(this.base, data, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
     return response.data;
   }
 
-  static async createUser(
-    username: string,
-    email: string,
-    user: User
-  ): Promise<UserDB> {
-    const token = await getIdToken(user);
-
-    const data: UserDB = {
-      email,
-      username,
+  static async createUserFull(
+    user: User,
+    data: UserBase,
+    additionalData?: {
+      role?: AllowedRoles;
+      institution?: ValidInstitutions | null;
+    }
+  ) {
+    const payload = {
+      user: data,
+      role: additionalData?.role,
+      institution: additionalData?.institution,
     };
+    const token = await getIdToken(user);
+    const response = await api.post<UserBase>(`${this.base}/full`, payload, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    return response.data;
+  }
 
-    const response = await api.post<UserDB>(this.base, data, {
+  static async getUser(user: User): Promise<UserRead> {
+    const token = await getIdToken(user);
+
+    const response = await api.get<UserRead>(this.base, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -52,10 +67,10 @@ export class UserAPI {
     return response.data;
   }
 
-  static async getUser(user: User): Promise<UserDB> {
+  static async deleteUser(user: User): Promise<UserBase> {
     const token = await getIdToken(user);
 
-    const response = await api.get<UserDB>(this.base, {
+    const response = await api.delete<UserBase>(this.base, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -64,22 +79,10 @@ export class UserAPI {
     return response.data;
   }
 
-  static async deleteUser(user: User): Promise<UserDB> {
+  static async updateUser(user: User, data: UserUpdate): Promise<UserBase> {
     const token = await getIdToken(user);
 
-    const response = await api.delete<UserDB>(this.base, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
-
-    return response.data;
-  }
-
-  static async updateUser(user: User, data: UserDB): Promise<UserDB> {
-    const token = await getIdToken(user);
-
-    const response = await api.put<UserDB>(`${this.base}/`, data, {
+    const response = await api.put<UserBase>(`${this.base}/`, data, {
       headers: {
         Authorization: `Bearer ${token}`,
       },

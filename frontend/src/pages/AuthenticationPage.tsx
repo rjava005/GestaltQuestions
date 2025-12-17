@@ -4,11 +4,10 @@ import { MyModal } from "../components/Base/MyModal";
 import { useAuth } from "../context/AuthContext";
 import ToggleButton from "@mui/material/ToggleButton";
 import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
-import { LogInForm } from "../components/Auth/LogInForm";
-import { SignUpForm } from "../components/Auth/SignUpForm";
-import VerifyAccount from "../components/Auth/VerifyAccount";
-import { TitleHeader } from "../components/Base/TitleHeader";
 
+import { TitleHeader } from "../components/Base/TitleHeader";
+import VerifyAccount from "../features/userForm/VerifyAccount";
+import { LogInForm, SignUpForm, } from "../features/userForm"
 
 // Handles wether the page is show
 type AuthenticationPageModel = {

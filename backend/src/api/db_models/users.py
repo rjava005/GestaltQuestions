@@ -78,6 +78,8 @@ class UserRead(BaseModel):
     last_name: str
     username: str | None
     email: str
+    institution: ValidInstitutions | None = None
+    role: UserRoles | None = None
 
 
 class UserUpdate(BaseModel):
@@ -89,4 +91,4 @@ class UserUpdate(BaseModel):
 
 # This model is used for when we add users
 class UserBase(UserRead):
-    fb_id: str | None
+    fb_id: str | None = None

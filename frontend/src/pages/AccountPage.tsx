@@ -1,8 +1,8 @@
 import SectionContainer from "../components/Base/SectionContainer";
-import AccountPageHeader from "../components/Account/AccountPageHeader";
-import AccountProfilePic from "../components/Account/AccountProfilePic";
-import AccountInformation from "../components/Account/AccountInformation";
-import AccountOptions from "../components/Account/AccountOptions";
+import AccountPageHeader from "../features/accountPage/AccountPageHeader";
+import AccountProfilePic from "../features/accountPage/AccountProfilePic";
+import AccountInformation from "../features/accountPage/AccountInformation";
+import AccountOptions from "../features/accountPage/AccountOptions";
 import { useAuth } from "../context/AuthContext";
 
 export default function AccountPage() {
@@ -22,11 +22,13 @@ export default function AccountPage() {
         </div>
       )}
 
+
+
       {/* Actual Account Page */}
       {user && (
         <>
           <AccountPageHeader />
-          <div className=" bg-white dark:bg-neutral-900 shadow-sm rounded-xl p-6 border border-gray-200 dark:border-neutral-700">
+          <div className=" bg-white dark:bg-neutral-900 p-6 ">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-baseline">
               <AccountProfilePic src={""} />
               <AccountInformation />
