@@ -107,7 +107,7 @@ async def get_user(
         logger.error(f"[DB] User not found: {e}")
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
-            detail="Failed to auto-create user.",
+            detail="Failed to get user",
         )
 
 
