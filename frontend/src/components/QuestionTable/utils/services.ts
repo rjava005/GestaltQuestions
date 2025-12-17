@@ -1,4 +1,4 @@
-import api from "../../../services/client";
+import api from "../../../services/api/client";
 import type { AxiosError } from "axios";
 
 type CodeRunResponse = {
