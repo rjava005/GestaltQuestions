@@ -78,8 +78,8 @@ class UserRead(BaseModel):
     last_name: str
     username: str | None
     email: str
-    institution: ValidInstitutions | None
-    role: UserRoles
+    institution: ValidInstitutions | None = None
+    role: UserRoles | None = None
 
 
 class UserUpdate(BaseModel):
