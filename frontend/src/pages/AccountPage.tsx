@@ -22,13 +22,13 @@ export default function AccountPage() {
         </div>
       )}
 
-      
+
 
       {/* Actual Account Page */}
       {user && (
         <>
           <AccountPageHeader />
-          <div className=" bg-white dark:bg-neutral-900 shadow-sm rounded-xl p-6 border border-gray-200 dark:border-neutral-700">
+          <div className=" bg-white dark:bg-neutral-900 p-6 ">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-baseline">
               <AccountProfilePic src={""} />
               <AccountInformation />

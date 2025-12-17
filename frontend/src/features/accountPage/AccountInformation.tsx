@@ -115,7 +115,7 @@ export default function AccountInformation() {
           <span className="font-medium text-gray-600 dark:text-gray-400">
             Role:
           </span>
-          <span className="ml-1">{userData.role?.toUpperCase()}</span>
+          <span className="ml-1">{userData.role}</span>
         </div>
 
         {/* Save Button */}
