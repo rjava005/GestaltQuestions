@@ -67,10 +67,9 @@ class UserManager:
                 detail=f"Could not retrieve user by email {e}",
             )
 
-    def get_user_by_fb(self, uid: str) -> User:
+    def get_user_by_fb(self, uid: str) -> User|None:
         try:
             user = udb.get_user_by_fb(uid, self.session)
-            assert user
             return user
         except Exception as e:
             raise HTTPException(

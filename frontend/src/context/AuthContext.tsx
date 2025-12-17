@@ -3,11 +3,12 @@ import type { User } from "firebase/auth";
 import { auth } from "../../config/firebaseClient";
 import { useState, useEffect } from "react";
 import { createContext, useContext } from "react";
-import { UserAPI, type UserDB } from "../services/api/backend/userAPI";
+import { UserAPI, type UserBase } from "../services/api/backend/userAPI";
+
 
 export function useStateAuth() {
     const [user, setUser] = useState<User | null>(null);
-    const [userData, setUserData] = useState<UserDB | null>(null)
+    const [userData, setUserData] = useState<UserBase | null>(null)
     const [loading, setLoading] = useState<boolean>(true);
 
     useEffect(() => {
@@ -23,7 +24,9 @@ export function useStateAuth() {
                         setUserData(data)
                     } catch (error) {
                         console.error("Error fetching user data:", error);
+                        setUser(null);
                     }
+
                 } else {
                     console.log("No User Logged In");
                     setUser(null);
@@ -42,7 +45,7 @@ export function useStateAuth() {
 
 type AuthContextType = {
     user: User | null;
-    userData: UserDB | null
+    userData: UserBase | null
     loading: boolean;
     logout: () => Promise<void>;
 };

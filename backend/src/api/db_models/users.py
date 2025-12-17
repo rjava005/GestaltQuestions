@@ -89,4 +89,4 @@ class UserUpdate(BaseModel):
 
 # This model is used for when we add users
 class UserBase(UserRead):
-    fb_id: str | None
+    fb_id: str | None = None

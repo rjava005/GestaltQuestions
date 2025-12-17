@@ -6,15 +6,16 @@ import { UseAuthMode } from "../../context/AuthMode";
 import { getAuth, sendPasswordResetEmail } from "firebase/auth";
 import { toast } from "react-toastify";
 import { SelectComponent } from "../../components/Forms/SelectComponent";
-
-const ValidInstitutions = ["University of California, Riverside", "California State Polytechnic University, Pomona", "Norco College"]
-
+import { AllowedInstitutions, type ValidInstitutions } from "../../types/userTypes";
 
 type AuthProps = {
     onSubmit: (
         email: string,
         password: string,
-        username?: string
+        username?: string,
+        firstName?: string,
+        lastName?: string,
+        institution?: ValidInstitutions | null
     ) => Promise<void>;
 };
 export default function AuthBase({ onSubmit }: AuthProps) {
@@ -27,13 +28,14 @@ export default function AuthBase({ onSubmit }: AuthProps) {
     const [username, setUserName] = useState<string>("");
     const [email, setEmail] = useState<string>("");
     const [password, setPassword] = useState<string>("");
+    const [institution, setInstituion] = useState<ValidInstitutions | null>(null);
 
     const handleSubmit = async (e: FormEvent) => {
         e.preventDefault();
         if (mode === "passwordReset") {
             await handlePasswordReset();
         } else {
-            onSubmit(email, password, username);
+            onSubmit(email, password, username, firstName, lastName, institution);
         }
     };
 
@@ -54,8 +56,7 @@ export default function AuthBase({ onSubmit }: AuthProps) {
         >
             {/* Name and username field — only for signup */}
 
-            <div className="grid grid-cols-2 gap-y-2 gap-x-0 place-content-center justify-items-center w-fit mx-auto">
-
+            <div className="grid sm:grid-cols-2 gap-y-2 gap-x-0 place-content-center justify-items-center w-fit mx-auto">
                 {mode === "signup" && (
                     <>
                         <InputTextForm
@@ -124,8 +125,11 @@ export default function AuthBase({ onSubmit }: AuthProps) {
                     <>
                         <SelectComponent
                             label="Choose your University:"
-                            options={ValidInstitutions}
-                            onChange={(v) => console.log(v.target.value)}
+                            options={AllowedInstitutions}
+                            value={institution as string}
+                            onChange={(v) =>
+                                setInstituion(v.target.value as ValidInstitutions)
+                            }
                         />
                     </>
                 )}

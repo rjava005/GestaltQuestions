@@ -22,6 +22,8 @@ export default function AccountPage() {
         </div>
       )}
 
+      
+
       {/* Actual Account Page */}
       {user && (
         <>

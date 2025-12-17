@@ -2,6 +2,7 @@
 from fastapi import APIRouter
 
 # --- Internal ---
+from pydantic import BaseModel
 from src.api.db_models.users import User
 from src.api.service.user_manager import UserManagerDependeny
 from src.api.core.logging import logger
@@ -19,6 +20,11 @@ from src.api.db_models.users import (
 
 router = APIRouter(prefix="/users", tags=["users"])
 initialize_firebase_app()
+
+
+class CreateUserFullPayload(BaseModel):
+    user: UserBase
+    institution: ValidInstitutions | None = None
 
 
 @router.post("/")
@@ -69,11 +75,33 @@ async def create_user(
 def create_user_full(
     user_manager: UserManagerDependeny,
     fb_token: FireBaseToken,
-    data: UserBase,
-    role: UserRoles,
-    institution: ValidInstitutions,
+    payload: CreateUserFullPayload,
+    role: UserRoles = UserRoles.STUDENT,
 ):
-    return "data"
+    try:
+        fb_uid = fb_token["uid"]
+        existing_user = user_manager.get_user_by_fb(fb_uid)
+        if existing_user:
+            logger.info(f"[DB] User already exists: {existing_user.fb_id}")
+            return existing_user
+        # Other wise create a user
+        logger.info(
+            "Creating user with email='%s' and fb_id='%s'",
+            payload.user.email,
+        )
+        payload.user.fb_id = fb_uid
+        created_user = user_manager.create_user_full(
+            payload.user, role, payload.institution
+        )
+        logger.info("User created successfully: uid='%s'", created_user.id)
+        return created_user
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"An error occured while creating the user {e}",
+        )
 
 
 @router.get("/{id}")
@@ -107,7 +135,7 @@ async def get_user(
         logger.error(f"[DB] User not found: {e}")
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
-            detail="Failed to get user",
+            detail=f"Failed to get user {e}",
         )
 
 

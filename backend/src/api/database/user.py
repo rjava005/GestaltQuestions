@@ -53,6 +53,7 @@ def create_user_full(
     institution: ValidInstitutions | None = None,
 ) -> User:
     user = create_user(data, session)
+    logger.debug(f"User created succesfully {user}")
     assert user
     user = set_user_role(user.id, role, session)
     if institution:
