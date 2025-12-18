@@ -1,7 +1,7 @@
 import { MathJaxContext } from "better-react-mathjax";
 import QuestionSettingsProvider from "./context/GeneralSettingsContext";
 import { AuthProvider } from "./context/AuthContext";
-import NavBar from "./components/NavBar/NavBar";
+import NavBar from "./features/NavBar/NavBar";
 import { ToastContainer } from "react-toastify";
 import CodeEditorProvider from "./context/CodeEditorContext";
 import { QuestionProvider } from "./context/QuestionContext";
