@@ -1,16 +1,10 @@
 import SectionContainer from "../../components/Base/SectionContainer";
 import { useState } from "react";
-import { DropDown, DropDownAdvance, type DropDownAdvanceOption } from "../../components/Generic/DropDown";
-import { TbMatrix } from "react-icons/tb";
-const ValidQuestionComponents = [
-    "pl-question-panel",
-    "pl-number-input",
-    "pl-figure",
-    "pl-solution-panel",
-    "pl-hint",
-    "pl-multiple-choice",
-    "pl-checkbox",
-];
+import { DropDownAdvance, type DropDownAdvanceOption } from "../../components/Generic/DropDown";
+
+import { ValidQuestionComponents, type QuestionComponentMeta } from "./config";
+import CodeEditorGeneric from "../../components/CodeEditor/CodeEditorGeneric";
+
 
 function Header() {
     return (
@@ -24,19 +18,28 @@ function Header() {
 }
 
 export default function QuestionPlayGroundPage() {
-    const [selectedOption, setSelectedOption] = useState<string>("");
-    const formattedOptions: DropDownAdvanceOption[] = ValidQuestionComponents.map((v) => { return { value: v, label: v, icon: TbMatrix } })
-    console.log("Formatted", formattedOptions)
+
+    const [selectedComponent, setSelectedComponent] = useState<QuestionComponentMeta>(ValidQuestionComponents[0])
+    const handleSelectComponent = (val: string) => {
+        const found = ValidQuestionComponents.find(v => v.name === val);
+        if (found) setSelectedComponent(found);
+    };
+
+    const formattedOptions: DropDownAdvanceOption[] = ValidQuestionComponents.map((v) => { return { value: v.name, label: v.label, icon: v.icon } })
     return (
         <SectionContainer id="question-playground" className="flex flex-col items-center">
             <Header />
-            <div className="w-1/2">
+            <div className="w-1/2 my-4">
                 <DropDownAdvance
                     options={formattedOptions}
-                    selected={selectedOption}
-                    setSelected={setSelectedOption}
+                    selected={selectedComponent?.name}
+                    setSelected={handleSelectComponent}
                     label="Question Component"
                 />
+            </div>
+
+            <div className="border-2 w-full ">
+                <CodeEditorGeneric value={selectedComponent.example} language="html" />
             </div>
         </SectionContainer>
     );

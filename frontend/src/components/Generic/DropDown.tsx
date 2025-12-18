@@ -90,7 +90,7 @@ export function DropDownAdvance({
         "
             >
                 <span className="flex items-center gap-2">
-                    {SelectedIcon && <SelectedIcon className="size-10" />}
+                    {SelectedIcon && <SelectedIcon className="size-8" />}
                     {selectedOption?.label}
                 </span>
                 <span className="text-slate-400">▾</span>
