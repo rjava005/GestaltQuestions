@@ -14,7 +14,7 @@ import ImageGenerator from "../CodeGenerators/ImageGenerator";
 
 // import GestaltStudio from "../Gestalt Studio/GestaltStudioPage";
 import { QuestionViewPage } from '../QuestionView/QuestionViewPage';
-
+import GestaltStudio from "../../features/gestaltStudio/GestaltStudioPage";
 
 
 export const Navigation: NavigationItem[] = [
@@ -99,14 +99,14 @@ export const Navigation: NavigationItem[] = [
         requiresAuth: true,     // Protected route
         allowedRoles: []
     },
-    // {
-    //     type: "route",
-    //     name: "Lecture Test",
-    //     href: "/lecture",
-    //     element: <GestaltStudio />,
-    //     includeNavBar: true,
-    //     requiresAuth: false,
-    //     allowedRoles: []
-    // }
+    {
+        type: "route",
+        name: "Lecture Test",
+        href: "/lecture",
+        element: <GestaltStudio />,
+        includeNavBar: true,
+        requiresAuth: false,
+        allowedRoles: []
+    }
 ];
 
