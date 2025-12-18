@@ -14,7 +14,7 @@ import ImageGenerator from "../CodeGenerators/ImageGenerator";
 
 // import GestaltStudio from "../Gestalt Studio/GestaltStudioPage";
 import { QuestionViewPage } from '../QuestionView/QuestionViewPage';
-import GestaltStudio from "../../features/gestaltStudio/GestaltStudioPage";
+import GestaltStudio from "../../features/GestaltStudio/GestaltStudioPage";
 
 
 export const Navigation: NavigationItem[] = [

@@ -1,4 +1,4 @@
-import AuthBase from "../../features/userForm/AuthBase";
+import AuthBase from "./AuthBase";
 import { toast } from "react-toastify";
 import { FirebaseError } from "firebase/app";
 import { UserAPI } from "../../services/api/backend/userAPI";

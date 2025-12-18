@@ -1,8 +1,8 @@
 import SectionContainer from "../components/Base/SectionContainer";
-import AccountPageHeader from "../features/accountPage/AccountPageHeader";
-import AccountProfilePic from "../features/accountPage/AccountProfilePic";
-import AccountInformation from "../features/accountPage/AccountInformation";
-import AccountOptions from "../features/accountPage/AccountOptions";
+import AccountPageHeader from "../features/AccountPage/AccountPageHeader";
+import AccountProfilePic from "../features/AccountPage/AccountProfilePic";
+import AccountInformation from "../features/AccountPage/AccountInformation";
+import AccountOptions from "../features/AccountPage/AccountOptions";
 import { useAuth } from "../context/AuthContext";
 
 export default function AccountPage() {

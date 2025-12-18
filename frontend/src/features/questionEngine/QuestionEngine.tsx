@@ -16,7 +16,7 @@ import { Loading } from "../../components/Base/Loading";
 import { QuestionHeader } from "./QuestionHeader";
 import { QuestionButtons } from "./QuestionButtons";
 import DisplayCorrectAnswer from "./DisplayCorrectAnswer";
-import QuestionHTMLToReact from "../../components/QuestionComponents/ParseQuestionHTML";
+import QuestionHTMLToReact from "../QuestionComponents/ParseQuestionHTML";
 
 
 

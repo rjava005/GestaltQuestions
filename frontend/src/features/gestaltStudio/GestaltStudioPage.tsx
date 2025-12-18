@@ -10,7 +10,7 @@ import rehypeStringify from "rehype-stringify";
 // UI Components
 import SectionContainer from "../../components/Base/SectionContainer";
 import MarkDownEditor from "../../components/markdownEditor/MarkdownEditor";
-import QuestionHTMLToReact from "../../components/QuestionComponents/ParseQuestionHTML";
+import QuestionHTMLToReact from "../QuestionComponents/ParseQuestionHTML";
 import { visit } from "unist-util-visit";
 // Layout
 import { Panel, PanelGroup, PanelResizeHandle } from "react-resizable-panels";

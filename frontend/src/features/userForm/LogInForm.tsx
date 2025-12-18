@@ -1,4 +1,4 @@
-import AuthBase from "../../features/userForm/AuthBase";
+import AuthBase from "./AuthBase";
 import {
   signInWithEmailAndPassword,
 } from "firebase/auth";

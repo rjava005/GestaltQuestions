@@ -6,8 +6,8 @@ import ToggleButton from "@mui/material/ToggleButton";
 import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
 
 import { TitleHeader } from "../components/Base/TitleHeader";
-import VerifyAccount from "../features/userForm/VerifyAccount";
-import { LogInForm, SignUpForm, } from "../features/userForm"
+import VerifyAccount from "../features/UserForm/VerifyAccount";
+import { LogInForm, SignUpForm, } from "../features/UserForm"
 
 // Handles wether the page is show
 type AuthenticationPageModel = {
