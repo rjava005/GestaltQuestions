@@ -34,6 +34,7 @@ export type TagRegistry = {
   "pl-derivation-container": PLDerivationProps;
   "pl-derivation-step": PLDerivationStepProps;
   "pl-multiple-choice": PLMultipleChoiceProps;
+  "pl-checkbox": PLMultipleChoiceProps;
   "pl-answer": PLAnswerProps
 };
 
@@ -49,6 +50,7 @@ export const ComponentMap: Record<
   "pl-derivation-container": PLDerivation,
   "pl-derivation-step": PLDerivationStep,
   "pl-multiple-choice": PLMultipleChoice,
+  "pl-checkbox": PLMultipleChoice,
   "pl-answer": PLAnswer
 };
 // These are the raw attributes for instance <pl-number-input answer-name='c' />
@@ -108,6 +110,12 @@ export const TagAttributeMapping: {
     "correct": attrs["correct"] === "true" ? "true" : "false"
   }),
   "pl-multiple-choice": (attrs) => ({
+    "answersName": attrs["answers-name"],
+    "inline": attrs["inline"] === "true" ? true : false,
+    "style": attrs["style"],
+    "multiple": attrs["multiple"] === "true" ? true : false
+  }),
+  "pl-checkbox": (attrs) => ({
     "answersName": attrs["answers-name"],
     "inline": attrs["inline"] === "true" ? true : false,
     "style": attrs["style"],
