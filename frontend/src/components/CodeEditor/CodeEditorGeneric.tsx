@@ -4,18 +4,17 @@ import type { editor as MonacoEditor } from "monaco-editor";
 import type { OnChange } from "@monaco-editor/react";
 import { debounce } from "lodash";
 import { useCallback } from "react";
-const languageMap: Record<string, string> = {
-    js: "javascript",
-    py: "python",
-    json: "json",
-    html: "html",
-};
+// const languageMap: Record<string, string> = {
+//     js: "javascript",
+//     py: "python",
+//     json: "json",
+//     html: "html",
+// };
 
 interface CodeEditorProps {
     value: string,
     setValue: (val: string) => void
     language: string
-
     theme?: string;
 }
 
