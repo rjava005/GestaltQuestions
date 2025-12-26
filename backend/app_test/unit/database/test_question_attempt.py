@@ -11,23 +11,15 @@ import pytest
         ({"x": 0}, {"x": 5}),
     ],
 )
-async def test_create_attempt(
-    make_user, make_question, db_session, quiz_data, submitted_answer
-):
-    user = make_user()
-    question = await make_question()
+async def test_create_attempt(quiz_data, make_submission_attempt, submitted_answer):
+    user = None
+    question = None
 
-    attempt = qa.create_attempt(
-        question_id=question.id,
-        user_id=user.id,
-        quiz_data=quiz_data,
-        submitted_answer=submitted_answer,
-        session=db_session,
-    )
+    attempt, user, question = await make_submission_attempt(quiz_data, submitted_answer, user, question)
 
     assert attempt is not None
-    assert attempt.user_id == user.id
-    assert attempt.question_id == question.id
+    assert attempt.user_id == user.id  # type: ignore
+    assert attempt.question_id == question.id  # type: ignore
     assert attempt.submitted_answer == submitted_answer
 
 
