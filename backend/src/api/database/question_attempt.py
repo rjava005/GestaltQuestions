@@ -1,6 +1,6 @@
 from .models.question_attempt import QuestionAttempt
 from uuid import UUID
-from typing import Dict, Any
+from typing import Dict, Any, Sequence
 from src.utils import convert_uuid
 from src.api.core import SessionDep
 from sqlmodel import select
@@ -29,14 +29,36 @@ def create_attempt(
     return attempt
 
 
-def get_attempt_by_user(user_id: ID, session: SessionDep):
+def get_attempt_by_user(user_id: ID, session: SessionDep) -> Sequence[QuestionAttempt]:
+    """Retrieves all the submission attempts of a user. This is a general one
+
+    Args:
+        user_id (ID): The ID of the user
+        session (SessionDep): The database session
+
+    Returns:
+        _type_: _description_
+    """
     stmt = select(QuestionAttempt).where(user_id == convert_uuid(user_id))
     results = session.exec(stmt).all()
     return results
 
 
-def get_attemps_by_question():
-    pass
+def get_attemps_by_question(
+    question_id: ID, session: SessionDep
+) -> Sequence[QuestionAttempt]:
+    stmt = select(QuestionAttempt).where(question_id == convert_uuid(question_id))
+    results = session.exec(stmt).all()
+    return results
+
+
+def get_attempt_by_user_and_question(
+    question_id: ID, user_id: ID, session: SessionDep
+) -> Sequence[QuestionAttempt]:
+    stmt = select(QuestionAttempt).where(
+        question_id == convert_uuid(question_id) and user_id == convert_uuid(user_id)
+    )
+    return session.exec(stmt).all()
 
 
 def get_latest_attemp():

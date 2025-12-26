@@ -1,63 +1,39 @@
 from src.api.database import question_attempt as qa
 import pytest
+from app_test.mock_data.question_submission import MATRIX, ATTEMPTS
 
 
 @pytest.mark.asyncio
 @pytest.mark.parametrize(
-    "quiz_data,submitted_answer",
-    [
-        ({"a": 1}, {"a": 1}),
-        ({"a": 1, "b": 2}, {"a": 2, "b": 1}),
-        ({"x": 0}, {"x": 5}),
-    ],
+    "attempt_case",
+    ATTEMPTS,
+    ids=lambda x: f"quiz={x['quiz_data']}-n={len(x['submissions'])}",
 )
-async def test_create_attempt(quiz_data, make_submission_attempt, submitted_answer):
+async def test_create_attempt(make_submission_attempt, attempt_case):
+    quiz_data = attempt_case["quiz_data"]
+    submissions = attempt_case["submissions"]
     user = None
     question = None
 
-    attempt, user, question = await make_submission_attempt(quiz_data, submitted_answer, user, question)
+    attempt, user, question = await make_submission_attempt(
+        quiz_data, submissions[0], user, question
+    )
 
     assert attempt is not None
     assert attempt.user_id == user.id  # type: ignore
     assert attempt.question_id == question.id  # type: ignore
-    assert attempt.submitted_answer == submitted_answer
+    assert attempt.submitted_answer == submissions[0]
 
 
 @pytest.mark.asyncio
 @pytest.mark.parametrize(
-    "quiz_data,submissions",
-    [
-        (
-            {"a": 1},
-            [
-                {"a": 1},  # correct
-                {"a": 3},  # incorrect
-                {"a": 0},  # edge case
-            ],
-        ),
-        (
-            {"a": 1, "b": 2},
-            [
-                {"a": 1, "b": 2},  # correct
-                {"a": 2, "b": 1},  # swapped
-                {"a": 1},  # partial
-            ],
-        ),
-        (
-            {"x": 0},
-            [
-                {"x": 0},  # correct
-                {"x": 1},  # incorrect
-                {},  # empty submission
-            ],
-        ),
-    ],
+    "attempt_case",
+    ATTEMPTS,
+    ids=lambda x: f"quiz={x['quiz_data']}-n={len(x['submissions'])}",
 )
-async def test_multiple_attempts(
-    make_submission_attempt,
-    quiz_data,
-    submissions,
-):
+async def test_multiple_attempts(make_submission_attempt, attempt_case):
+    quiz_data = attempt_case["quiz_data"]
+    submissions = attempt_case["submissions"]
     user = None
     question = None
     results = []
@@ -79,3 +55,62 @@ async def test_multiple_attempts(
     for a in results:
         assert a.question_id == question.id  # type: ignore
         assert a.user_id == user.id  # type: ignore
+
+
+@pytest.mark.asyncio
+@pytest.mark.parametrize(
+    "attempt_case",
+    ATTEMPTS,
+    ids=lambda x: f"quiz={x['quiz_data']}-n={len(x['submissions'])}",
+)
+async def test_get_attempts_by_user(make_submission_attempt, attempt_case, db_session):
+    quiz_data = attempt_case["quiz_data"]
+    submissions = attempt_case["submissions"]
+    user = None
+    question = None
+    results = []
+
+    for s in submissions:
+        attempt, user, question = await make_submission_attempt(
+            quiz_data=quiz_data,
+            submission=s,
+            user=user,
+            question=question,
+        )
+        results.append(attempt)
+    attempts = qa.get_attempt_by_user(user.id, db_session)  # type: ignore
+    assert len(attempts) == len(submissions)
+    assert all([a.user_id == user.id for a in attempts])  # type: ignore
+
+
+@pytest.mark.asyncio
+@pytest.mark.parametrize(
+    "attempt_case",
+    ATTEMPTS,
+    ids=lambda x: f"quiz={x['quiz_data']}-n={len(x['submissions'])}",
+)
+async def test_get_attempts_by_question(
+    make_submission_attempt, attempt_case, db_session
+):
+    user = None
+    question = None
+    results = []
+    quiz_data = attempt_case["quiz_data"]
+    submissions = attempt_case["submissions"]
+    for s in submissions:
+        attempt, user, question = await make_submission_attempt(
+            quiz_data=quiz_data,
+            submission=s,
+            user=user,
+            question=question,
+        )
+        results.append(attempt)
+    attempts = qa.get_attemps_by_question(question.id, db_session)  # type: ignore
+
+    assert all(a.question_id == question.id for a in attempts)  # type: ignore
+
+
+@pytest.mark.asyncio
+@pytest.mark.parametrize("scenario", MATRIX)
+async def test_student_question_scenarios(scenario):
+    print("This is the scenario", scenario)
