@@ -17,6 +17,6 @@ USERS = [
 
 
 USER_GROUPS = [
-    {"name": "single_student", "users": USERS[0]},
-    {"name": "two_students", "users": USERS},
+    {"case": "single_user", "users": [USERS[0]]},
+    {"case": "multiple_users", "users": USERS},
 ]

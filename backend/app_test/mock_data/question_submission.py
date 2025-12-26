@@ -1,6 +1,6 @@
 import itertools
 from .users import USER_GROUPS
-from .questions import QUESTIONS
+from .questions import QUESTION_GROUPS
 
 ATTEMPTS = [
     {"quiz_data": {"a": 1}, "submissions": [{"a": 0}, {"a": 20}]},
@@ -8,8 +8,22 @@ ATTEMPTS = [
     {"quiz_data": {"a": 1, "b": 2}, "submissions": [{"a": 1}, {"a": 2, "b": 1}, {}]},
 ]
 
-MATRIX = list(itertools.product(USER_GROUPS, QUESTIONS, ATTEMPTS))
 
+SCENARIOS = [
+    {
+        "users": users,
+        "questions": questions,
+        "attempts": attempts,
+    }
+    for users, questions, attempts in itertools.product(
+        USER_GROUPS,
+        QUESTION_GROUPS,
+        ATTEMPTS,
+    )
+]
 
 if __name__ == "__main__":
-    print(MATRIX)
+    from pprint import pprint
+
+    pprint(SCENARIOS)
+    print(len(SCENARIOS))

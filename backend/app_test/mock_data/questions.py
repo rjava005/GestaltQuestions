@@ -11,3 +11,8 @@ QUESTIONS = [
     },
 ]
 
+
+QUESTION_GROUPS = [
+    {"case": "single_question", "questions": [QUESTIONS[0]]},
+    {"case": "multiple_questions", "questions": QUESTIONS},
+]

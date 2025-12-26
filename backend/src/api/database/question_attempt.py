@@ -3,7 +3,7 @@ from uuid import UUID
 from typing import Dict, Any, Sequence
 from src.utils import convert_uuid
 from src.api.core import SessionDep
-from sqlmodel import select
+from sqlmodel import select, desc
 
 
 ID = str | UUID
@@ -62,4 +62,12 @@ def get_attempt_by_user_and_question(
 
 
 def get_latest_attemp():
-    pass
+    stmt = (
+        select(QuestionAttempt)
+        .where(
+            question_id == convert_uuid(question_id)
+            and user_id == convert_uuid(user_id)
+        )
+        .order_by(desc(QuestionAttempt.attemption_time))
+    )
+    return session.exec(stmt).all()
