@@ -12,32 +12,32 @@ from src.api.database.models.users import (
 
 
 def test_user_create(make_user):
-    user = make_user
+    user = make_user()
     user.role
     assert user
 
 
 def test_get_user(make_user, db_session):
-    cuser = make_user
+    cuser = make_user()
     ruser = user_db.get_user(cuser.id, db_session)
     assert ruser
     assert cuser == ruser
 
 
 def test_get_user_by_email(make_user, user_data, db_session):
-    cuser = make_user
+    cuser = make_user()
     ruser = user_db.get_user_by_email(user_data.email, db_session)
     assert cuser == ruser
 
 
 def test_get_user_by_fb(make_user, user_data, db_session):
-    cuser = make_user
+    cuser = make_user()
     ruser = user_db.get_user_by_fb(user_data.fb_id, db_session)
     assert cuser == ruser
 
 
 def test_delete_user(make_user, db_session):
-    cuser = make_user
+    cuser = make_user()
     user_db.delete_user(cuser.id, db_session)
     ruser = user_db.get_user(cuser.id, db_session)
     assert ruser is None
