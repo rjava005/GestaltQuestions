@@ -13,11 +13,11 @@ from src.utils import to_serializable
 from src.api.core import logger
 from src.api.dependencies import StorageType, StorageTypeDep
 from src.api.db_models.question import QuestionData,Question
-from src.api.models.models import FileData
+from src.api.response_models.models import FileData
 from src.api.service.question_manager import QuestionManager, QuestionManagerDependency
 from src.api.service.storage_manager import StorageDependency, StorageService
 from src.utils import safe_dir_name
-from src.api.models.models import (
+from src.api.response_models.models import (
     FileData,
     SuccessFileResponse,
     SuccessDataResponse,

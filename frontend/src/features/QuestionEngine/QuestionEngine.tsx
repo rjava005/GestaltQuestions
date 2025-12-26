@@ -17,12 +17,16 @@ import { QuestionHeader } from "./QuestionHeader";
 import { QuestionButtons } from "./QuestionButtons";
 import DisplayCorrectAnswer from "./DisplayCorrectAnswer";
 import QuestionHTMLToReact from "../QuestionComponents/ParseQuestionHTML";
+import { getIdToken } from "firebase/auth";
+import { UserAPI } from "../../services/api/backend/userAPI";
 
+import { useAuth } from "../../context/AuthContext";
 
 
 export default function QuestionEngine() {
   const { questionMeta: qdata } = useQuestionContext();
   const { answers, setSolution, setShowSolution } = useQuestionRuntime();
+  const {user} = useAuth()
 
   const [formattedQuestion, setFormattedQuestion] = useState<string>("");
   const [isSubmitted, setIsSubmitted] = useState(false);
@@ -54,8 +58,15 @@ export default function QuestionEngine() {
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
+
     console.log("Saving the question answers", answers);
-    const data = await api.post("/run_server/submit", answers)
+    const token = await getIdToken(user)
+
+    const data = await api.post("/run_server/submit", answers, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
     console.log("This is the response", data)
     setIsSubmitted(true);
   };
@@ -69,6 +80,9 @@ export default function QuestionEngine() {
     return <Error error={`Failed to get question data: ${adaptiveError ?? ""}`} />;
   }
   if (pLoading) return <Loading />;
+
+
+  console.log("My Answers", answers)
 
   return (
     <>
@@ -84,6 +98,8 @@ export default function QuestionEngine() {
           showSolution={() => setShowSolution((prev) => !prev)}
         />
       </form>
+
+      <div>My Answers{ }</div>
 
       {isSubmitted && (
         <div className="w-full flex justify-center flex-col items-center mb-10">

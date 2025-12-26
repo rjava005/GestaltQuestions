@@ -7,6 +7,8 @@ from pydantic import ValidationError
 import json
 from starlette import status
 from typing import Dict, Any
+from src.api.service.user_manager import UserManagerDependeny
+from src.api.dependencies import FireBaseToken
 
 # Third-party libraries
 from fastapi import APIRouter, HTTPException
@@ -153,6 +155,13 @@ async def run_server(
 
 
 @router.post("/submit")
-async def submit_answers(data: Dict[str, Any]):
+async def submit_answers(
+    data: Dict[str, Any],
+    user_manager: UserManagerDependeny,
+    token: FireBaseToken,
+):
     logger.info("Got quiz data", data)
-    return {"status": "okay"}
+    user = user_manager.get_user_by_fb(token["uid"])
+    logger.info("User submitted answer %s", user.username)
+
+    return {"status": data}

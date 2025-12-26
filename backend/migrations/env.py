@@ -25,7 +25,7 @@ import os
 # access to the values within the .ini file in use.
 config = context.config
 
-from src.api.database.database import DATABASE_URL
+from src.api.core.database import DATABASE_URL
 
 config.set_main_option("sqlalchemy.url", DATABASE_URL)
 

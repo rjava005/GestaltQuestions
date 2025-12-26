@@ -8,9 +8,9 @@ from sqlmodel import Session, create_engine
 from app_test.fixtures.fixture_crud import *
 from src.api.core import logger, in_test_ctx
 from src.api.core.config import get_settings
-from src.api.database.database import Base, get_session
+from src.api.core.database import Base, get_session
 from src.api.main import get_application
-from src.api.models import FileData
+from src.api.response_models import FileData
 from src.storage.base import StorageService
 from src.api.service.question_manager import (
     QuestionManager,
@@ -19,7 +19,7 @@ from src.api.service.question_manager import (
 from src.api.service.storage_manager import (
     get_storage_manager,
 )
-from src.api.initialize_firebase import initialize_firebase_app
+from src.api.core.firebase import initialize_firebase_app
 from src.storage.firebase_storage import FirebaseStorage
 from src.storage.local_storage import LocalStorageService
 from src.api.service.question_resource import (

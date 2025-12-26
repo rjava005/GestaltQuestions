@@ -9,7 +9,7 @@ from src.api.core.logging import logger
 from src.api.dependencies import FireBaseToken
 from fastapi import HTTPException
 from starlette import status
-from src.api.initialize_firebase import initialize_firebase_app
+from src.api.core.firebase import initialize_firebase_app
 from src.api.db_models.users import (
     User,
     UserBase,

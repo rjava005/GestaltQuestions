@@ -4,7 +4,7 @@ from src.api.core import logger
 from fastapi import Depends, HTTPException
 from starlette import status
 
-from src.api.database.database import SessionDep
+from src.api.core.database import SessionDep
 from src.api.database import user as udb
 from src.api.db_models.users import (
     User,

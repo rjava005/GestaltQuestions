@@ -12,9 +12,9 @@ from pathlib import Path
 
 # --- Internal ---
 from src.api.core import logger
-from src.api.database.database import SessionDep
-from src.api.database import generic_db as gdb
-from src.api.database.generic_db import filter_conditional
+from src.api.core.database import SessionDep
+from src.api.database import generic as gdb
+from src.api.database.generic import filter_conditional
 from src.api.db_models.question import Question
 from src.api.db_models.question import QuestionMeta, QuestionData
 from src.utils import convert_uuid

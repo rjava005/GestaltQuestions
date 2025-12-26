@@ -1,6 +1,6 @@
-from src.api.database.database import SessionDep
+from src.api.core.database import SessionDep
 from src.api.db_models.question import Language, QuestionType, Topic
-from src.api.database.generic_db import create_or_resolve
+from src.api.database.generic import create_or_resolve
 
 
 def create_qtype(name: str, session: SessionDep) -> QuestionType:

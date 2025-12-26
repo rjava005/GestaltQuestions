@@ -5,7 +5,7 @@ import pytest_asyncio
 
 from src.api.core import logger
 from src.utils import *
-from src.api.models import (
+from src.api.response_models import (
     SuccessFileResponse,
     SuccessDataResponse,
 )

@@ -14,7 +14,7 @@ from src.api.db_models.question import Question, QuestionData
 from src.api.service.question_manager import (
     QuestionManagerDependency,
 )
-from src.api.models.sync_models import (
+from src.api.response_models.sync_models import (
     UnsyncedQuestion,
     SyncMetrics,
     FolderCheckMetrics,

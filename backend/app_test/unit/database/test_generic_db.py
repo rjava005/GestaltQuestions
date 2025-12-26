@@ -1,5 +1,5 @@
 from src.api.db_models.question import Question
-from src.api.database import generic_db as gdb
+from src.api.database import generic as gdb
 import pytest
 from src.api.db_models.question import Topic, Language, QuestionType
 

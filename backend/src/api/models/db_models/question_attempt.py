@@ -30,8 +30,11 @@ class QuestionAttempt(SQLModel, table=True):
     user_id: UUID | None = SQLField(
         default=None, foreign_key="user.id", primary_key=True
     )
-    quiz_data: QuizData = SQLField(sa_column=Column(JSON, nullable=False))
+    quiz_data: QuizData | Dict[str, Any] = SQLField(
+        sa_column=Column(JSON, nullable=False)
+    )
     submitted_answer: Dict[str, Any] = SQLField(sa_column=Column(JSON, nullable=False))
+    is_correct: bool = False
     attemption_time: datetime = SQLField(
         sa_column=Column(
             DateTime(timezone=True), server_default=func.now(), nullable=False
