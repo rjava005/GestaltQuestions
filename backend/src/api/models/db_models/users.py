@@ -11,6 +11,7 @@ from .hybrid import QuestionOwnership
 
 if TYPE_CHECKING:
     from .question import Question
+    from .institution import ValidInstitutions, Institution
 
 
 class UserRoles(str, Enum):
@@ -20,27 +21,12 @@ class UserRoles(str, Enum):
     STUDENT = "student"
 
 
-# Defines the institution that they belong to
-class ValidInstitutions(str, Enum):
-    UCR = "University of California, Riverside"
-    CPP = "California State Polytechnic University, Pomona"
-    NORCO = "Norco College"
-
-
 # Create a link between a user a many to many relationship
 class UserRoleLink(SQLModel, table=True):
     __tablename__ = "user_role_link"  # type: ignore
     role_id: UUID | None = Field(default=None, foreign_key="role.id", primary_key=True)
     # References the user.id column
     user_id: UUID | None = Field(default=None, foreign_key="user.id", primary_key=True)
-
-
-class Institution(SQLModel, table=True):
-    id: UUID = Field(default_factory=uuid4, primary_key=True)
-    name: ValidInstitutions
-    description: str | None = None
-
-    users: List["User"] = Relationship(back_populates="institution")
 
 
 # Role table
@@ -64,7 +50,7 @@ class User(SQLModel, table=True):
     # Define the relationship
     role: "Role" = Relationship(back_populates="users", link_model=UserRoleLink)
     institution_id: Optional[UUID] = Field(default=None, foreign_key="institution.id")
-    institution: Institution | None = Relationship(back_populates="users")
+    institution: Optional["Institution"] = Relationship(back_populates="users")
 
     # Relationship to questions
     created_questions: List["Question"] = Relationship(
