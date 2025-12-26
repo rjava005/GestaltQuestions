@@ -26,7 +26,7 @@ from src.api.response_models import (
     SuccessDataResponse,
     SuccessFileResponse,
 )
-from src.api.db_models.question import Question,QuestionData
+from src.api.database.question import Question,QuestionData
 from src.api.service.file_service import FileServiceDep, FileService
 from src.api.service.question_manager import QuestionManagerDependency
 from src.api.service.question_resource import QuestionResourceDepencency

@@ -1,11 +1,6 @@
-from typing import List, Sequence
-
-from src.api.db_models.question import Question
-from src.api.db_models import *
-from typing import Literal
+from typing import Sequence, Literal
 from pydantic import BaseModel
-
-from typing import Sequence
+from src.api.database.models.question import Question
 
 
 SyncStatus = Literal[

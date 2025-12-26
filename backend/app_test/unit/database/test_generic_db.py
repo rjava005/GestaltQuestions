@@ -1,7 +1,6 @@
-from src.api.db_models.question import Question
+from src.api.database.models.question import Question, Topic, Language, QuestionType
 from src.api.database import generic as gdb
 import pytest
-from src.api.db_models.question import Topic, Language, QuestionType
 
 # def test_get_all_model_relationships():
 #     question_relationships = ["topics", "languages", "qtypes"]

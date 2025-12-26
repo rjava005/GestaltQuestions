@@ -1,5 +1,5 @@
 import pytest
-from src.api.db_models.question import QuestionBase
+from src.api.database.models.question import QuestionBase
 
 
 @pytest.fixture

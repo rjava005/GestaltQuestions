@@ -1,8 +1,7 @@
 from src.api.database import question as qdb
 import pytest
-from src.api.db_models.question import Question
+from src.api.database.models.question import Question, QuestionData, QuestionMeta
 from src.api.core.logging import logger
-from src.api.db_models.question import QuestionData, QuestionMeta
 
 
 # ----------------------

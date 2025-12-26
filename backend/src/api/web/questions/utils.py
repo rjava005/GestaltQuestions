@@ -2,14 +2,11 @@
 from typing import Optional
 
 # --- Third-Party ---
-from fastapi import UploadFile, HTTPException
 
 # --- Internal ---
 from src.api.core.config import get_settings
 from src.api.core import logger
-from src.api.db_models.models import Question
-from src.api.db_models import *
-from src.api.service.file_service import FileService
+from src.api.database.models.question import Question
 from src.utils import serialized_to_dict
 
 app_settings = get_settings()
@@ -32,5 +29,3 @@ def parse_question_payload(
 #     await f.seek(0)
 #     fd = FileData(filename=str(f.filename), content=content)
 #     return fd
-
-

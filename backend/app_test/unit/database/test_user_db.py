@@ -3,7 +3,12 @@ import src.api.database.user as user_db
 import src.api.database.role as role_db
 import src.api.database.institution as instituion_db
 import src.api.database.question as question_db
-from src.api.db_models.users import UserRoles, UserBase, UserUpdate, ValidInstitutions
+from src.api.database.models.users import (
+    UserRoles,
+    UserBase,
+    UserUpdate,
+    ValidInstitutions,
+)
 
 
 @pytest.fixture
@@ -132,7 +137,7 @@ def test_create_user_full(user_data, institution, role, db_session):
         inst = instituion_db.create_institution(db_session, institution)
         assert inst
     r = role_db.create_role(db_session, role, "")
-    
+
     assert r
     user = user_db.create_user_full(user_data, db_session, role, institution)
     print("This is the created user ", user)

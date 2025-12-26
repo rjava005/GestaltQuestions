@@ -18,7 +18,7 @@ def initialize_firebase_app():
             cred = json.loads(app_settings.FIREBASE_CRED)
         else:
             root_path = Path(__file__).parents[2]
-            cred = (root_path / app_settings.FIREBASE_CRED).resolve()
+            cred = (root_path.parent / app_settings.FIREBASE_CRED).resolve()
     except Exception as e:
         raise ValueError(f"There was an error loading credentials {str(e)}")
 

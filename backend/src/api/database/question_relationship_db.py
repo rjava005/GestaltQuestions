@@ -1,5 +1,5 @@
 from src.api.core.database import SessionDep
-from src.api.db_models.question import Language, QuestionType, Topic
+from src.api.database.models.question import Language, QuestionType, Topic
 from src.api.database.generic import create_or_resolve
 
 

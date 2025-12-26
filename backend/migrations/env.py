@@ -15,9 +15,9 @@ from src.api.db_models.question import (
     Language,
     QuestionType,
 )
-from src.api.db_models.users import Institution, UserRoleLink, User, Role
-from src.api.db_models.hybrid import QuestionOwnership, QuestionReview
-from src.api.db_models.question_attempt import QuestionAttempt
+from src.api.database.models.users import Institution, UserRoleLink, User, Role
+from src.api.database.models.hybrid import QuestionOwnership, QuestionReview
+from src.api.database.models.question_attempt import QuestionAttempt
 from src.api.core.config import AppSettings
 import os
 

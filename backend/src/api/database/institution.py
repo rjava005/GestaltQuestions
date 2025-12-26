@@ -5,7 +5,7 @@ from sqlmodel import select
 
 from src.api.core import logger
 from src.api.core.database import SessionDep
-from src.api.models.models.institution import ValidInstitutions, Institution
+from .models.institution import ValidInstitutions, Institution
 
 
 def seed_institution(session: SessionDep):

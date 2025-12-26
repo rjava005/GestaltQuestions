@@ -6,7 +6,7 @@ from starlette import status
 
 from src.api.core.database import SessionDep
 from src.api.database import user as udb
-from src.api.db_models.users import (
+from src.api.database.models.users import (
     User,
     UserBase,
     UserRoles,

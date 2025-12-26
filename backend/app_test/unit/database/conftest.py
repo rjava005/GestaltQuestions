@@ -1,6 +1,6 @@
 import pytest
 from src.api.database import question as qdb
-from src.api.db_models.question import QuestionData
+from src.api.database.models.question import QuestionData
 
 @pytest.fixture
 def combined_payload(question_payload, question_payload_2):

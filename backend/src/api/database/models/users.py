@@ -8,6 +8,7 @@ from sqlalchemy import Enum as SAEnum, Column
 from sqlmodel import Field, SQLModel, Relationship
 from pydantic import BaseModel
 from .hybrid import QuestionOwnership
+from .institution import ValidInstitutions
 
 if TYPE_CHECKING:
     from .question import Question

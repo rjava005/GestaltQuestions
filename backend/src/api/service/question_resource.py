@@ -12,7 +12,7 @@ from src.utils import to_serializable
 # --- Internal ---
 from src.api.core import logger
 from src.api.dependencies import StorageType, StorageTypeDep
-from src.api.db_models.question import QuestionData,Question
+from src.api.database.models.question import QuestionData,Question
 from src.api.response_models.models import FileData
 from src.api.service.question_manager import QuestionManager, QuestionManagerDependency
 from src.api.service.storage_manager import StorageDependency, StorageService
