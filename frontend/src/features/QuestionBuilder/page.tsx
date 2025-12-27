@@ -12,7 +12,7 @@ import CodeEditorBase from "../../components/CodeEditor/CodeEditorBase";
 
 import QuestionBuilderHeader from "./Header";
 import { QuestionEditorSections } from "./QuestionEditorSections";
-import QuestionBuilderSideBar from "./SideBar";
+import QuestionBuilderSideBar from "./QuestionBuilderSideBar";
 
 const Mockdata = {
   title: "Adding 2 Numbers",

@@ -1,5 +1,4 @@
 import React, { createContext, useContext, useState } from "react";
-import { CodeEditorContex } from "../../context/CodeEditorContext";
 
 
 export type QuestionBuilderSection =
@@ -25,7 +24,7 @@ type QuestionBuilderContext = {
 
 export const QuestionBuilderContext = createContext<QuestionBuilderContext>({
   section: "question",
-  setSection: () => {},
+  setSection: () => { },
 });
 
 const QuestionBuilderProvider = ({
@@ -49,7 +48,7 @@ const QuestionBuilderProvider = ({
 export default QuestionBuilderProvider;
 
 export function useQuestionBuildingContext() {
-  const context = useContext(CodeEditorContex);
+  const context = useContext(QuestionBuilderContext);
   if (context === undefined) {
     throw new Error(
       "useSelectedQuestion must be used within a SelectedQuestionProvider"
