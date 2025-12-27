@@ -12,7 +12,7 @@ import CodeEditorBase from "../../components/CodeEditor/CodeEditorBase";
 
 import QuestionBuilderHeader from "./Header";
 import { QuestionEditorSections } from "./QuestionEditorSections";
-import SideBar from "./SideBar";
+import QuestionBuilderSideBar from "./SideBar";
 
 const Mockdata = {
   title: "Adding 2 Numbers",
@@ -75,7 +75,7 @@ export default function QuestionBuilder() {
               maxSize={22}
               className="bg-white border-r"
             >
-              <SideBar />
+              <QuestionBuilderSideBar />
             </Panel>
 
             <PanelResizeHandle className="group w-[3px] bg-transparent hover:bg-blue-400 transition cursor-col-resize" />
