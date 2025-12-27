@@ -13,18 +13,20 @@ import CodeEditorBase from "../../components/CodeEditor/CodeEditorBase";
 import QuestionBuilderHeader from "./Header";
 import { QuestionEditorSections } from "./QuestionEditorSections";
 import QuestionBuilderSideBar from "./QuestionBuilderSideBar";
+import { useQuestionBuildingContext } from "./QuestionBuilderContext";
 
 const Mockdata = {
   title: "Adding 2 Numbers",
 };
 
 function MainContent() {
+  const { section } = useQuestionBuildingContext();
   return (
     <div className="flex flex-col">
       <QuestionBuilderHeader title={Mockdata.title} />
       <QuestionEditorSections />
       <div className="w-full h-8/10">
-        <CodeEditorBase />
+        {section === "code" ? <CodeEditorBase /> : <div>{section}</div>}
       </div>
     </div>
   );
@@ -56,11 +58,6 @@ export default function QuestionBuilder() {
           <h1 className="text-lg font-semibold text-slate-800">
             Question Builder
           </h1>
-        </div>
-
-        {/* Right-side actions (future) */}
-        <div className="flex items-center gap-2">
-          {/* Save / Preview / Publish */}
         </div>
       </div>
 
