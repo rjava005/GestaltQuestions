@@ -6,7 +6,7 @@ import type { NavigationItem } from "../../types/navbarTypes";
 import Home from "../../pages/Home";
 // import ChatPage from "../ChatUI/ChatPage";
 import AccountPage from "../../pages/AccountPage";
-
+import QuestionBuilder from "../QuestionBuilder/page";
 
 // Generators
 import TextGenerator from "../../components/CodeGenerators/TextGenerator";
@@ -117,6 +117,16 @@ export const Navigation: NavigationItem[] = [
         includeNavBar: true,
         requiresAuth: false,
         allowedRoles: []
-    }
+    },
+    {
+        type: "route",
+        name: "Question Builder",
+        href: "/question_builder",
+        element: <QuestionBuilder />,
+        includeNavBar: true,
+        requiresAuth: false,
+        allowedRoles: []
+    },
+
 ];
 

@@ -20,6 +20,7 @@ import { useAuth } from "../../context/AuthContext";
 import { handleRoutes } from "./Routes";
 import { canAccessRoute } from "./utils";
 import type { NavigationItem } from "../../types/navbarTypes";
+import { DarkModeToggle } from "../DarkModeToggle/DarkModeToggle";
 
 function DropDownNav({ nav }: { nav: NavigationItem }) {
   if (nav.type !== "dropdown") return;
@@ -95,6 +96,7 @@ function NavBar() {
 
               {/* Right-side buttons */}
               <div className="ml-auto flex items-center text-white space-x-4">
+                <DarkModeToggle />
                 {user ? (
                   <>
                     <button

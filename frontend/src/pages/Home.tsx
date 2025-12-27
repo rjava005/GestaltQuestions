@@ -13,7 +13,7 @@ function Hero() {
             <div className="text-center space-y-6 px-6 max-w-3xl mx-auto py-20">
                 {/* Title */}
                 <h1 className="font-extrabold text-4xl sm:text-6xl text-gray-900 dark:text-white">
-                    Gestalt Questions 
+                    Gestalt Questions
                 </h1>
 
                 <hr className="border-primary-yellow dark:border-primary-yellow/70 w-24 mx-auto" />

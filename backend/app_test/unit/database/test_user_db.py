@@ -2,7 +2,7 @@ import pytest
 import src.api.database.user as user_db
 import src.api.database.role as role_db
 import src.api.database.institution as instituion_db
-import src.api.database.question as question_db
+from app_test.mock_data import USERS
 from src.api.core import logger
 from src.api.database.models.users import (
     UserRoles,
@@ -57,7 +57,7 @@ def test_update_user(make_user, db_session):
 
 @pytest.mark.asyncio
 async def test_set_user_question(make_user, make_question, db_session):
-    qcreated = make_question()
+    qcreated = await make_question()
     user = make_user()
     user_db.set_user_created_questions(user.id, qcreated, db_session)
     result = user_db.get_user_created_questions(make_user.id, db_session)
@@ -68,7 +68,7 @@ async def test_set_user_question(make_user, make_question, db_session):
 async def test_set_user_questions(make_user, make_question, db_session):
     user = make_user()
     for _ in range(3):
-        qcreated = make_question()
+        qcreated = await make_question()
         user_db.set_user_created_questions(user.id, qcreated, db_session)
     result = user_db.get_user_created_questions(user.id, db_session)
 
@@ -111,7 +111,8 @@ def test_set_user_institution(make_user, institution, db_session):
 @pytest.mark.parametrize(
     "role", [UserRoles.ADMIN, UserRoles.DEVELOPER, UserRoles.STUDENT, UserRoles.TEACHER]
 )
-def test_make_user_full(user_data, institution, role, db_session):
+@pytest.mark.parametrize("user_data", USERS)
+def test_make_user_full(institution, role, user_data, db_session):
     # Create the institution and role
     if institution:
         inst = instituion_db.create_institution(db_session, institution)

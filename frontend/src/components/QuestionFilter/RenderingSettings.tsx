@@ -5,7 +5,7 @@ import ToggleButton from "@mui/material/ToggleButton";
 import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
 import { CiCircleInfo } from "react-icons/ci";
 import { useToggleButtonSx } from "../../styles/ToggleButtonStyles";
-import { useTheme } from "../Generic/DarkModeToggle";
+import { useTheme } from "../../features/DarkModeToggle/DarkModeToggle";
 
 
 type RenderingSettingsProps = {

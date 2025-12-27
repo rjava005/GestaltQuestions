@@ -12,7 +12,7 @@ import {
 import { QuestionRow } from "./QuestionRow";
 
 import { tableHeaderSx } from "../../styles/tableHeaderSx";
-import { useTheme } from "../Generic/DarkModeToggle";
+import { useTheme } from "../../features/DarkModeToggle/DarkModeToggle";
 import { useQuestionContext } from "../../context/QuestionContext";
 
 import { ValidTableCol } from "./tableConfig";

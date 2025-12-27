@@ -1,4 +1,4 @@
-from typing import Optional, Sequence
+from typing import Optional, Sequence, Dict
 from uuid import UUID
 
 from sqlalchemy.exc import SQLAlchemyError
@@ -14,6 +14,7 @@ from src.api.database.models.users import (
     UserUpdate,
     ValidInstitutions,
 )
+from pydantic import ValidationError
 from src.utils import convert_uuid
 
 from .role import get_role
@@ -21,11 +22,20 @@ from .institution import get_institution
 
 
 def create_user(
-    data: UserBase,
+    data: UserBase | Dict[str, str],
     session: SessionDep,
 ) -> Optional[User]:
 
+    # Try to convert
     try:
+        if isinstance(data, dict):
+            data = UserBase.model_validate(data)
+    except ValidationError as e:
+        logger.error("Validation error for user %s", e)
+        raise
+
+    try:
+
         user = User(
             fb_id=data.fb_id,
             first_name=data.first_name,

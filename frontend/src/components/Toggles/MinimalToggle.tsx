@@ -1,7 +1,7 @@
 import { ToggleButton, ToggleButtonGroup } from "@mui/material";
 import { IoLockClosedOutline } from "react-icons/io5";
 import { IoLockOpenOutline } from "react-icons/io5";
-import { useTheme } from "../Generic/DarkModeToggle";
+import { useTheme } from "../../features/DarkModeToggle/DarkModeToggle";
 import { useToggleButtonSx } from "../../styles/ToggleButtonStyles";
 import { genericIconColor } from './../../styles/IconStyles';
 import type { ViewMode } from "../../types/settingsType";
@@ -11,8 +11,8 @@ type MinimalToggleProps = {
     onChange: (mode: ViewMode) => void
 }
 export function MinimalToggle({ viewMode, onChange }: MinimalToggleProps) {
-    const [theme] = useTheme(); 
-    const sx = useToggleButtonSx(theme); 
+    const [theme] = useTheme();
+    const sx = useToggleButtonSx(theme);
 
     const handleViewChange = (
         _event: React.MouseEvent<HTMLElement>,

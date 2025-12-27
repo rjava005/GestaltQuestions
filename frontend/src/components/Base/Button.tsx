@@ -1,5 +1,6 @@
 import clsx from "clsx";
 import React from "react";
+import type { IconType } from "react-icons";
 
 //
 // TYPES
@@ -65,6 +66,7 @@ export type MyButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> & {
   name: string;
   color?: ButtonColor;
   size?: ButtonSize;
+  icon?: IconType
 };
 
 //
@@ -77,6 +79,7 @@ export const MyButton = ({
   size = "md",
   className,
   disabled,
+  icon: Icon,
   ...rest
 }: MyButtonProps) => {
   return (
@@ -91,7 +94,7 @@ export const MyButton = ({
       )}
       {...rest} // <-- inherits all button attributes (type, onClick, etc)
     >
-      {name}
+      {Icon && <Icon className="w-5 h-5" />} {name}
     </button>
   );
 };

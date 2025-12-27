@@ -26,7 +26,7 @@ import { useAuth } from "../../context/AuthContext";
 export default function QuestionEngine() {
   const { questionMeta: qdata } = useQuestionContext();
   const { answers, setSolution, setShowSolution } = useQuestionRuntime();
-  const {user} = useAuth()
+  const { user } = useAuth()
 
   const [formattedQuestion, setFormattedQuestion] = useState<string>("");
   const [isSubmitted, setIsSubmitted] = useState(false);
