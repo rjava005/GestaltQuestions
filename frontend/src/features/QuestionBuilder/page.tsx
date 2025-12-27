@@ -1,5 +1,5 @@
 import { useState } from "react";
-
+import AllQuestions from "../QuestionLibrary/AllQuestions";
 import { Panel, PanelGroup, PanelResizeHandle } from "react-resizable-panels";
 
 import {
@@ -14,6 +14,7 @@ import QuestionBuilderHeader from "./Header";
 import { QuestionEditorSections } from "./QuestionEditorSections";
 import QuestionBuilderSideBar from "./QuestionBuilderSideBar";
 import { useQuestionBuildingContext } from "./QuestionBuilderContext";
+import { useQuestionCollectionContext } from "./QuestionCollectionContext";
 
 const Mockdata = {
   title: "Adding 2 Numbers",
@@ -34,6 +35,8 @@ function MainContent() {
 
 export default function QuestionBuilder() {
   const [showDashboard, setShowDashboard] = useState(true);
+  const { filter } = useQuestionCollectionContext();
+  console.log("Curring Filter", filter);
 
   return (
     <SectionContainer
@@ -82,7 +85,13 @@ export default function QuestionBuilder() {
         {/* Main Content */}
         <Panel className="bg-slate-50" defaultSize={22} minSize={18}>
           <div className="p-6 max-w-[1400px] mx-auto">
-            <MainContent />
+            {filter === "current" ? (
+              <MainContent />
+            ) : filter === "all" ? (
+              <AllQuestions />
+            ) : (
+              <div>{filter}</div>
+            )}
           </div>
         </Panel>
       </PanelGroup>
