@@ -4,14 +4,19 @@ import SectionContainer from "../../components/Base/SectionContainer";
 import SideBar from "./SideBar";
 import { TbLayoutSidebarRightCollapseFilled } from "react-icons/tb";
 import { TbLayoutSidebarRightExpandFilled } from "react-icons/tb";
+import QuestionBuilderHeader from "./Header";
 
+const Mockdata = {
+    title: "Adding 2 Numbers"
+}
 function MainContent() {
     return (
-        <div>
-            <h1 className="">Some Content</h1>
+        <div className="flex flex-col">
+            <QuestionBuilderHeader title={Mockdata.title} />
         </div>
     );
 }
+
 export default function QuestionBuilder() {
     const [showDashboard, setShowDashboard] = useState(true);
 
