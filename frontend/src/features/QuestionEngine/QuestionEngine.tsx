@@ -18,7 +18,6 @@ import { QuestionButtons } from "./QuestionButtons";
 import DisplayCorrectAnswer from "./DisplayCorrectAnswer";
 import QuestionHTMLToReact from "../QuestionComponents/ParseQuestionHTML";
 import { getIdToken } from "firebase/auth";
-import { UserAPI } from "../../services/api/backend/userAPI";
 
 import { useAuth } from "../../context/AuthContext";
 
