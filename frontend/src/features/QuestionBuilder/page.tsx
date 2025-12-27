@@ -5,14 +5,18 @@ import SideBar from "./SideBar";
 import { TbLayoutSidebarRightCollapseFilled } from "react-icons/tb";
 import { TbLayoutSidebarRightExpandFilled } from "react-icons/tb";
 import QuestionBuilderHeader from "./Header";
+import { QuestionEditorSections } from "./QuestionEditorSections";
 
 const Mockdata = {
     title: "Adding 2 Numbers"
 }
+
+
 function MainContent() {
     return (
         <div className="flex flex-col">
             <QuestionBuilderHeader title={Mockdata.title} />
+            <QuestionEditorSections />
         </div>
     );
 }
