@@ -3,7 +3,7 @@ import FileDropDown from "../Generic/FileDropDown";
 import { useCodeEditorContext } from "./../../context/CodeEditorContext";
 import { CodeSettings } from "../QuestionFilter/CodeSettings";
 import { MyModal } from "../Base/MyModal";
-import { useQuestionContext } from "../../context/QuestionContext";
+import { useQuestionCollectionContext } from "../../context/QuestionCollectionContext";
 import {
   useDeleteQuestionFile,
   useSaveQuestionFile,
@@ -26,7 +26,7 @@ export function CodeEditorToolBar() {
     setShowLogs,
   } = useCodeEditorContext();
 
-  const { selectedQuestionID } = useQuestionContext();
+  const { selectedQuestionID } = useQuestionCollectionContext();
 
   const { saveFile } = useSaveQuestionFile(() =>
     setRefreshKey((prev) => prev + 1)

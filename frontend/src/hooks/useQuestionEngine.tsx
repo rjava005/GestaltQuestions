@@ -4,7 +4,7 @@ import type { QuizData } from "../types/quizType";
 import { useCodeEditorContext } from "../context/CodeEditorContext";
 import { QuestionAPI } from "../services/api/backend/questionAPI";
 import type { QuestionData } from "../types/questionTypes";
-import { useQuestionContext } from "../context/QuestionContext";
+import { useQuestionContext } from "../context/QuestionCollectionContext";
 import applyPlaceHolders from "../utils/flattenParams";
 
 export function useRetrievedQuestions({

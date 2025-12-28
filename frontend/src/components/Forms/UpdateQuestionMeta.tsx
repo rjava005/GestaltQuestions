@@ -1,4 +1,4 @@
-import { useQuestionContext } from "../../context/QuestionContext";
+import { useQuestionContext } from "../../context/QuestionCollectionContext";
 import type { QuestionMeta } from "../../types/questionTypes";
 import { InputTextForm } from "./InputComponents";
 import { useState, type FormEvent } from "react";

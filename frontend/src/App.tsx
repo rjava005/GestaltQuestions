@@ -4,12 +4,12 @@ import { AuthProvider } from "./context/AuthContext";
 import NavBar from "./features/NavBar/NavBar";
 import { ToastContainer } from "react-toastify";
 import CodeEditorProvider from "./context/CodeEditorContext";
-import { QuestionProvider } from "./context/QuestionContext";
+import { QuestionProvider } from "./context/QuestionCollectionContext";
 import { QuestionRuntimeProvider } from "./context/QuestionAnswerContext";
 import { AuthModeProvider } from "./context/AuthMode";
-import { QuestionTableProvider } from "./context/QuestionTableContext";
+import { QuestionTableProvider } from "./features/QuestionTable/QuestionTableContext";
 import QuestionBuilderProvider from "./features/QuestionBuilder/QuestionBuilderContext";
-import QuestionCollectionProvider from "./features/QuestionBuilder/QuestionCollectionContext";
+import QuestionCollectionProvider from "./features/QuestionBuilder/QuestionCollectionViewContext";
 
 const config = {
   loader: { load: ["[tex]/ams"] },

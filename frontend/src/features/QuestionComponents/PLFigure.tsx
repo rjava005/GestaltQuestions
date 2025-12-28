@@ -1,6 +1,6 @@
 import clsx from "clsx";
 import { questionAPIURL } from "../../config";
-import { useQuestionContext } from "../../context/QuestionContext";
+import { useQuestionContext } from "../../context/QuestionCollectionContext";
 
 export type ImageSize = "sm" | "md" | "lg";
 

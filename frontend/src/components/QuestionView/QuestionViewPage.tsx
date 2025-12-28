@@ -2,7 +2,7 @@
 import { QuestionTable } from "../QuestionTable/QuestionTable";
 import { ResizableQuestionContainer } from "../Question/ResizableQuestion";
 import SyncQuestions from "../QuestionSync/QuestionSync";
-import { useQuestionContext } from "../../context/QuestionContext";
+import { useQuestionContext } from "../../context/QuestionCollectionContext";
 import QuestionPageHeader from "./QuestionPageHeader";
 import QuestionViewToolBar from "./QuestionViewToolBar";
 

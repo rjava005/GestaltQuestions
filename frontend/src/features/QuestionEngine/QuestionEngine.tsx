@@ -8,7 +8,7 @@ import {
 } from "react";
 import { useAdaptiveParams } from "../../services";
 import { useRawQuestionHTML, useParsedQuestionHTML } from "../../services";
-import { useQuestionContext } from "../../context/QuestionContext";
+import { useQuestionContext } from "../../context/QuestionCollectionContext";
 import { useQuestionRuntime } from "../../context/QuestionAnswerContext";
 import { trueish } from "../../utils";
 import { Error } from "../../components/Generic/Error";

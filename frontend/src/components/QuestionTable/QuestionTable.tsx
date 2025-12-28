@@ -1,22 +1,8 @@
-import React, { useMemo, useState } from "react";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TablePagination,
-  TableRow,
-  Paper,
-} from "@mui/material";
-import { QuestionRow } from "./QuestionRow";
 
-import { tableHeaderSx } from "../../styles/tableHeaderSx";
-import { useTheme } from "../../features/DarkModeToggle/DarkModeToggle";
-import { useQuestionContext } from "../../context/QuestionContext";
 
-import { ValidTableCol } from "./tableConfig";
-import { useQuestionTableContext } from "../../context/QuestionTableContext";
+
+
+
 
 export function QuestionTable() {
   const [page, setPage] = useState(0);
@@ -25,8 +11,8 @@ export function QuestionTable() {
   const [theme] = useTheme();
 
   const { questions } =
-    useQuestionContext();
-  const { multiSelect } = useQuestionTableContext()
+    QuestionCollectionContext();
+  
 
   const paged = useMemo(
     () => questions.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage),

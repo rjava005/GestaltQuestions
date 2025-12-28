@@ -14,7 +14,7 @@ import QuestionBuilderHeader from "./Header";
 import { QuestionEditorSections } from "./QuestionEditorSections";
 import QuestionBuilderSideBar from "./QuestionBuilderSideBar";
 import { useQuestionBuildingContext } from "./QuestionBuilderContext";
-import { useQuestionCollectionContext } from "./QuestionCollectionContext";
+import { useQuestionCollectionViewContext } from "./QuestionCollectionViewContext";
 
 const Mockdata = {
   title: "Adding 2 Numbers",
@@ -35,8 +35,8 @@ function MainContent() {
 
 export default function QuestionBuilder() {
   const [showDashboard, setShowDashboard] = useState(true);
-  const { filter } = useQuestionCollectionContext();
-  console.log("Curring Filter", filter);
+  const { view } = useQuestionCollectionViewContext();
+  console.log("Curring Filter", view);
 
   return (
     <SectionContainer
@@ -85,12 +85,12 @@ export default function QuestionBuilder() {
         {/* Main Content */}
         <Panel className="bg-slate-50" defaultSize={22} minSize={18}>
           <div className="p-6 max-w-[1400px] mx-auto">
-            {filter === "current" ? (
+            {view === "current" ? (
               <MainContent />
-            ) : filter === "all" ? (
+            ) : view === "all" ? (
               <AllQuestions />
             ) : (
-              <div>{filter}</div>
+              <div>{view}</div>
             )}
           </div>
         </Panel>

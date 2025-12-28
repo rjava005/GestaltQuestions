@@ -13,12 +13,12 @@ import Divider from "../../components/Base/Divider";
 import { SideBar, SideBarItem } from "../../components/SideBar";
 
 import {
-    type QuestionCollectionFilter,
-    useQuestionCollectionContext,
-} from "./QuestionCollectionContext";
+    type QuestionCollectionView,
+    useQuestionCollectionViewContext,
+} from "./QuestionCollectionViewContext";
 
 
-export const sidebarItems: SideBarItem<QuestionCollectionFilter>[] = [
+export const sidebarItems: SideBarItem<QuestionCollectionView>[] = [
     { key: "all", label: "All Questions", icon: BsCollection },
     { key: "current", label: "Current", icon: FaRegQuestionCircle },
     { key: "drafts", label: "Drafts", icon: FaRegFileAlt },
@@ -27,14 +27,14 @@ export const sidebarItems: SideBarItem<QuestionCollectionFilter>[] = [
 ] as const;
 
 export default function QuestionBuilderSideBar() {
-    const { filter, setFilter } = useQuestionCollectionContext();
+    const { view, setView } = useQuestionCollectionViewContext();
     return (
         <div className="flex flex-col h-full  gap-y-2 my-4">
             {/* Functions for Handling viewing questions that were created or archived */}
             <SideBar
                 options={sidebarItems}
-                selected={filter}
-                setSelected={(val) => setFilter(val as QuestionCollectionFilter)}
+                selected={view}
+                setSelected={(val) => setView(val as QuestionCollectionView)}
             />
             <Divider />
             <div className="flex flex-col  gap-y-5 items-center justify-center my-4 w-full">
