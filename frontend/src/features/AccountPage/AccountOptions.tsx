@@ -1,5 +1,5 @@
 import { useAuth } from "../../context/AuthContext";
-import { MyButton } from "../../components/Base/Button";
+import { MyButton } from "../../components/Button/Button";
 import { deleteUser } from "firebase/auth";
 import { toast } from "react-toastify";
 

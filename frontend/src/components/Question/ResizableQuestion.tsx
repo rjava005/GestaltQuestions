@@ -5,7 +5,7 @@ import {
   PanelGroup,
   PanelResizeHandle,
 } from "react-resizable-panels";
-import { MyButton } from "./../Base/Button";
+import { MyButton } from "../Button/Button";
 import QuestionCodeEditor from "../CodeEditor/QuestionCodeEditor";
 import QuestionEngine from "../../features/QuestionEngine/QuestionEngine";
 import { useQuestionRuntime } from "../../context/QuestionAnswerContext";

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { MyButton } from "../../components/Base/Button";
+import { MyButton } from "../Button/Button";
 import { IoMdAddCircleOutline } from "react-icons/io";
 import { CiCircleMinus } from "react-icons/ci";
 import { SectionTab, type SectionItem } from "../../components/SectionTabs";

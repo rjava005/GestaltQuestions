@@ -21,7 +21,7 @@ const styles: Record<HeaderStyle, HeaderStyleConfig> = {
 };
 type HeaderProps = React.HTMLAttributes<HTMLDivElement> & {
     title: string;
-    children: React.ReactNode;
+    children?: React.ReactNode;
     style?: HeaderStyle;
     className?: string;
 };

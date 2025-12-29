@@ -1,5 +1,5 @@
 import SectionContainer from "../components/Section/Section";
-import { MyButton } from "../components/Base/Button";
+import { MyButton } from "../components/Button/Button";
 import { HashLink } from "react-router-hash-link";
 import { GeneratorContainer } from "../components/CodeGenerators/AIGeneratorBox";
 import Card from "../components/Base/Card";

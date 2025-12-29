@@ -1,7 +1,7 @@
 import UploadFiles from "../Forms/UploadFileComponent";
 import { useQuestionToolBarActions } from "../../hooks/useQuestionsToolBarActions";
 import { useState } from "react";
-import { MyButton } from "../Base/Button";
+import { MyButton } from "../Button/Button";
 
 export default function UploadZipQuestionModal({
     setShowModal,

@@ -3,7 +3,7 @@ import { FaSyncAlt } from "react-icons/fa";
 import { toast } from "react-toastify";
 
 // Local components
-import { MyButton } from "../Base/Button";
+import { MyButton } from "../Button/Button";
 import { PopUpHelpIcon } from "../Base/PopUpHelper";
 
 // Local utilities / API / types

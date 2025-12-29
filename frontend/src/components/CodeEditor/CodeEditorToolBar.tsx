@@ -1,4 +1,4 @@
-import { MyButton } from "../Base/Button";
+import { MyButton } from "../Button/Button";
 import FileDropDown from "../Generic/FileDropDown";
 import { useCodeEditorContext } from "./../../context/CodeEditorContext";
 import { CodeSettings } from "../QuestionFilter/CodeSettings";

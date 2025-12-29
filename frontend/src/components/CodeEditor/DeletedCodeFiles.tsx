@@ -1,4 +1,4 @@
-import { MyButton } from "../Base/Button";
+import { MyButton } from "../Button/Button";
 
 
 export function DeleteCodeFile({

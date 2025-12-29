@@ -1,6 +1,6 @@
 import { useState } from "react";
 import type { FormEvent } from "react";
-import { MyButton } from "../../components/Base/Button";
+import { MyButton } from "../../components/Button/Button";
 import { InputTextForm } from "../../components/Forms/InputComponents";
 import { UseAuthMode } from "../../context/AuthMode";
 import { getAuth, sendPasswordResetEmail } from "firebase/auth";

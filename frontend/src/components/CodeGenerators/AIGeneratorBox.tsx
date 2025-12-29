@@ -1,5 +1,5 @@
 import Card from "../Base/Card";
-import { MyButton } from "../Base/Button";
+import { MyButton } from "../Button/Button";
 import { generators } from "./generatorInfo";
 import type { GeneratorConfig } from "./generatorInfo";
 import { Link } from "react-router-dom";

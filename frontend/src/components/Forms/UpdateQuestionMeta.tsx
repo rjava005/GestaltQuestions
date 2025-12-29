@@ -2,7 +2,7 @@ import { useQuestionCollectionContext } from "../../context/QuestionCollectionCo
 import type { QuestionMeta } from "../../types/questionTypes";
 import { InputTextForm } from "./InputComponents";
 import { useState, type FormEvent } from "react";
-import { MyButton } from "../Base/Button";
+import { MyButton } from "../Button/Button";
 import { QuestionAPI } from "../../services/api/backend/questionAPI";
 import type { QuestionData } from "../../types/questionTypes";
 import { toast } from "react-toastify";
