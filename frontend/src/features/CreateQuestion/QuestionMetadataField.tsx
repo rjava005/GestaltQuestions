@@ -3,7 +3,6 @@ import type { QuestionData } from "../../types/questionTypes";
 import { InputTextForm, BooleanField } from "../../components/FormInputs";
 import { useState } from "react";
 
-
 export default function QuestionMeta() {
     const [title, setTitle] = useState("");
     const [topics, setTopics] = useState<string[]>([]);
@@ -12,7 +11,10 @@ export default function QuestionMeta() {
     const [aiGenerated, setAIGenerated] = useState(false);
 
     const handleCommaSeparation = (val: string) =>
-        val.split(",").map(v => v.trim()).filter(Boolean);
+        val
+            .split(",")
+            .map((v) => v.trim())
+            .filter(Boolean);
 
     return (
         <section className="w-full rounded-lg border border-slate-200 bg-white p-4 shadow-sm">
@@ -44,9 +46,7 @@ export default function QuestionMeta() {
                         label="Topics"
                         hint="Comma separated (e.g. dynamics, kinematics)"
                         variant="createQuestion"
-                        onChange={(e) =>
-                            setTopics(handleCommaSeparation(e.target.value))
-                        }
+                        onChange={(e) => setTopics(handleCommaSeparation(e.target.value))}
                     />
 
                     <InputTextForm

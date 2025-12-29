@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Panel, PanelGroup, PanelResizeHandle } from "react-resizable-panels";
 
-import SectionContainer from "../../components/Section/Section";
+import { Section } from "../../components/Section";
 import CodeEditorGeneric from "../../components/CodeEditor/CodeEditorGeneric";
 import {
     DropDownAdvance,
@@ -49,7 +49,7 @@ export default function QuestionPlayGroundPage() {
         }
     );
     return (
-        <SectionContainer
+        <Section
             id="question-playground"
             className="flex flex-col items-center gap-6 py-8"
         >
@@ -123,7 +123,7 @@ export default function QuestionPlayGroundPage() {
                     </Panel>
                 </PanelGroup>
             </div>
-        </SectionContainer>
+        </Section>
 
     );
 }

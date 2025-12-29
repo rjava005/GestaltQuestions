@@ -1,4 +1,4 @@
-import SectionContainer from "../components/Section/Section";
+import { Section } from "../components/Section";
 import AccountPageHeader from "../features/AccountPage/AccountPageHeader";
 import AccountProfilePic from "../features/AccountPage/AccountProfilePic";
 import AccountInformation from "../features/AccountPage/AccountInformation";
@@ -9,7 +9,7 @@ export default function AccountPage() {
   const { user } = useAuth();
 
   return (
-    <SectionContainer
+    <Section
       id="AccountPage"
       className="flex flex-col gap-y-8 py-8 max-w-4xl mx-auto min-h-screen"
     >
@@ -37,6 +37,6 @@ export default function AccountPage() {
           </div>
         </>
       )}
-    </SectionContainer>
+    </Section>
   );
 }

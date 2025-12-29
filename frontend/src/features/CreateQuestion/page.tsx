@@ -27,7 +27,7 @@ function SelectFiles() {
 
 export default function CreateQuestion() {
     return (
-        <Section variant="questionBuilder" id="create-question">
+        <Section variant="questionBuilder" id="create-question" className="gap-3">
             <Header
                 style={"QuestionBuilder"}
                 title="Create Question"

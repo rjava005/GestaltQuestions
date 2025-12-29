@@ -7,7 +7,7 @@ import {
   TbLayoutSidebarRightExpandFilled,
 } from "react-icons/tb";
 
-import SectionContainer from "../../components/Section/Section";
+import { Section } from "../../components/Section";
 import CodeEditorBase from "../../components/CodeEditor/CodeEditorBase";
 
 import QuestionBuilderHeader from "./Header";
@@ -38,7 +38,7 @@ export default function QuestionBuilder() {
   const { view } = useQuestionCollectionViewContext();
 
   return (
-    <SectionContainer
+    <Section
       id="question_builder"
       className="min-h-screen bg-slate-50 flex flex-col"
     >
@@ -95,6 +95,6 @@ export default function QuestionBuilder() {
           </div>
         </Panel>
       </PanelGroup>
-    </SectionContainer>
+    </Section>
   );
 }

@@ -1,4 +1,4 @@
-import SectionContainer from "../components/Section/Section";
+import { Section } from "../components/Section";
 import { Button } from "../components/Button/Button";
 import { HashLink } from "react-router-hash-link";
 import { GeneratorContainer } from "../components/CodeGenerators/AIGeneratorBox";
@@ -9,7 +9,7 @@ import { Link } from "react-router-dom";
 
 function Hero() {
     return (
-        <SectionContainer id="hero" style="hero" className="bg-gray-50 dark:bg-gray-900">
+        <Section id="hero" style="hero" className="bg-gray-50 dark:bg-gray-900">
             <div className="text-center space-y-6 px-6 max-w-3xl mx-auto py-20">
                 {/* Title */}
                 <h1 className="font-extrabold text-4xl sm:text-6xl text-gray-900 dark:text-white">
@@ -32,13 +32,13 @@ function Hero() {
                     />
                 </HashLink>
             </div>
-        </SectionContainer>
+        </Section>
     );
 }
 
 function AboutSection() {
     return (
-        <SectionContainer id="about" style="hero" className="bg-white dark:bg-gray-800">
+        <Section id="about" style="hero" className="bg-white dark:bg-gray-800">
             <div className="max-w-4xl mx-auto text-center space-y-8 px-6 py-16">
                 {/* Heading */}
                 <h2 className="text-3xl sm:text-5xl font-extrabold text-gray-900 dark:text-white">
@@ -73,13 +73,13 @@ function AboutSection() {
                     />
                 </HashLink>
             </div>
-        </SectionContainer>
+        </Section>
     );
 }
 
 function GeneratorSection() {
     return (
-        <SectionContainer id="generator-section" style="hero" className="bg-gray-50 dark:bg-gray-900">
+        <Section id="generator-section" style="hero" className="bg-gray-50 dark:bg-gray-900">
             <div className="flex flex-col items-center justify-center space-y-10 py-20">
                 <GeneratorContainer />
                 <HashLink smooth to="#learn-more">
@@ -90,13 +90,13 @@ function GeneratorSection() {
                     />
                 </HashLink>
             </div>
-        </SectionContainer>
+        </Section>
     );
 }
 
 function LearnMore() {
     return (
-        <SectionContainer id="learn-more" style="hero" className="bg-white dark:bg-gray-800">
+        <Section id="learn-more" style="hero" className="bg-white dark:bg-gray-800">
             <div className="max-w-6xl mx-auto text-center space-y-10 px-6 py-16">
                 {/* Heading */}
                 <h2 className="text-3xl sm:text-5xl font-extrabold text-gray-900 dark:text-white">
@@ -157,13 +157,13 @@ function LearnMore() {
                     <span className="font-semibold text-primary-yellow">accurate, contextual, and ready to use</span>.
                 </p>
             </div>
-        </SectionContainer>
+        </Section>
     );
 }
 
 function HowItWorks() {
     return (
-        <SectionContainer id="how-it-works" style="hero" className="bg-gray-50 dark:bg-gray-900">
+        <Section id="how-it-works" style="hero" className="bg-gray-50 dark:bg-gray-900">
             <div className="max-w-5xl w-full mx-auto text-center space-y-10 px-6 py-16">
                 {/* Heading */}
                 <h2 className="text-3xl sm:text-5xl font-extrabold text-gray-900 dark:text-white">
@@ -227,12 +227,12 @@ function HowItWorks() {
                     </HashLink>
                 </div>
             </div>
-        </SectionContainer>
+        </Section>
     );
 }
 function QuestionsSection() {
     return (
-        <SectionContainer id="questions" style="hero" className="bg-gray-50 dark:bg-gray-900">
+        <Section id="questions" style="hero" className="bg-gray-50 dark:bg-gray-900">
             <div className="max-w-5xl mx-auto text-center space-y-10 px-6 py-16">
                 {/* Heading */}
                 <h2 className="text-3xl sm:text-5xl font-extrabold text-gray-900 dark:text-white">
@@ -289,7 +289,7 @@ function QuestionsSection() {
 
                 </div>
             </div>
-        </SectionContainer>
+        </Section>
     );
 }
 

@@ -8,7 +8,7 @@ import remarkRehype from "remark-rehype";
 import rehypeStringify from "rehype-stringify";
 
 // UI Components
-import SectionContainer from "../../components/Section/Section";
+import { Section } from "../../components/Section";
 import MarkDownEditor from "../../components/markdownEditor/MarkdownEditor";
 import QuestionHTMLToReact from "../QuestionComponents/ParseQuestionHTML";
 import { visit } from "unist-util-visit";
@@ -59,7 +59,7 @@ export default function GestaltStudio() {
     }, [content]);
 
     return (
-        <SectionContainer id="gestalt-studio" className="min-h-screen">
+        <Section id="gestalt-studio" className="min-h-screen">
             <PanelGroup autoSaveId="gestalt-studio-panels" direction="horizontal">
 
                 {/* Markdown Editor */}
@@ -84,6 +84,6 @@ export default function GestaltStudio() {
                 </Panel>
 
             </PanelGroup>
-        </SectionContainer>
+        </Section>
     );
 }

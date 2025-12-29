@@ -1,5 +1,5 @@
 import { useState } from "react";
-import SectionContainer from "../Section/Section";
+import { Section } from "../Section";
 import {
   Panel as RPanel,
   PanelGroup,
@@ -17,9 +17,9 @@ export function ResizableQuestionContainer() {
   const { showSolution, solution } = useQuestionRuntime()
 
   return (
-    <SectionContainer
+    <Section
       id="questionView"
-      style="primary"
+      variant="primary"
       className="relative flex flex-col w-full h-full p-4 sm:p-6 
                  bg-gray-50 dark:bg-gray-900 rounded-2xl shadow-md 
                  border border-gray-200 dark:border-gray-700 transition-colors duration-200"
@@ -87,6 +87,6 @@ export function ResizableQuestionContainer() {
           <QuestionEngine />
         </RPanel>
       </PanelGroup>
-    </SectionContainer>
+    </Section>
   );
 }

@@ -1,5 +1,5 @@
 import { UseAuthMode, type UserMode } from "../context/AuthMode";
-import SectionContainer from "../components/Section/Section";
+import { Section } from "../components/Section";
 import { MyModal } from "../components/Base/MyModal";
 import { useAuth } from "../context/AuthContext";
 import ToggleButton from "@mui/material/ToggleButton";
@@ -35,7 +35,7 @@ export default function AuthenticationPage({
     const showVerify = mode === "authenticate" || (user && !user.emailVerified);
 
     return (
-        <SectionContainer id="AuthenticationPage">
+        <Section id="AuthenticationPage">
             {show && (
                 <MyModal setShowModal={setShow} className="flex flex-col items-center justify-center gap-y-5">
                     {shouldShowToggle && (
@@ -70,6 +70,6 @@ export default function AuthenticationPage({
                     {showVerify && <VerifyAccount />}
                 </MyModal>
             )}
-        </SectionContainer>
+        </Section>
     );
 }
