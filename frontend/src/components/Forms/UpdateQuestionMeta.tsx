@@ -1,6 +1,6 @@
 import { useQuestionCollectionContext } from "../../context/QuestionCollectionContext";
 import type { QuestionMeta } from "../../types/questionTypes";
-import { InputTextForm } from "./InputComponents";
+import { InputTextForm } from "../FormInputs/InputComponents";
 import { useState, type FormEvent } from "react";
 import { Button } from "../Button/Button";
 import { QuestionAPI } from "../../services/api/backend/questionAPI";
