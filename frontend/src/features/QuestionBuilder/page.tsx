@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import AllQuestions from "../QuestionLibrary/AllQuestions";
 import { Panel, PanelGroup, PanelResizeHandle } from "react-resizable-panels";
 
@@ -36,7 +36,6 @@ function MainContent() {
 export default function QuestionBuilder() {
   const [showDashboard, setShowDashboard] = useState(true);
   const { view } = useQuestionCollectionViewContext();
-  console.log("Curring Filter", view);
 
   return (
     <SectionContainer

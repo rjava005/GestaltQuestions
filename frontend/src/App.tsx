@@ -9,6 +9,7 @@ import { QuestionRuntimeProvider } from "./context/QuestionAnswerContext";
 import { AuthModeProvider } from "./context/AuthMode";
 import { QuestionTableProvider } from "./features/QuestionTable/QuestionTableContext";
 import QuestionBuilderProvider from "./features/QuestionBuilder/QuestionBuilderContext";
+import QuestionCollectionViewProvider from "./features/QuestionBuilder/QuestionCollectionViewContext";
 
 
 const config = {
@@ -33,31 +34,33 @@ const config = {
 function App() {
   return (
     <AuthProvider>
-      <QuestionCollectionProvider>
-        <QuestionBuilderProvider>
-          <QuestionTableProvider>
-            <MathJaxContext version={3} config={config}>
-              <AuthModeProvider>
-                <QuestionRuntimeProvider>
-                  <QuestionSettingsProvider>
-                    <QuestionCollectionProvider>
-                      <CodeEditorProvider>
-                        {/* Main Content */}
-                        <NavBar />
-                        <ToastContainer />
+      <QuestionCollectionViewProvider>
+        <QuestionCollectionProvider>
+          <QuestionBuilderProvider>
+            <QuestionTableProvider>
+              <MathJaxContext version={3} config={config}>
+                <AuthModeProvider>
+                  <QuestionRuntimeProvider>
+                    <QuestionSettingsProvider>
+                      <QuestionCollectionProvider>
+                        <CodeEditorProvider>
+                          {/* Main Content */}
+                          <NavBar />
+                          <ToastContainer />
 
-                        {/* <LecturePage /> */}
-                        {/* <LegacyQuestion /> */}
-                        {/* End of Main Content */}
-                      </CodeEditorProvider>
-                    </QuestionCollectionProvider>
-                  </QuestionSettingsProvider>
-                </QuestionRuntimeProvider>
-              </AuthModeProvider>
-            </MathJaxContext>
-          </QuestionTableProvider>
-        </QuestionBuilderProvider>
-      </QuestionCollectionProvider>
+                          {/* <LecturePage /> */}
+                          {/* <LegacyQuestion /> */}
+                          {/* End of Main Content */}
+                        </CodeEditorProvider>
+                      </QuestionCollectionProvider>
+                    </QuestionSettingsProvider>
+                  </QuestionRuntimeProvider>
+                </AuthModeProvider>
+              </MathJaxContext>
+            </QuestionTableProvider>
+          </QuestionBuilderProvider>
+        </QuestionCollectionProvider>
+      </QuestionCollectionViewProvider>
     </AuthProvider>
   );
 }

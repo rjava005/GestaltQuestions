@@ -1,9 +1,9 @@
 import { BsCollection } from "react-icons/bs";
 import { FaBoxArchive } from "react-icons/fa6";
 import {
-    FaRegFileAlt,
-    FaRegPaperPlane,
-    FaRegQuestionCircle,
+  FaRegFileAlt,
+  FaRegPaperPlane,
+  FaRegQuestionCircle,
 } from "react-icons/fa";
 import { IoMdAddCircleOutline } from "react-icons/io";
 import { MdFileUpload } from "react-icons/md";
@@ -13,45 +13,48 @@ import Divider from "../../components/Base/Divider";
 import { SideBar, SideBarItem } from "../../components/SideBar";
 
 import {
-    type QuestionCollectionView,
-    useQuestionCollectionViewContext,
+  type QuestionCollectionView,
+  useQuestionCollectionViewContext,
 } from "./QuestionCollectionViewContext";
 
-
 export const sidebarItems: SideBarItem<QuestionCollectionView>[] = [
-    { key: "all", label: "All Questions", icon: BsCollection },
-    { key: "current", label: "Current", icon: FaRegQuestionCircle },
-    { key: "drafts", label: "Drafts", icon: FaRegFileAlt },
-    { key: "published", label: "Published", icon: FaRegPaperPlane },
-    { key: "archived", label: "Archived", icon: FaBoxArchive },
+  { key: "all", label: "All Questions", icon: BsCollection },
+  { key: "current", label: "Current", icon: FaRegQuestionCircle },
+  { key: "drafts", label: "Drafts", icon: FaRegFileAlt },
+  { key: "published", label: "Published", icon: FaRegPaperPlane },
+  { key: "archived", label: "Archived", icon: FaBoxArchive },
 ] as const;
 
 export default function QuestionBuilderSideBar() {
-    const { view, setView } = useQuestionCollectionViewContext();
-    return (
-        <div className="flex flex-col h-full  gap-y-2 my-4">
-            {/* Functions for Handling viewing questions that were created or archived */}
-            <SideBar
-                options={sidebarItems}
-                selected={view}
-                setSelected={(val) => setView(val as QuestionCollectionView)}
-            />
-            <Divider />
-            <div className="flex flex-col  gap-y-5 items-center justify-center my-4 w-full">
-                <MyButton
-                    name="Create"
-                    className="w-5/10 flex flex-row items-center justify-start gap-x-2 font-bold"
-                    icon={IoMdAddCircleOutline}
-                />
+  const { view, setView } = useQuestionCollectionViewContext();
+  console.log("Current view", view);
+  return (
+    <div className="flex flex-col h-full  gap-y-2 my-4">
+      {/* Functions for Handling viewing questions that were created or archived */}
+      <SideBar
+        options={sidebarItems}
+        selected={view}
+        setSelected={(val) => {
+          console.log("New val", val);
+          return setView(val as QuestionCollectionView);
+        }}
+      />
+      <Divider />
+      <div className="flex flex-col  gap-y-5 items-center justify-center my-4 w-full">
+        <MyButton
+          name="Create"
+          className="w-5/10 flex flex-row items-center justify-start gap-x-2 font-bold"
+          icon={IoMdAddCircleOutline}
+        />
 
-                <MyButton
-                    name="Upload"
-                    className="w-5/10 flex flex-row items-center justify-start gap-x-2 font-bold"
-                    color="showSolution"
-                    icon={MdFileUpload}
-                />
-            </div>
-            <Divider />
-        </div>
-    );
+        <MyButton
+          name="Upload"
+          className="w-5/10 flex flex-row items-center justify-start gap-x-2 font-bold"
+          color="showSolution"
+          icon={MdFileUpload}
+        />
+      </div>
+      <Divider />
+    </div>
+  );
 }
