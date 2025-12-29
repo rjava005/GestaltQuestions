@@ -1,6 +1,6 @@
 import { sendEmailVerification } from "firebase/auth";
 import { useAuth } from "../../context/AuthContext";
-import { MyButton } from "../../components/Button/Button";
+import { Button } from "../../components/Button/Button";
 import { useState } from "react";
 import { toast } from "react-toastify";
 import { useEffect } from "react";
@@ -37,7 +37,7 @@ export default function VerifyAccount() {
     return (
         <div className="flex flex-col items-center text-gray-800 text-sm font-medium space-y-2">
             <p>Verify your email address to continue.</p>
-            <MyButton
+            <Button
                 name="Send Verification Email"
                 disabled={coolDown}
                 onClick={handleClick}

@@ -1,4 +1,4 @@
-import { MyButton } from "../Button/Button";
+import { Button } from "../Button/Button";
 
 
 export function DeleteCodeFile({
@@ -20,11 +20,11 @@ export function DeleteCodeFile({
             </p>
 
             <div className="flex gap-3 w-full justify-center">
-                <MyButton
+                <Button
                     name="Cancel"
                     onClick={() => window.history.back()}
                 />
-                <MyButton
+                <Button
                     name="Delete"
                     onClick={() => onSubmit(questionId, filename)}
                 />

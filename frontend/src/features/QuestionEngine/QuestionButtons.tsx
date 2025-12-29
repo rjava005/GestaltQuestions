@@ -1,6 +1,6 @@
 
 import type { FormEvent } from "react";
-import { MyButton } from "../../components/Button/Button";
+import { Button } from "../../components/Button/Button";
 
 type QuestionButtonProps = {
   isSubmitted: boolean;
@@ -16,13 +16,13 @@ export function QuestionButtons({
 }: QuestionButtonProps) {
   return (
     <div className="grid sm:grid-cols-3 gap-10 mb-10">
-      <MyButton
+      <Button
         name={"Generate Variation"}
         onClick={generateVariant}
         color="generateVariant"
       />
-      <MyButton name={"Show Solution"} color="showSolution" onClick={showSolution} />
-      <MyButton
+      <Button name={"Show Solution"} color="showSolution" onClick={showSolution} />
+      <Button
         name={"Submit"}
         type="submit"
         onClick={handleSubmit}

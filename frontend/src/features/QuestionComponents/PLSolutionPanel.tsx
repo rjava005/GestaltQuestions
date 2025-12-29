@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import clsx from "clsx";
-import { MyButton } from "../../components/Button/Button";
+import { Button } from "../../components/Button/Button";
 import { uiPanelVariantStyles, uiPanelSizeStyles, type UIPanelSize, type UIPanelVariant } from "./PanelStyles";
 
 export interface PLSolutionPanelProps {
@@ -68,12 +68,12 @@ const PLSolutionPanel: React.FC<PLSolutionPanelProps> = ({
             {/* Buttons pinned to bottom */}
             <div className="mt-auto mb-4 flex justify-center gap-3">
                 {!autoShowAll && stepIndex < steps.length - 1 ? (
-                    <MyButton
+                    <Button
                         name="Show Next Step"
                         onClick={handleShowNext}
                     />
                 ) : (
-                    <MyButton
+                    <Button
                         name="Reset"
                         color="secondary"
                         onClick={handleReset}

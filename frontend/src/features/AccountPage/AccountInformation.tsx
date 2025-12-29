@@ -2,7 +2,7 @@ import { useAuth } from "../../context/AuthContext";
 import { useEffect, useState } from "react";
 import { FaEdit } from "react-icons/fa";
 import { InputTextForm } from "../../components/Forms/InputComponents";
-import { MyButton } from "../../components/Button/Button";
+import { Button } from "../../components/Button/Button";
 import AccountFieldContainer from "./AccountFieldContainer";
 import { updateEmail, updatePassword } from "firebase/auth";
 import { UserAPI } from "../../services/api/backend/userAPI";
@@ -121,7 +121,7 @@ export default function AccountInformation() {
         {/* Save Button */}
         {editMode && (
           <div className="flex items-center justify-start pt-2">
-            <MyButton name="Save Changes" onClick={handleUserUpdate} />
+            <Button name="Save Changes" onClick={handleUserUpdate} />
           </div>
         )}
       </div>

@@ -1,4 +1,4 @@
-import { MyButton } from "../../components/Button/Button";
+import { Button } from "../../components/Button/Button";
 import { DropDown } from "../../components/Generic/DropDown";
 import { QuestionOptionsToolBar } from "./QuestionToolBarItems";
 import { useState } from "react";
@@ -35,7 +35,7 @@ export default function QuestionBuilderHeader({ title }: QuestionBuilderProps) {
         {/* Right controls */}
         <div className="flex items-center gap-2">
           {/* Toggle options */}
-          <MyButton
+          <Button
             icon={FiMoreHorizontal}
             className="flex items-center gap-2 rounded-md px-3 py-2 text-sm font-semibold transition"
             name={showQuestionOptions ? "Hide Options" : "Show Options"}
@@ -54,7 +54,7 @@ export default function QuestionBuilderHeader({ title }: QuestionBuilderProps) {
         {showQuestionOptions && (
           <div className="flex items-center gap-2">
             {QuestionOptionsToolBar.map((v) => (
-              <MyButton
+              <Button
                 key={v.key}
                 icon={v.icon}
                 name={v.label}

@@ -5,7 +5,7 @@ import {
   PanelGroup,
   PanelResizeHandle,
 } from "react-resizable-panels";
-import { MyButton } from "../Button/Button";
+import { Button } from "../Button/Button";
 import QuestionCodeEditor from "../CodeEditor/QuestionCodeEditor";
 import QuestionEngine from "../../features/QuestionEngine/QuestionEngine";
 import { useQuestionRuntime } from "../../context/QuestionAnswerContext";
@@ -26,7 +26,7 @@ export function ResizableQuestionContainer() {
     >
       {/* Toolbar */}
       <div className="w-full mb-6 flex justify-end">
-        <MyButton
+        <Button
           onClick={() => setDevMode((prev) => !prev)}
           color="primary"
           name={showDevMode ? "Close Dev Mode" : "Open Dev Mode"}

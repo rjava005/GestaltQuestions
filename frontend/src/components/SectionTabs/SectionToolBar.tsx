@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { MyButton } from "../Button/Button";
+import { Button } from "../Button/Button";
 import { IoMdAddCircleOutline } from "react-icons/io";
 import { CiCircleMinus } from "react-icons/ci";
 import { SectionTab, type SectionItem } from "../../components/SectionTabs";
@@ -44,14 +44,14 @@ export default function SectionToolBar({
             {/* RIGHT: Controls */}
             <div className="relative flex items-center gap-2">
                 {/* Add Section */}
-                <MyButton
+                <Button
                     icon={IoMdAddCircleOutline}
                     name="Add section"
                     onClick={() => setShowOptions((prev) => !prev)}
                 />
                 {/* Remove Section */}
                 {selected && (
-                    <MyButton
+                    <Button
                         icon={CiCircleMinus}
                         name="Hide section"
                         color="danger"

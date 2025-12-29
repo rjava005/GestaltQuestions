@@ -62,7 +62,7 @@ const sizeClasses: Record<ButtonSize, string> = {
 // PROPS — fully inherit HTML button attributes!
 //
 
-export type MyButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> & {
+export type ButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> & {
   name: string;
   color?: ButtonColor;
   size?: ButtonSize;
@@ -73,7 +73,7 @@ export type MyButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> & {
 // COMPONENT
 //
 
-export const MyButton = ({
+export const Button = ({
   name,
   color = "primary",
   size = "md",
@@ -81,7 +81,7 @@ export const MyButton = ({
   disabled,
   icon: Icon,
   ...rest
-}: MyButtonProps) => {
+}: ButtonProps) => {
   return (
     <button
       disabled={disabled}

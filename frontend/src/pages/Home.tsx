@@ -1,5 +1,5 @@
 import SectionContainer from "../components/Section/Section";
-import { MyButton } from "../components/Button/Button";
+import { Button } from "../components/Button/Button";
 import { HashLink } from "react-router-hash-link";
 import { GeneratorContainer } from "../components/CodeGenerators/AIGeneratorBox";
 import Card from "../components/Base/Card";
@@ -25,7 +25,7 @@ function Hero() {
 
                 {/* Call to Action */}
                 <HashLink smooth to="/home/#about">
-                    <MyButton
+                    <Button
                         name="Get Started"
                         color="secondary"
                         className="px-8 py-4 mt-6 rounded-2xl text-xl sm:text-2xl font-extrabold shadow-lg hover:scale-105 transition-transform"
@@ -66,7 +66,7 @@ function AboutSection() {
                 </div>
 
                 <HashLink smooth to="/home/#how-it-works">
-                    <MyButton
+                    <Button
                         name="How It Works"
                         color="primary"
                         className="px-6 py-3 rounded-xl text-lg font-bold shadow hover:scale-105 transition-transform"
@@ -83,7 +83,7 @@ function GeneratorSection() {
             <div className="flex flex-col items-center justify-center space-y-10 py-20">
                 <GeneratorContainer />
                 <HashLink smooth to="#learn-more">
-                    <MyButton
+                    <Button
                         name="Learn More"
                         color="secondary"
                         className="px-6 py-3 rounded-xl text-lg sm:text-xl font-bold shadow-md hover:scale-105 transition-transform"
@@ -212,14 +212,14 @@ function HowItWorks() {
                 {/* CTA Buttons */}
                 <div className="flex flex-col sm:flex-row gap-6 justify-center pt-6">
                     <HashLink smooth to="/home/#generator-section">
-                        <MyButton
+                        <Button
                             name="Start with Generators"
                             color="primary"
                             className="px-6 py-3 rounded-xl text-lg font-bold shadow hover:scale-105 transition-transform"
                         />
                     </HashLink>
                     <HashLink smooth to="#questions">
-                        <MyButton
+                        <Button
                             name="Explore Questions"
                             color="secondary"
                             className="px-6 py-3 rounded-xl text-lg font-bold shadow-md hover:scale-105 transition-transform"
@@ -273,14 +273,14 @@ function QuestionsSection() {
                 <div className="flex flex-col sm:flex-row justify-center gap-6 pt-8">
 
                     <Link to="/questions">
-                        <MyButton
+                        <Button
                             name="Go to Question Page"
                             color="primary"
                             className="px-6 py-3 rounded-xl text-lg font-bold shadow hover:scale-105 transition-transform"
                         />
                     </Link>
                     <Link to="/createQuestion">"
-                        <MyButton
+                        <Button
                             name="Create Manual Question"
                             color="secondary"
                             className="px-6 py-3 rounded-xl text-lg font-bold shadow hover:scale-105 transition-transform"

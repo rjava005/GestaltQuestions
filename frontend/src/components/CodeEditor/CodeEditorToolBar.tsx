@@ -1,4 +1,4 @@
-import { MyButton } from "../Button/Button";
+import { Button } from "../Button/Button";
 import FileDropDown from "../Generic/FileDropDown";
 import { useCodeEditorContext } from "./../../context/CodeEditorContext";
 import { CodeSettings } from "../QuestionFilter/CodeSettings";
@@ -58,12 +58,12 @@ export function CodeEditorToolBar() {
         {/* Button Group */}
         <div className="flex flex-wrap gap-3 flex-1 justify-start">
           {/* Primary actions */}
-          <MyButton
+          <Button
             name="Upload"
             className="min-w-[110px]"
             onClick={() => setShowUpload((prev) => !prev)}
           />
-          <MyButton
+          <Button
             name="Save"
             className="min-w-[110px]"
             onClick={() =>
@@ -72,18 +72,18 @@ export function CodeEditorToolBar() {
           />
 
           {/* Secondary actions */}
-          <MyButton
+          <Button
             name="Delete"
             className="min-w-[110px]"
             onClick={() => setShowDelete((prev) => !prev)}
           />
-          <MyButton
+          <Button
             name="Show Logs"
             color="secondary"
             className="min-w-[110px]"
             onClick={() => setShowLogs((prev) => !prev)}
           />
-          <MyButton
+          <Button
             name="Edit Question Meta"
             color="success"
             className="min-w-[110px]"

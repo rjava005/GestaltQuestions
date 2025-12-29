@@ -1,7 +1,7 @@
 import UploadFiles from "../Forms/UploadFileComponent";
 import { useQuestionToolBarActions } from "../../hooks/useQuestionsToolBarActions";
 import { useState } from "react";
-import { MyButton } from "../Button/Button";
+import { Button } from "../Button/Button";
 
 export default function UploadZipQuestionModal({
     setShowModal,
@@ -77,7 +77,7 @@ export default function UploadZipQuestionModal({
 
                 {selectedFiles.length > 0 && (
                     <div className="pt-2">
-                        <MyButton
+                        <Button
                             name="Upload Question"
                             onClick={() => {
                                 handleQuestionUpload(selectedFiles);

@@ -1,6 +1,6 @@
 import { useState } from "react";
 import type { FormEvent } from "react";
-import { MyButton } from "../../components/Button/Button";
+import { Button } from "../../components/Button/Button";
 import { InputTextForm } from "../../components/Forms/InputComponents";
 import { UseAuthMode } from "../../context/AuthMode";
 import { getAuth, sendPasswordResetEmail } from "firebase/auth";
@@ -135,7 +135,7 @@ export default function AuthBase({ onSubmit }: AuthProps) {
                 )}
             </div>
 
-            <MyButton
+            <Button
                 type="submit"
                 name={
                     mode === "login"
@@ -148,7 +148,7 @@ export default function AuthBase({ onSubmit }: AuthProps) {
                 }
             />
             {mode === "passwordReset" && (
-                <MyButton
+                <Button
                     type="button" // prevent form submission
                     name="Go Back to Login"
                     onClick={() => setMode("login")}

@@ -8,7 +8,7 @@ import {
 import { IoMdAddCircleOutline } from "react-icons/io";
 import { MdFileUpload } from "react-icons/md";
 
-import { MyButton } from "../../components/Button/Button";
+import { Button } from "../../components/Button/Button";
 import Divider from "../../components/Base/Divider";
 import { SideBar, SideBarItem } from "../../components/SideBar";
 
@@ -40,14 +40,14 @@ export default function QuestionBuilderSideBar() {
       />
       <Divider />
       <div className="flex flex-col  gap-y-5 items-center justify-center my-4 w-full">
-        <MyButton
+        <Button
           name="Create"
           className="w-5/10 flex flex-row items-center justify-start gap-x-2 font-bold"
           icon={IoMdAddCircleOutline}
           onClick={() => setView("create")}
         />
 
-        <MyButton
+        <Button
           name="Upload"
           className="w-5/10 flex flex-row items-center justify-start gap-x-2 font-bold"
           color="showSolution"

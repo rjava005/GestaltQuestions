@@ -1,4 +1,4 @@
-import { MyButton } from "../Button/Button";
+import { Button } from "../Button/Button";
 import { useState } from "react";
 import UploadFiles from "../Forms/UploadFileComponent";
 
@@ -34,7 +34,7 @@ export function UploadCodeFile({ questionId, onSubmit }: { questionId: string, o
             </div>
 
             <div>
-                <MyButton name="Upload" onClick={() => onSubmit(questionId, uploadedFiles)} />
+                <Button name="Upload" onClick={() => onSubmit(questionId, uploadedFiles)} />
             </div>
         </div>
     );

@@ -1,5 +1,5 @@
 import { useAuth } from "../../context/AuthContext";
-import { MyButton } from "../../components/Button/Button";
+import { Button } from "../../components/Button/Button";
 import { deleteUser } from "firebase/auth";
 import { toast } from "react-toastify";
 
@@ -30,9 +30,9 @@ export default function AccountOptions() {
             </h2>
 
             <div className="flex flex-col space-y-3 w-full">
-                <MyButton name="Logout" onClick={logout} color="secondary" size="md" />
+                <Button name="Logout" onClick={logout} color="secondary" size="md" />
 
-                <MyButton
+                <Button
                     name="Delete Account"
                     onClick={deleteAccount}
                     color="danger"
