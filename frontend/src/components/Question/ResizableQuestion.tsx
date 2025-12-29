@@ -1,5 +1,5 @@
 import { useState } from "react";
-import SectionContainer from "../Base/SectionContainer";
+import SectionContainer from "../Section/Section";
 import {
   Panel as RPanel,
   PanelGroup,

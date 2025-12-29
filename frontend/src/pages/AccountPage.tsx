@@ -1,4 +1,4 @@
-import SectionContainer from "../components/Base/SectionContainer";
+import SectionContainer from "../components/Section/Section";
 import AccountPageHeader from "../features/AccountPage/AccountPageHeader";
 import AccountProfilePic from "../features/AccountPage/AccountProfilePic";
 import AccountInformation from "../features/AccountPage/AccountInformation";

@@ -1,5 +1,5 @@
 import { DerivationRender } from "../components/Lecture/Derivation";
-import SectionContainer from "../components/Base/SectionContainer";
+import SectionContainer from "../components/Section/Section";
 import type { Derivation } from "../components/Lecture/Derivation";
 
 const mock_data: Derivation = {

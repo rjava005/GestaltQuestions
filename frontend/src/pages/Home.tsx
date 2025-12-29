@@ -1,4 +1,4 @@
-import SectionContainer from "../components/Base/SectionContainer";
+import SectionContainer from "../components/Section/Section";
 import { MyButton } from "../components/Base/Button";
 import { HashLink } from "react-router-hash-link";
 import { GeneratorContainer } from "../components/CodeGenerators/AIGeneratorBox";

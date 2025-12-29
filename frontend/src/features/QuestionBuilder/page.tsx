@@ -7,7 +7,7 @@ import {
   TbLayoutSidebarRightExpandFilled,
 } from "react-icons/tb";
 
-import SectionContainer from "../../components/Base/SectionContainer";
+import SectionContainer from "../../components/Section/Section";
 import CodeEditorBase from "../../components/CodeEditor/CodeEditorBase";
 
 import QuestionBuilderHeader from "./Header";

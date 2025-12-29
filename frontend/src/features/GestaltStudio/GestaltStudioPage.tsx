@@ -8,7 +8,7 @@ import remarkRehype from "remark-rehype";
 import rehypeStringify from "rehype-stringify";
 
 // UI Components
-import SectionContainer from "../../components/Base/SectionContainer";
+import SectionContainer from "../../components/Section/Section";
 import MarkDownEditor from "../../components/markdownEditor/MarkdownEditor";
 import QuestionHTMLToReact from "../QuestionComponents/ParseQuestionHTML";
 import { visit } from "unist-util-visit";

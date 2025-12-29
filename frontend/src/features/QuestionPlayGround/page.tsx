@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Panel, PanelGroup, PanelResizeHandle } from "react-resizable-panels";
 
-import SectionContainer from "../../components/Base/SectionContainer";
+import SectionContainer from "../../components/Section/Section";
 import CodeEditorGeneric from "../../components/CodeEditor/CodeEditorGeneric";
 import {
     DropDownAdvance,

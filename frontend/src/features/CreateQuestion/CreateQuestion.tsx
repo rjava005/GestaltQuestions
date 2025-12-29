@@ -1,15 +1,24 @@
-import type { QuestionData } from "../../types/questionTypes"
-
+import type { QuestionData } from "../../types/questionTypes";
+import { Header } from "../../components/Header";
+import Divider from "../../components/Base/Divider";
 
 function QuestionMeta() {
-    return <div>Question Metadata</div>
+  return <div>Question Metadata</div>;
 }
 
-function Header() {
-    return <div>Create Question</div>
+function CreateHeader() {
+  return (
+    <Header style={"QuestionBuilder"} title="Create Question">
+      Content
+    </Header>
+  );
 }
-
 
 export default function CreateQuestion() {
-    return <div>Create a question</div>
+  return (
+    <>
+      <CreateHeader />
+      <Divider />
+    </>
+  );
 }

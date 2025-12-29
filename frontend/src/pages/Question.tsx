@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { DisplayFiles } from "../components/Generic/DisplayFiles";
 import UploadFiles from "../components/Forms/UploadFileComponent";
-import SectionContainer from "../components/Base/SectionContainer";
+import SectionContainer from "../components/Section/Section";
 
 
 function CreateQuestionHeader() {
