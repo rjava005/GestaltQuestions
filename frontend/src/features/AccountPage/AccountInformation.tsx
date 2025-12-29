@@ -1,7 +1,7 @@
 import { useAuth } from "../../context/AuthContext";
 import { useEffect, useState } from "react";
 import { FaEdit } from "react-icons/fa";
-import { InputTextForm } from "../../components/Forms/InputComponents";
+import { InputTextForm } from "../../components/FormInputs/InputComponents";
 import { Button } from "../../components/Button/Button";
 import AccountFieldContainer from "./AccountFieldContainer";
 import { updateEmail, updatePassword } from "firebase/auth";

@@ -28,7 +28,7 @@ const colorClasses: Record<ButtonColor, string> = {
     "bg-indigo-500 text-white hover:bg-indigo-600 dark:bg-indigo-700 dark:hover:bg-indigo-800",
 
   secondary:
-    "bg-gray-300 text-gray-900 hover:bg-gray-400 dark:bg-gray-700 dark:text-white dark:hover:bg-gray-600",
+    "bg-gray-500 text-gray-900 hover:bg-gray-400 dark:bg-gray-700 dark:text-white dark:hover:bg-gray-600",
 
   danger:
     "bg-red-500 text-white hover:bg-red-600 dark:bg-red-700 dark:hover:bg-red-800",

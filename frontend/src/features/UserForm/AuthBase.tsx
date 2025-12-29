@@ -1,11 +1,11 @@
 import { useState } from "react";
 import type { FormEvent } from "react";
 import { Button } from "../../components/Button/Button";
-import { InputTextForm } from "../../components/Forms/InputComponents";
+import { InputTextForm } from "../../components/FormInputs/InputComponents";
 import { UseAuthMode } from "../../context/AuthMode";
 import { getAuth, sendPasswordResetEmail } from "firebase/auth";
 import { toast } from "react-toastify";
-import { SelectComponent } from "../../components/Forms/SelectComponent";
+import { SelectComponent } from "../../components/FormInputs/SelectComponent";
 import { AllowedInstitutions, type ValidInstitutions } from "../../types/userTypes";
 
 type AuthProps = {

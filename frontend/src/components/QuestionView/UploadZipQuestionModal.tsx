@@ -1,4 +1,4 @@
-import UploadFiles from "../Forms/UploadFileComponent";
+import UploadFiles from "../FormInputs/UploadFileComponent";
 import { useQuestionToolBarActions } from "../../hooks/useQuestionsToolBarActions";
 import { useState } from "react";
 import { Button } from "../Button/Button";

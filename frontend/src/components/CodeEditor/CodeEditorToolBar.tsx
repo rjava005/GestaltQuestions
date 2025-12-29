@@ -12,7 +12,7 @@ import {
 import { useState } from "react";
 import { UploadCodeFile } from "./UploadCodeFiles";
 import { DeleteCodeFile } from "./DeletedCodeFiles";
-import QuestionUpdateForm from "../Forms/UpdateQuestionMeta";
+import QuestionUpdateForm from "../FormInputs/UpdateQuestionMeta";
 
 export function CodeEditorToolBar() {
   const {

@@ -1,6 +1,6 @@
 import { Button } from "../Button/Button";
 import { useState } from "react";
-import UploadFiles from "../Forms/UploadFileComponent";
+import UploadFiles from "../FormInputs/UploadFileComponent";
 
 
 export function UploadCodeFile({ questionId, onSubmit }: { questionId: string, onSubmit: (questionId: string, files: File[]) => void }) {
