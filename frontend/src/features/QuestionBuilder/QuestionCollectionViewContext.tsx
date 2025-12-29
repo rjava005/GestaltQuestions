@@ -9,7 +9,9 @@ export type QuestionCollectionView =
     | "current"
     | "drafts"
     | "published"
-    | "archived";
+    | "archived"
+    | "create"
+    | "upload";
 
 export const QuestionCollectionViewLabels: Record<
     QuestionCollectionView,
@@ -20,6 +22,8 @@ export const QuestionCollectionViewLabels: Record<
     drafts: "Drafts",
     published: "Published",
     archived: "Archived",
+    create: "Create Question",
+    upload: "Upload Question"
 };
 
 /* =======================

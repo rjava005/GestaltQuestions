@@ -1,7 +1,7 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import AllQuestions from "../QuestionLibrary/AllQuestions";
 import { Panel, PanelGroup, PanelResizeHandle } from "react-resizable-panels";
-
+import { CreateQuestion } from "../CreateQuestion";
 import {
   TbLayoutSidebarRightCollapseFilled,
   TbLayoutSidebarRightExpandFilled,
@@ -88,9 +88,10 @@ export default function QuestionBuilder() {
               <MainContent />
             ) : view === "all" ? (
               <AllQuestions />
-            ) : (
-              <div>{view}</div>
-            )}
+            ) : view === "create" ? (
+              <CreateQuestion />
+            ) :
+              <div>{view}</div>}
           </div>
         </Panel>
       </PanelGroup>

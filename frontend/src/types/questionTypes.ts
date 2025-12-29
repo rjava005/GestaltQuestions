@@ -1,7 +1,6 @@
 // For question types reference api/models
-
-export type QuestionType = "Numerical" | "MultipleChoice" | "Example" | "Other";
 import type { GeneralResponse } from "./responseTypes";
+export type QuestionType = "Numerical" | "MultipleChoice" | "Example" | "Other";
 
 export type questionRel = {
   name: string;
@@ -45,5 +44,3 @@ export type FileName = GeneralResponse & {
   files: FileData[];
   file_paths: string[];
 };
-
-
