@@ -9,7 +9,7 @@ import { Link } from "react-router-dom";
 
 function Hero() {
     return (
-        <Section id="hero" style="hero" className="bg-gray-50 dark:bg-gray-900">
+        <Section id="hero" variant="hero" className="bg-gray-50 dark:bg-gray-900">
             <div className="text-center space-y-6 px-6 max-w-3xl mx-auto py-20">
                 {/* Title */}
                 <h1 className="font-extrabold text-4xl sm:text-6xl text-gray-900 dark:text-white">
@@ -38,7 +38,7 @@ function Hero() {
 
 function AboutSection() {
     return (
-        <Section id="about" style="hero" className="bg-white dark:bg-gray-800">
+        <Section id="about" variant="hero" className="bg-white dark:bg-gray-800">
             <div className="max-w-4xl mx-auto text-center space-y-8 px-6 py-16">
                 {/* Heading */}
                 <h2 className="text-3xl sm:text-5xl font-extrabold text-gray-900 dark:text-white">
@@ -79,7 +79,7 @@ function AboutSection() {
 
 function GeneratorSection() {
     return (
-        <Section id="generator-section" style="hero" className="bg-gray-50 dark:bg-gray-900">
+        <Section id="generator-section" variant="hero" className="bg-gray-50 dark:bg-gray-900">
             <div className="flex flex-col items-center justify-center space-y-10 py-20">
                 <GeneratorContainer />
                 <HashLink smooth to="#learn-more">
@@ -96,7 +96,7 @@ function GeneratorSection() {
 
 function LearnMore() {
     return (
-        <Section id="learn-more" style="hero" className="bg-white dark:bg-gray-800">
+        <Section id="learn-more" variant="hero" className="bg-white dark:bg-gray-800">
             <div className="max-w-6xl mx-auto text-center space-y-10 px-6 py-16">
                 {/* Heading */}
                 <h2 className="text-3xl sm:text-5xl font-extrabold text-gray-900 dark:text-white">
@@ -163,7 +163,7 @@ function LearnMore() {
 
 function HowItWorks() {
     return (
-        <Section id="how-it-works" style="hero" className="bg-gray-50 dark:bg-gray-900">
+        <Section id="how-it-works" variant="hero" className="bg-gray-50 dark:bg-gray-900">
             <div className="max-w-5xl w-full mx-auto text-center space-y-10 px-6 py-16">
                 {/* Heading */}
                 <h2 className="text-3xl sm:text-5xl font-extrabold text-gray-900 dark:text-white">
@@ -193,7 +193,7 @@ function HowItWorks() {
                         {
                             step: "4",
                             title: "Review & Customize",
-                            text: "Adjust content, add your own questions, and download files to fit your course or study style."
+                            text: "Adjust content, add your own questions, and download files to fit your course or study variant."
                         }
                     ].map((item) => (
                         <Card
@@ -232,7 +232,7 @@ function HowItWorks() {
 }
 function QuestionsSection() {
     return (
-        <Section id="questions" style="hero" className="bg-gray-50 dark:bg-gray-900">
+        <Section id="questions" variant="hero" className="bg-gray-50 dark:bg-gray-900">
             <div className="max-w-5xl mx-auto text-center space-y-10 px-6 py-16">
                 {/* Heading */}
                 <h2 className="text-3xl sm:text-5xl font-extrabold text-gray-900 dark:text-white">
