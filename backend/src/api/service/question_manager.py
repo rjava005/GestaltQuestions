@@ -139,7 +139,7 @@ class QuestionManager:
         except Exception as e:
             raise HTTPException(
                 status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-                detail="Could not filter question {e}",
+                detail=f"Could not filter question {e}",
             )
 
     def get_question_path(

@@ -131,6 +131,7 @@ class QuestionBase(BaseModel):
     ai_generated: Optional[bool] = None
     isAdaptive: Optional[bool] = None
     question_path: str | None = None
+    status: Status
     model_config = ConfigDict(extra="ignore")
 
 

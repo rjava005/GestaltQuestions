@@ -7,6 +7,7 @@ from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.inspection import inspect
 from sqlalchemy.orm.properties import RelationshipProperty
 from sqlmodel import SQLModel, select
+from enum import Enum
 
 # --- Internal ---
 from src.api.core import logger
@@ -92,6 +93,9 @@ def filter_conditional(
         return column.is_(value)
 
     if isinstance(value, (int, float)):
+        return column == value
+
+    if isinstance(value, Enum):
         return column == value
 
     if partial:
