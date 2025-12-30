@@ -15,7 +15,7 @@ import { MdDelete, MdFileUpload } from "react-icons/md";
 import SearchBar from "../Base/SearchBar";
 import { MyModal } from "../Base/MyModal";
 
-import UploadZipQuestionModal from "./UploadZipQuestionModal";
+import UploadZipQuestionModal from "../../features/CreateQuestion/UploadZipQuestionModal";
 
 interface ActionButtonProps {
   icon: IconType;

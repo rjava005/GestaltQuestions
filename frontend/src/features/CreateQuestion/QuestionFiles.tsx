@@ -1,5 +1,6 @@
 import Checkbox from "@mui/material/Checkbox";
 import Divider from "../../components/Base/Divider";
+import { useEffect } from "react";
 import { type Filenames, useCreateMode } from "./context";
 
 type QuestionFileSpec = {
@@ -43,7 +44,7 @@ function QuestionFileDisplay({
     isAdaptive,
     description,
 }: QuestionFileSpec) {
-    const { setFiles, files } = useCreateMode();
+    const { setFiles, files, isAdaptive: isAdaptiveChecked } = useCreateMode();
 
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const value = event.target.value as Filenames;
@@ -57,14 +58,25 @@ function QuestionFileDisplay({
         });
     };
 
-    const isChecked = files.includes(filename) || required;
+    useEffect(() => {
+        if (!isAdaptive) return;
+        setFiles((prev) => {
+            if (isAdaptiveChecked) {
+                return prev.includes(filename) ? prev : [...prev, filename];
+            }
+            return prev.filter((f) => f !== filename);
+        });
+    }, [isAdaptiveChecked, isAdaptive, filename, setFiles]);
+
+
+    const isChecked = files.includes(filename) || required || (isAdaptiveChecked && isAdaptive);
 
     return (
         <div className="flex items-start gap-3 rounded-md border border-slate-200 bg-white px-3 py-2 hover:bg-slate-50 transition">
             <Checkbox
                 value={filename}
                 checked={isChecked}
-                disabled={required}
+                disabled={required || (isAdaptiveChecked && isAdaptive)}
                 onChange={handleChange}
                 className="mt-1"
             />
@@ -75,7 +87,7 @@ function QuestionFileDisplay({
                         {filename}
                     </span>
 
-                    {required && (
+                    {required || (isAdaptive && isAdaptiveChecked) && (
                         <span className="rounded bg-slate-100 px-1.5 py-0.5 text-xs font-medium text-slate-600">
                             required
                         </span>

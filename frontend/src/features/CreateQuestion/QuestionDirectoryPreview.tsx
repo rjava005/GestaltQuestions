@@ -1,5 +1,5 @@
 import { CiFolderOn } from "react-icons/ci";
-import { type Filenames, useCreateMode } from "./context";
+import { useCreateMode } from "./context";
 import { MdOutlineSubdirectoryArrowRight } from "react-icons/md";
 
 

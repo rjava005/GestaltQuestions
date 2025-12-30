@@ -1,20 +1,37 @@
 import { QuestionAPI } from "../../services";
 import type { QuestionData } from "../../types/questionTypes";
 import { InputTextForm, BooleanField } from "../../components/FormInputs";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useCreateMode } from "./context";
 
 export default function QuestionMeta() {
     const [title, setTitle] = useState("");
+
+    // Handle raw values
+    const [topicsInput, setTopicsInput] = useState<string>("");
     const [topics, setTopics] = useState<string[]>([]);
+    const [questionTypeInput, setQuestionTypeInput] = useState("");
     const [questionType, setQuestionType] = useState<string[]>([]);
+    // boolean
     const [isAdaptive, setIsAdaptive] = useState(false);
     const [aiGenerated, setAIGenerated] = useState(false);
+
+    const { setIsAdaptive: setAdaptiveFlag } = useCreateMode()
 
     const handleCommaSeparation = (val: string) =>
         val
             .split(",")
             .map((v) => v.trim())
             .filter(Boolean);
+
+    useEffect(() => {
+        setTopics(handleCommaSeparation(topicsInput))
+    }, [topicsInput,setTopicsInput])
+
+    useEffect(() => {
+        setQuestionType(handleCommaSeparation(questionTypeInput))
+    }, [questionTypeInput, setQuestionTypeInput])
+
 
     return (
         <section className="w-full h-full rounded-lg border border-slate-200 bg-white p-4 shadow-sm">
@@ -41,23 +58,23 @@ export default function QuestionMeta() {
                 <div className="grid grid-cols-1 gap-2 md:grid-cols-2">
                     <InputTextForm
                         id="topics"
-                        value={topics.join(", ")}
+                        value={topicsInput}
                         type="text"
                         label="Topics"
                         hint="Comma separated (e.g. dynamics, kinematics)"
                         variant="createQuestion"
-                        onChange={(e) => setTopics(handleCommaSeparation(e.target.value))}
+                        onChange={(e) => setTopicsInput(e.target.value)}
                     />
 
                     <InputTextForm
                         id="question-type"
-                        value={questionType.join(", ")}
+                        value={questionTypeInput}
                         type="text"
                         label="Question Types"
                         hint="e.g. conceptual, numerical, coding"
                         variant="createQuestion"
                         onChange={(e) =>
-                            setQuestionType(handleCommaSeparation(e.target.value))
+                            setQuestionTypeInput(e.target.value)
                         }
                     />
                 </div>
@@ -67,7 +84,7 @@ export default function QuestionMeta() {
                     <BooleanField
                         label="Adaptive Question"
                         value={isAdaptive}
-                        onChange={setIsAdaptive}
+                        onChange={(value) => { setIsAdaptive(value); setAdaptiveFlag(value); }}
                     />
 
                     <BooleanField

@@ -7,25 +7,26 @@ import { useCreateMode } from "./context";
 import { CreateQuestionFromBlank } from "./CreateQuestionFromBlank";
 
 import { Button } from "../../components/Button/Button";
+import UploadZipQuestionModal from "./UploadZipQuestionModal";
 
 export default function CreateQuestion() {
-  const { mode } = useCreateMode();
-  return (
-    <Section variant="questionBuilder" id="create-question" className="gap-3">
-      <Header
-        style={"QuestionBuilder"}
-        title="Create Question"
-        className="flex flex-row justify-between "
-      >
-        <div className="flex flex-row gap-4">
-          <Button size="md" name="Save" className="grow" />
-          <Button size="md" name="Cancel" color="secondary" className="grow" />
-        </div>
-      </Header>
-      <Divider />
-      <ModeToggle />
+    const { mode } = useCreateMode();
+    return (
+        <Section variant="questionBuilder" id="create-question" className="gap-3">
+            <Header
+                style={"QuestionBuilder"}
+                title="Create Question"
+                className="flex flex-row justify-between "
+            >
+                <div className="flex flex-row gap-4">
+                    <Button size="md" name="Save" className="grow" />
+                    <Button size="md" name="Cancel" color="secondary" className="grow" />
+                </div>
+            </Header>
+            <Divider />
+            <ModeToggle />
 
-      {mode === "blank" && <CreateQuestionFromBlank />}
-    </Section>
-  );
+            {mode === "blank" ? <CreateQuestionFromBlank /> : <UploadZipQuestionModal setShowModal={() => { }} />}
+        </Section>
+    );
 }
