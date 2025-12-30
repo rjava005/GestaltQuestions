@@ -17,7 +17,7 @@ export default function QuestionMeta() {
             .filter(Boolean);
 
     return (
-        <section className="w-full rounded-lg border border-slate-200 bg-white p-4 shadow-sm">
+        <section className="w-full h-full rounded-lg border border-slate-200 bg-white p-4 shadow-sm">
             {/* Header */}
             <div className="mb-4">
                 <h2 className="text-base font-semibold text-slate-900">
