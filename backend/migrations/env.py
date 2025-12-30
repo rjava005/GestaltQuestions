@@ -6,7 +6,7 @@ from sqlmodel import SQLModel
 from pathlib import Path
 from alembic import context
 from dotenv import load_dotenv
-from src.api.db_models.question import (
+from src.api.database.models.question import (
     Question,
     QuestionLanguageLink,
     QuestionTopicLink,
@@ -15,8 +15,9 @@ from src.api.db_models.question import (
     Language,
     QuestionType,
 )
-from src.api.database.models.users import Institution, UserRoleLink, User, Role
-from src.api.database.models.hybrid import QuestionOwnership, QuestionReview
+from src.api.database.models.institution import Institution
+from src.api.database.models.users import UserRoleLink, User, Role
+from src.api.database.models.question_ownership import QuestionOwnership, QuestionReview
 from src.api.database.models.question_attempt import QuestionAttempt
 from src.api.core.config import AppSettings
 import os

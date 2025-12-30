@@ -1,17 +1,25 @@
 # Standard library
 from typing import List, Optional, Sequence, Literal, TYPE_CHECKING
 from uuid import UUID, uuid4
+from enum import Enum
 
 # Third-party libraries
 from pydantic import BaseModel, ConfigDict, Field
 from sqlmodel import Field as SQLField, Relationship, SQLModel
-from .hybrid import QuestionOwnership
+from sqlalchemy import text
+from .question_ownership import QuestionOwnership
 
 if TYPE_CHECKING:
     from .users import User
 
 
 AllowedLanguages = Literal["javascript", "python"]
+
+
+class Status(Enum):
+    ARCHIVED = "archived"
+    DRAFT = "draft"
+    PUBLISHED = "published"
 
 
 # Link tables for many to many
@@ -56,6 +64,11 @@ class Question(SQLModel, table=True):
     # Storage where the question is saved
     local_path: Optional[str] = None
     blob_path: Optional[str] = None
+
+    # Status of the question whheter it is published, archived etc
+    status: Status = SQLField(
+        default=Status.DRAFT, sa_column_kwargs={"server_default": text("'draft'")}
+    )
 
     # Relationships
 

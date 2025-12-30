@@ -1,5 +1,5 @@
 import Checkbox from "@mui/material/Checkbox";
-import Divider from "../../components/Base/Divider";
+import Divider from "../../components/Divider/Divider";
 import { useEffect } from "react";
 import { type Filenames, useCreateMode } from "./context";
 

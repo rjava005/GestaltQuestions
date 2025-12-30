@@ -1,5 +1,5 @@
 import { Header } from "../../components/Header";
-import Divider from "../../components/Base/Divider";
+import Divider from "../../components/Divider/Divider";
 import { Section } from "../../components/Section";
 
 import ModeToggle from "./ModeToggle";
