@@ -15,7 +15,7 @@ import { SideBar, SideBarItem } from "../../components/SideBar";
 import {
   type QuestionCollectionView,
   useQuestionCollectionViewContext,
-} from "./QuestionCollectionViewContext";
+} from "./context";
 
 export const sidebarItems: SideBarItem<QuestionCollectionView>[] = [
   { key: "all", label: "All Questions", icon: BsCollection },
@@ -45,14 +45,6 @@ export default function QuestionBuilderSideBar() {
           className="w-5/10 flex flex-row items-center justify-start gap-x-2 font-bold"
           icon={IoMdAddCircleOutline}
           onClick={() => setView("create")}
-        />
-
-        <Button
-          name="Upload"
-          className="w-5/10 flex flex-row items-center justify-start gap-x-2 font-bold"
-          color="showSolution"
-          icon={MdFileUpload}
-          onClick={() => setView("upload")}
         />
       </div>
       <Divider />

@@ -13,8 +13,8 @@ import CodeEditorBase from "../../components/CodeEditor/CodeEditorBase";
 import QuestionBuilderHeader from "./Header";
 import { QuestionEditorSections } from "./QuestionEditorSections";
 import QuestionBuilderSideBar from "./QuestionBuilderSideBar";
-import { useQuestionBuildingContext } from "./QuestionBuilderContext";
-import { useQuestionCollectionViewContext } from "./QuestionCollectionViewContext";
+import { useQuestionBuildingContext, useQuestionCollectionViewContext } from "./context";
+
 
 const Mockdata = {
   title: "Adding 2 Numbers",

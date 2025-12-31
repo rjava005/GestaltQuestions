@@ -96,7 +96,7 @@ def filter_conditional(
         return column == value
 
     if isinstance(value, Enum):
-        return column == value
+        return column.lower == value.value
 
     if partial:
         # Case-insensitive partial match

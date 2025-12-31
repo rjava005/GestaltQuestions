@@ -30,6 +30,7 @@ export default function QuestionTable() {
         setRowsPerPage(parseInt(e.target.value, 10));
         setPage(0);
     };
+    console.log("These are all the questions", questions[0])
     return (
         <div className="w-full lg:w-3/4 mt-10">
             <TableContainer

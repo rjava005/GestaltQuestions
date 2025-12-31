@@ -1,7 +1,7 @@
 import {
   type QuestionBuilderSection,
   useQuestionBuildingContext,
-} from "./QuestionBuilderContext";
+} from "./context";
 import { type SectionItem, SectionToolBar } from "../../components/SectionTabs";
 
 export const SectionItems: SectionItem<QuestionBuilderSection>[] = [

@@ -67,7 +67,8 @@ class Question(SQLModel, table=True):
 
     # Status of the question whheter it is published, archived etc
     status: Status = SQLField(
-        default=Status.DRAFT, sa_column_kwargs={"server_default": text("'draft'")}
+        default=Status.DRAFT,
+        sa_column_kwargs={"server_default": Status.DRAFT.name.upper()},
     )
 
     # Relationships
@@ -131,7 +132,6 @@ class QuestionBase(BaseModel):
     ai_generated: Optional[bool] = None
     isAdaptive: Optional[bool] = None
     question_path: str | None = None
-    status: Status
     model_config = ConfigDict(extra="ignore")
 
 
