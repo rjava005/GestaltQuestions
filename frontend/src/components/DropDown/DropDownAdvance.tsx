@@ -1,7 +1,8 @@
 import { type DropDownBase } from "./types";
 import { type IconType } from "react-icons";
-import { useState } from "react";
+import { useState, useRef } from "react";
 import clsx from "clsx";
+import { useOnClickOutside } from "../../hooks/useOnClickOutside";
 
 export type DropDownAdvanceOption = {
   value: string;
@@ -22,6 +23,7 @@ export default function DropDownAdvance({
   open: controlledOpen,
   onOpenChange,
 }: DropDownAdvanceProps) {
+  const containerRef = useRef<HTMLDivElement | null>(null);
   const [uncontrolledOpen, setUncontrolledOpen] = useState(false);
   const isControlled = controlledOpen !== undefined;
   const open = isControlled ? controlledOpen : uncontrolledOpen;
@@ -33,11 +35,15 @@ export default function DropDownAdvance({
     onOpenChange?.(value);
   };
 
+  useOnClickOutside(containerRef, () => {
+    if (open) setOpen(false);
+  });
+
   const selectedOption = options.find((o) => o.value === selected);
   const SelectedIcon = selectedOption?.icon;
 
   return (
-    <div className="relative w-full">
+    <div ref={containerRef} className="relative w-full">
       <label className="block mb-1 text-sm font-medium text-slate-700">
         {label}
       </label>
@@ -67,7 +73,7 @@ export default function DropDownAdvance({
                 key={opt.value}
                 onClick={() => {
                   setSelected(opt.value);
-                  setOpen(false);
+                  // setOpen(false);
                 }}
                 className={clsx(
                   "w-full px-3 py-2 flex items-center gap-2 text-sm text-left hover:bg-slate-100",

@@ -2,7 +2,7 @@
 import { useMemo, useState } from "react";
 import clsx from "clsx";
 import { useDebounce } from "@uidotdev/usehooks";
-import { DropDownAdvance } from "../../components/Generic/DropDown";
+import DropDownAdvance from "../../components/DropDown/DropDownAdvance";
 
 import { ActionButton } from "../../components/Button";
 import { SearchBar } from "../../components/SearchBar";
@@ -129,7 +129,7 @@ export default function TableToolBar() {
                                         selected={""}
                                         setSelected={(v) => handleColumnSelect(v)}
                                         open={openDropDown}
-                                        onOpenChange={() => setOpenDropDown(true)}
+                                        onOpenChange = {setOpenDropDown}
                                     />
                                 )}
                             </>
