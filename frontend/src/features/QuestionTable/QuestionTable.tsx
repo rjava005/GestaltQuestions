@@ -27,7 +27,7 @@ export default function QuestionTable() {
     selectedQuestions,
     questions,
   } = useQuestionCollectionContext();
-  const { multiSelect, setResetKey, resetKey } = useQuestionTableContext();
+  const { multiSelect, setResetKey, resetKey, columns, setColumns } = useQuestionTableContext();
 
   const paged = useMemo(
     () => questions.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage),
@@ -59,7 +59,7 @@ export default function QuestionTable() {
   }, [multiSelect]);
 
 
-  console.log("This is the only quesiton ", questions[3])
+  console.log("Inside the table", columns)
 
   return (
     <div className="w-full lg:w-3/4 mt-10">
@@ -111,11 +111,11 @@ export default function QuestionTable() {
                       >
                         {col.render
                           ? col.render(
-                              question,
-                              selectedQuestionID === question.id
-                                ? "font-semibold text-indigo-700"
-                                : ""
-                            )
+                            question,
+                            selectedQuestionID === question.id
+                              ? "font-semibold text-indigo-700"
+                              : ""
+                          )
                           : null}
                       </TableCell>
                     );

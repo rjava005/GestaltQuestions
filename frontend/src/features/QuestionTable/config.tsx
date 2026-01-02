@@ -1,44 +1,13 @@
-import type {
-  QuestionData,
-  QuestionMeta,
-  questionRel,
-} from "../../types/questionTypes";
 import clsx from "clsx";
-
-
-type ColumnKey = keyof QuestionData | "select";
-type TableColumn<T> = {
-  key: ColumnKey;
-  label: string;
-  default: boolean;
-  render?: (row: T, className?: string) => React.ReactNode;
-};
-
-function isRelArray(value: unknown): value is questionRel[] {
-  return (
-    Array.isArray(value) &&
-    value.length > 0 &&
-    typeof value[0] === "object" &&
-    value[0] !== null &&
-    "name" in value[0]
-  );
-}
-function isStringArray(value: unknown): value is string[] {
-  return (
-    Array.isArray(value) && (value.length === 0 || typeof value === "string")
-  );
-}
-function formatRelationshipField(value?: string[] | questionRel[]): string {
-  if (!value || value.length === 0) return "-";
-
-  if (isStringArray(value)) {
-    return value.join(", ");
-  }
-  if (isRelArray(value)) {
-    return value.map((v) => v.name).join(", ");
-  }
-  return "—";
-}
+import type { QuestionData, QuestionMeta } from "../../types/questionTypes";
+import type { TableColumn } from "./types";
+import { formatRelationshipField } from "./utils";
+import { BiSelectMultiple } from "react-icons/bi";
+import { IoMdDownload } from "react-icons/io";
+import { MdDelete } from "react-icons/md";
+import { IoSettings } from "react-icons/io5";
+import { FaSyncAlt } from "react-icons/fa";
+import { type ToolBarItem } from "./types";
 
 export const QuestionTableColumns: TableColumn<QuestionData | QuestionMeta>[] =
   [
@@ -120,3 +89,40 @@ export const QuestionTableColumns: TableColumn<QuestionData | QuestionMeta>[] =
     },
   ];
 
+export const ToolBarItems: ToolBarItem<
+  TableColumn<QuestionData | QuestionMeta>
+>[] = [
+  {
+    label: "Multi-Select",
+    action: "TOGGLE_MULTI_SELECT",
+    icon: BiSelectMultiple,
+    kind: "button",
+  },
+  {
+    label: "Download",
+    action: "DOWNLOAD",
+    icon: IoMdDownload,
+    multiSelect: true,
+    kind: "button",
+  },
+  {
+    label: "Delete Question",
+    action: "DELETE",
+    icon: MdDelete,
+    multiSelect: true,
+    kind: "button",
+  },
+  {
+    label: "Sync",
+    action: "SYNC",
+    icon: FaSyncAlt,
+    kind: "button",
+  },
+  {
+    label: "Table Settings",
+    action: "TABLE_SETTINGS",
+    icon: IoSettings,
+    kind: "dropdown",
+    items: QuestionTableColumns,
+  },
+];

@@ -13,6 +13,7 @@ type DropDownAdvanceProps = DropDownBase & {
   options: DropDownAdvanceOption[];
   open?: boolean;
   onOpenChange?: (open: boolean) => void;
+  className?: string
 };
 
 export default function DropDownAdvance({
@@ -22,6 +23,8 @@ export default function DropDownAdvance({
   label,
   open: controlledOpen,
   onOpenChange,
+  className
+
 }: DropDownAdvanceProps) {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const [uncontrolledOpen, setUncontrolledOpen] = useState(false);
@@ -43,7 +46,7 @@ export default function DropDownAdvance({
   const SelectedIcon = selectedOption?.icon;
 
   return (
-    <div ref={containerRef} className="relative w-full">
+    <div ref={containerRef} className={clsx("relative w-full", className)}>
       <label className="block mb-1 text-sm font-medium text-slate-700">
         {label}
       </label>
