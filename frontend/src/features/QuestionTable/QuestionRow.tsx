@@ -64,7 +64,7 @@ export function QuestionRow({ question }: Props) {
             "text-base font-medium",
             "transition-all duration-300 ease-in-out",
             selectedQuestionID === question.id &&
-              "font-semibold text-indigo-700"
+            "font-semibold text-indigo-700"
           )}
         >
           {question.title}
@@ -72,6 +72,18 @@ export function QuestionRow({ question }: Props) {
       </TableCell>
 
       {/* Adaptive / Non-Adaptive Badge */}
+      <TableCell>
+        <span
+          className={clsx(
+            "w-full px-2 py-1 rounded-full text-lg font-semibold",
+            question.isAdaptive
+              ? "bg-green-100 text-green-800 dark:bg-green-800 dark:text-green-100"
+              : "bg-gray-200 text-gray-700 dark:bg-gray-700 dark:text-gray-300"
+          )}
+        >
+          {question.isAdaptive ? "Adaptive" : "Non-Adaptive"}
+        </span>
+      </TableCell>
       <TableCell>
         <span
           className={clsx(

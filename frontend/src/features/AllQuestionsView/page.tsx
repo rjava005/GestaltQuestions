@@ -1,7 +1,12 @@
-import QuestionLibraryHeader from "./Header";
-import { QuestionTable } from "../QuestionTable";
+
+import { QuestionTable, TableToolBar } from "../QuestionTable";
 import { useRetrievedQuestions } from "../../hooks";
 import { useMemo } from "react";
+import { Header } from "../../components/Header";
+import { Divider } from "../../components/Divider";
+
+
+
 
 export default function AllQuestions() {
   const questionFilter = useMemo(
@@ -15,8 +20,13 @@ export default function AllQuestions() {
   });
   return (
     <>
-      <QuestionLibraryHeader title={"All Questions"} />
+      <Header title="All Questions" variant={"QuestionBuilder"} />
+      <Divider />
+      <TableToolBar />
+      <Divider />
       <QuestionTable />
+      <Divider />
+
     </>
   );
 }

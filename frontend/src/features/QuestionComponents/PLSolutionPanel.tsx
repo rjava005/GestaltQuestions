@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import clsx from "clsx";
-import { Button } from "../../components/Button/Button";
+import { Button } from "../../components/Button";
 import { uiPanelVariantStyles, uiPanelSizeStyles, type UIPanelSize, type UIPanelVariant } from "./PanelStyles";
 
 export interface PLSolutionPanelProps {

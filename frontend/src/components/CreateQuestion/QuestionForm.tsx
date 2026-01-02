@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { ToggleButton, ToggleButtonGroup } from "@mui/material";
 import UploadFilesButton from "../UploadFile/UploadFileComponent";
-import { Button } from "../Button/Button";
+import { Button } from "../Button";
 import type { QuestionData } from "../../types/questionTypes";
 import { QuestionAPI } from "../../services/api/backend/questionAPI";
 

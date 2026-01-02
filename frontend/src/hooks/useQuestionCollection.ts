@@ -28,3 +28,22 @@ export function useRetrievedQuestions({
     fetchQuestions();
   }, [fetchQuestions]);
 }
+
+export function useQuestionMeta() {
+  const { selectedQuestionID, setQuestionMeta } =
+    useQuestionCollectionContext();
+
+  const fetchQuestionMeta = useCallback(async () => {
+    if (!selectedQuestionID) return;
+    try {
+      const retrieved = await QuestionAPI.getQuestionMeta(selectedQuestionID);
+      setQuestionMeta(retrieved);
+    } catch (error) {
+      console.error("❌ Failed to fetch question:", error);
+    }
+  }, [selectedQuestionID, setQuestionMeta]);
+
+  useEffect(() => {
+    fetchQuestionMeta();
+  }, [fetchQuestionMeta]);
+}

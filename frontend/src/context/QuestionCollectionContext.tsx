@@ -1,22 +1,19 @@
-import {
+import React, {
   createContext,
   useContext,
   useState,
-  useEffect,
-  useCallback,
   type Dispatch,
   type ReactNode,
 } from "react";
-import { QuestionAPI } from "../services/api/backend/questionAPI";
 import type { QuestionMeta } from "../types/questionTypes";
 
 type QuestionCollectionContext = {
   selectedQuestionID: string | null;
   setSelectedQuestionID: React.Dispatch<React.SetStateAction<string>>;
-  selectedQuestions: string[];
-  setSelectedQuestions: React.Dispatch<React.SetStateAction<string[]>>;
   questionMeta: QuestionMeta | null;
   setQuestionMeta: React.Dispatch<React.SetStateAction<QuestionMeta | null>>;
+  selectedQuestions: string[];
+  setSelectedQuestions: React.Dispatch<React.SetStateAction<string[]>>;
   questions: QuestionMeta[];
   setQuestions: Dispatch<React.SetStateAction<QuestionMeta[]>>;
 };
@@ -25,25 +22,16 @@ export const QuestionContext = createContext<QuestionCollectionContext | null>(
   null
 );
 
-export function QuestionCollectionProvider({ children }: { children: ReactNode }) {
+export function QuestionCollectionProvider({
+  children,
+}: {
+  children: ReactNode;
+}) {
   const [questions, setQuestions] = useState<QuestionMeta[]>([]);
   const [questionMeta, setQuestionMeta] = useState<QuestionMeta | null>(null);
+
   const [selectedQuestionID, setSelectedQuestionID] = useState<string>("");
   const [selectedQuestions, setSelectedQuestions] = useState<string[]>([]);
-
-  const fetchQuestionMeta = useCallback(async () => {
-    if (!selectedQuestionID) return;
-    try {
-      const retrieved = await QuestionAPI.getQuestionMeta(selectedQuestionID);
-      setQuestionMeta(retrieved);
-    } catch (error) {
-      console.error("❌ Failed to fetch question:", error);
-    }
-  }, [selectedQuestionID]);
-
-  useEffect(() => {
-    fetchQuestionMeta();
-  }, [fetchQuestionMeta]);
 
   return (
     <QuestionContext.Provider

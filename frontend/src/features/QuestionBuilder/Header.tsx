@@ -1,4 +1,4 @@
-import { Button } from "../../components/Button/Button";
+import { Button } from "../../components/Button";
 import { DropDown } from "../../components/Generic/DropDown";
 import { QuestionOptionsToolBar } from "./QuestionToolBarItems";
 import { useState } from "react";

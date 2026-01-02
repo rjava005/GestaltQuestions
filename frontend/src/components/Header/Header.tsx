@@ -26,17 +26,17 @@ const styles: Record<HeaderStyle, HeaderStyleConfig> = {
 type HeaderProps = React.HTMLAttributes<HTMLDivElement> & {
   title: string;
   children?: React.ReactNode;
-  style?: HeaderStyle;
+  variant?: HeaderStyle;
   className?: string;
 };
 export default function Header({
   title,
   children,
-  style = "Generic",
+  variant = "Generic",
   className,
   ...rest
 }: HeaderProps) {
-  const styleConfig = styles[style as HeaderStyle];
+  const styleConfig = styles[variant as HeaderStyle];
   return (
     <div {...rest} className={clsx(styleConfig.wrapper, className)}>
       <h1 className={styleConfig.title}>{title}</h1>

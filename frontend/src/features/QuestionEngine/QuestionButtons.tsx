@@ -1,6 +1,6 @@
 
 import type { FormEvent } from "react";
-import { Button } from "../../components/Button/Button";
+import { Button } from "../../components/Button";
 
 type QuestionButtonProps = {
   isSubmitted: boolean;

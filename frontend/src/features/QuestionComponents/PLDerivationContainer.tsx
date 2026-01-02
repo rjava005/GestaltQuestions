@@ -1,6 +1,6 @@
 import clsx from "clsx";
 import { MathJax } from "better-react-mathjax";
-import { Button } from "../../components/Button/Button";
+import { Button } from "../../components/Button";
 import React, { useState } from "react";
 import { uiPanelSizeStyles, uiPanelVariantStyles, type UIPanelSize, type UIPanelVariant, } from "./PanelStyles";
 

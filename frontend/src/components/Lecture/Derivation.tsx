@@ -1,6 +1,6 @@
 import { useState } from "react";
 import clsx from "clsx";
-import { Button } from "../Button/Button";
+import { Button } from "../Button";
 import { MathJax } from "better-react-mathjax";
 
 type PageRange = {

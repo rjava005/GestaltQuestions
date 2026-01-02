@@ -15,7 +15,8 @@ export type ButtonColor =
   | "neutral"
   | "submitQuestion"
   | "generateVariant"
-  | "showSolution";
+  | "showSolution"
+  | "transparent";
 
 export type ButtonSize = "sm" | "md" | "lg";
 
@@ -42,6 +43,7 @@ const colorClasses: Record<ButtonColor, string> = {
   neutral:
     "bg-transparent border border-gray-400 text-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:text-gray-200 dark:hover:bg-gray-800",
 
+  transparent: "",
   submitQuestion:
     "bg-blue-500 text-white hover:bg-blue-600 dark:bg-blue-700 dark:hover:bg-blue-800",
 
@@ -73,7 +75,7 @@ export type ButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> & {
 // COMPONENT
 //
 
-export const Button = ({
+const Button = ({
   name,
   color = "primary",
   size = "md",
@@ -98,3 +100,6 @@ export const Button = ({
     </button>
   );
 };
+
+
+export default Button

@@ -8,7 +8,7 @@ import {
 import { IoMdAddCircleOutline } from "react-icons/io";
 import { MdFileUpload } from "react-icons/md";
 
-import { Button } from "../../components/Button/Button";
+import { Button } from "../../components/Button";
 import Divider from "../../components/Divider/Divider";
 import { SideBar, SideBarItem } from "../../components/SideBar";
 

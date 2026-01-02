@@ -6,44 +6,15 @@ import { useQuestionTableContext } from "../../features/QuestionTable/QuestionTa
 import { useQuestionToolBarActions } from "../../hooks/useQuestionsToolBarActions";
 
 import clsx from "clsx";
+import { ActionButton } from "../Button";
 
-import type { IconType } from "react-icons";
-import { BiSelectMultiple } from "react-icons/bi";
-import { IoMdDownload } from "react-icons/io";
-import { MdDelete, MdFileUpload } from "react-icons/md";
 
-import SearchBar from "../Base/SearchBar";
+import SearchBar from "../SearchBar/SearchBar";
 import { MyModal } from "../Base/MyModal";
 
 import UploadZipQuestionModal from "../../features/CreateQuestion/UploadZipQuestionModal";
 
-interface ActionButtonProps {
-  icon: IconType;
-  label: string;
-  onClick?: () => void;
-  className?: string;
-}
-export function ActionButton({
-  icon: Icon,
-  label,
-  onClick,
-  className,
-}: ActionButtonProps) {
-  return (
-    <div
-      onClick={onClick}
-      className={clsx(
-        "w-full flex justify-center border p-2 rounded-md shadow hover:scale-105 uration-300 ease-in-out",
-        className
-      )}
-    >
-      <button onClick={() => onClick} className="flex items-center gap-2">
-        <Icon size={18} />
-        {label}
-      </button>
-    </div>
-  );
-}
+
 
 export default function QuestionViewToolBar() {
   const { multiSelect, setMultiSelect } = useQuestionTableContext();
