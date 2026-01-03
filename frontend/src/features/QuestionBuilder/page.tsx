@@ -1,5 +1,5 @@
 import { useState } from "react";
-import AllQuestions from "../QuestionLibrary/AllQuestions";
+import AllQuestions from "../AllQuestionsView/page";
 import { Panel, PanelGroup, PanelResizeHandle } from "react-resizable-panels";
 import { CreateQuestion } from "../CreateQuestion";
 import {
@@ -13,8 +13,8 @@ import CodeEditorBase from "../../components/CodeEditor/CodeEditorBase";
 import QuestionBuilderHeader from "./Header";
 import { QuestionEditorSections } from "./QuestionEditorSections";
 import QuestionBuilderSideBar from "./QuestionBuilderSideBar";
-import { useQuestionBuildingContext } from "./QuestionBuilderContext";
-import { useQuestionCollectionViewContext } from "./QuestionCollectionViewContext";
+import { useQuestionBuildingContext, useQuestionCollectionViewContext } from "./context";
+
 
 const Mockdata = {
   title: "Adding 2 Numbers",

@@ -3,10 +3,7 @@ import { Panel, PanelGroup, PanelResizeHandle } from "react-resizable-panels";
 
 import { Section } from "../../components/Section";
 import CodeEditorGeneric from "../../components/CodeEditor/CodeEditorGeneric";
-import {
-    DropDownAdvance,
-    type DropDownAdvanceOption,
-} from "../../components/Generic/DropDown";
+import { type DropDownAdvanceOption, DropDownAdvance } from "../../components/DropDown";
 
 import QuestionHTMLToReact from "../QuestionComponents/ParseQuestionHTML";
 import {

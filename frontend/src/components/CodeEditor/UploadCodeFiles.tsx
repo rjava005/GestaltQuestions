@@ -1,4 +1,4 @@
-import { Button } from "../Button/Button";
+import { Button } from "../Button";
 import { useState } from "react";
 import UploadFiles from "../UploadFile/UploadFileComponent";
 

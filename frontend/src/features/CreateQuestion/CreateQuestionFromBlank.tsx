@@ -6,7 +6,7 @@ import QuestionFiles from "./QuestionFiles";
 import { useState } from "react";
 import { QuestionDirectoryPreview } from "./QuestionDirectoryPreview";
 
-import { Button } from "../../components/Button/Button";
+import { Button } from "../../components/Button";
 
 export function CreateQuestionFromBlank() {
   const [showPreview, setShowPreview] = useState(false);

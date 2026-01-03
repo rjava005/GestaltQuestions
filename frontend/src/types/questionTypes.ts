@@ -13,6 +13,8 @@ export type QuestionBase = {
   ai_generated?: boolean;
   isAdaptive?: boolean;
   question_path?: string;
+  storage_path?: string;
+  status?: string;
 };
 
 export type QuestionData = QuestionBase & {

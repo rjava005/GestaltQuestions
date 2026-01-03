@@ -6,7 +6,7 @@ import ModeToggle from "./ModeToggle";
 import { useCreateMode } from "./context";
 import { CreateQuestionFromBlank } from "./CreateQuestionFromBlank";
 
-import { Button } from "../../components/Button/Button";
+import { Button } from "../../components/Button";
 import UploadZipQuestionModal from "./UploadZipQuestionModal";
 
 export default function CreateQuestion() {

@@ -7,17 +7,17 @@ import CodeEditorProvider from "./context/CodeEditorContext";
 import { QuestionCollectionProvider } from "./context/QuestionCollectionContext";
 import { QuestionRuntimeProvider } from "./context/QuestionAnswerContext";
 import { AuthModeProvider } from "./context/AuthMode";
-import { QuestionTableProvider } from "./features/QuestionTable/QuestionTableContext";
-import QuestionBuilderProvider from "./features/QuestionBuilder/QuestionBuilderContext";
-import QuestionCollectionViewProvider from "./features/QuestionBuilder/QuestionCollectionViewContext";
+import { QuestionTableProvider } from "./features/QuestionTable/context";
+import {
+  QuestionBuilderProvider,
+  QuestionCollectionViewProvider,
+} from "./features/QuestionBuilder";
 import CreateQuestionProvider from "./features/CreateQuestion/context";
 
 const config = {
   loader: { load: ["[tex]/ams"] },
   tex: {
-    inlineMath: [
-      ["$", "$"],
-    ],
+    inlineMath: [["$", "$"]],
     displayMath: [
       ["$$", "$$"],
       ["\\[", "\\]"],
@@ -30,11 +30,10 @@ const config = {
   },
 };
 
-
 function App() {
   return (
     <AuthProvider>
-      <CreateQuestionProvider >
+      <CreateQuestionProvider>
         <QuestionCollectionViewProvider>
           <QuestionCollectionProvider>
             <QuestionBuilderProvider>
@@ -64,7 +63,6 @@ function App() {
         </QuestionCollectionViewProvider>
       </CreateQuestionProvider>
     </AuthProvider>
-
   );
 }
 

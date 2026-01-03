@@ -1,11 +1,9 @@
-import { useCallback, useState } from "react";
-import type { IconType } from "react-icons/lib";
+import { type DropDownBase } from "./types";
+import { type IconType } from "react-icons";
+import { useState, useRef } from "react";
 import clsx from "clsx";
-type DropDownBase = {
-  selected: string;
-  setSelected: (val: string) => void;
-  label: string;
-};
+import { useOnClickOutside } from "../../hooks/useOnClickOutside";
+
 export type DropDownAdvanceOption = {
   value: string;
   label: string;
@@ -13,68 +11,42 @@ export type DropDownAdvanceOption = {
 };
 type DropDownAdvanceProps = DropDownBase & {
   options: DropDownAdvanceOption[];
+  open?: boolean;
+  onOpenChange?: (open: boolean) => void;
+  className?: string
 };
 
-type DropDownProps = DropDownBase & {
-  options: string[];
-};
-
-export function DropDown({
-  options,
-  selected,
-  setSelected,
-  label = "Drop Down",
-}: DropDownProps) {
-  const handleDropDownChange = useCallback(
-    (event: React.ChangeEvent<HTMLSelectElement>) => {
-      setSelected(event.target.value);
-    },
-    [setSelected]
-  );
-
-  return (
-    <div className="w-full flex flex-col gap-1">
-      <label htmlFor="dropDown" className="text-sm font-medium text-slate-700">
-        {label}
-      </label>
-
-      <select
-        id="dropDown"
-        name="dropDown"
-        value={selected}
-        onChange={handleDropDownChange}
-        className="
-          w-full rounded-md border border-slate-300 bg-white
-          px-3 py-2 text-sm text-slate-800
-          focus:outline-none focus:ring-2 focus:ring-violet-500 focus:border-violet-500
-          hover:border-slate-400
-        "
-      >
-        {options.map((v) => {
-          const cleaned = v.trim();
-          return (
-            <option key={cleaned} value={cleaned}>
-              {cleaned}
-            </option>
-          );
-        })}
-      </select>
-    </div>
-  );
-}
-
-export function DropDownAdvance({
+export default function DropDownAdvance({
   options,
   selected,
   setSelected,
   label,
+  open: controlledOpen,
+  onOpenChange,
+  className
+
 }: DropDownAdvanceProps) {
-  const [open, setOpen] = useState(false);
+  const containerRef = useRef<HTMLDivElement | null>(null);
+  const [uncontrolledOpen, setUncontrolledOpen] = useState(false);
+  const isControlled = controlledOpen !== undefined;
+  const open = isControlled ? controlledOpen : uncontrolledOpen;
+
+  const setOpen = (value: boolean) => {
+    if (!isControlled) {
+      setUncontrolledOpen(value);
+    }
+    onOpenChange?.(value);
+  };
+
+  useOnClickOutside(containerRef, () => {
+    if (open) setOpen(false);
+  });
+
   const selectedOption = options.find((o) => o.value === selected);
   const SelectedIcon = selectedOption?.icon;
 
   return (
-    <div className="relative w-full">
+    <div ref={containerRef} className={clsx("relative w-full", className)}>
       <label className="block mb-1 text-sm font-medium text-slate-700">
         {label}
       </label>
@@ -104,7 +76,7 @@ export function DropDownAdvance({
                 key={opt.value}
                 onClick={() => {
                   setSelected(opt.value);
-                  setOpen(false);
+                  // setOpen(false);
                 }}
                 className={clsx(
                   "w-full px-3 py-2 flex items-center gap-2 text-sm text-left hover:bg-slate-100",

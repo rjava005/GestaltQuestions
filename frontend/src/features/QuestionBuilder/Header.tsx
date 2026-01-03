@@ -1,5 +1,5 @@
-import { Button } from "../../components/Button/Button";
-import { DropDown } from "../../components/Generic/DropDown";
+import { Button } from "../../components/Button";
+import { DropDown } from "../../components/DropDown";
 import { QuestionOptionsToolBar } from "./QuestionToolBarItems";
 import { useState } from "react";
 import clsx from "clsx";
