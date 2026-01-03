@@ -56,10 +56,8 @@ export default function QuestionTable() {
     setResetKey((k) => k + 1);
   }, [multiSelect]);
 
-  console.log("Inside the table", columns);
-
   return (
-    <div className="w-full lg:w-3/4 mt-10">
+    <div className="w-full mt-10">
       <TableContainer
         component={Paper}
         className="rounded-lg shadow-md dark:bg-gray-900"
@@ -108,11 +106,11 @@ export default function QuestionTable() {
                       >
                         {col.render
                           ? col.render(
-                              question,
-                              selectedQuestionID === question.id
-                                ? "font-semibold text-indigo-700"
-                                : ""
-                            )
+                            question,
+                            selectedQuestionID === question.id
+                              ? "font-semibold text-indigo-700"
+                              : ""
+                          )
                           : null}
                       </TableCell>
                     );
