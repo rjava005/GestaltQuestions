@@ -12,26 +12,12 @@ import CodeEditorBase from "../../components/CodeEditor/CodeEditorBase";
 
 import QuestionBuilderHeader from "./Header";
 import { QuestionEditorSections } from "./QuestionEditorSections";
-import QuestionBuilderSideBar from "./QuestionBuilderSideBar";
+import QuestionBuilderSideBar from "../QuestionWorkspace/QuestionBuilderSideBar";
 import { useQuestionBuildingContext, useQuestionCollectionViewContext } from "./context";
 
 
-const Mockdata = {
-  title: "Adding 2 Numbers",
-};
 
-function MainContent() {
-  const { section } = useQuestionBuildingContext();
-  return (
-    <div className="flex flex-col">
-      <QuestionBuilderHeader title={Mockdata.title} />
-      <QuestionEditorSections />
-      <div className="w-full h-8/10">
-        {section === "code" ? <CodeEditorBase /> : <div>{section}</div>}
-      </div>
-    </div>
-  );
-}
+
 
 export default function QuestionBuilder() {
   const [showDashboard, setShowDashboard] = useState(true);

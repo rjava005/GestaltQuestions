@@ -9,9 +9,9 @@ import { QuestionRuntimeProvider } from "./context/QuestionAnswerContext";
 import { AuthModeProvider } from "./context/AuthMode";
 import { QuestionTableProvider } from "./features/QuestionTable/context";
 import {
-  QuestionBuilderProvider,
   QuestionCollectionViewProvider,
 } from "./features/QuestionBuilder";
+import { QuestionWorkspaceProvider } from "./features/QuestionWorkspace";
 import CreateQuestionProvider from "./features/CreateQuestion/context";
 
 const config = {
@@ -36,7 +36,7 @@ function App() {
       <CreateQuestionProvider>
         <QuestionCollectionViewProvider>
           <QuestionCollectionProvider>
-            <QuestionBuilderProvider>
+            <QuestionWorkspaceProvider>
               <QuestionTableProvider>
                 <MathJaxContext version={3} config={config}>
                   <AuthModeProvider>
@@ -58,7 +58,7 @@ function App() {
                   </AuthModeProvider>
                 </MathJaxContext>
               </QuestionTableProvider>
-            </QuestionBuilderProvider>
+            </QuestionWorkspaceProvider>
           </QuestionCollectionProvider>
         </QuestionCollectionViewProvider>
       </CreateQuestionProvider>
