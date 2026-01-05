@@ -1,7 +1,7 @@
 import { useQuestionCollectionContext } from "../../context/QuestionCollectionContext";
 import { useCallback, useEffect, useState, useMemo } from "react";
 import { QuestionAPI } from "../../services";
-import type { QuizData } from "../../types/quizType";
+import type { QuizData } from "./types";
 import { useQuestionEngineContext } from "./context";
 import applyPlaceHolders from "../../utils/flattenParams";
 
@@ -137,8 +137,6 @@ export function useQuestion({ isAdaptive }: UseQuestionArgs) {
     refetch,
   } = fetchAdaptiveParameters();
 
-
-
   const processed = useMemo(() => {
     if (!questionHtml) return null;
     if (!isAdaptive || !params) {
@@ -181,5 +179,6 @@ export function useQuestion({ isAdaptive }: UseQuestionArgs) {
     loading: questionLoading || (isAdaptive && paramsLoading),
     error,
     refetch,
+    params
   };
 }

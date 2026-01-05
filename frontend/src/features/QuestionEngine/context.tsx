@@ -16,12 +16,12 @@ type QuestionEngineContext = {
 
 export const QuestionEngineContext = createContext<QuestionEngineContext>({
   serverSetting: "javascript",
-  setServerSetting: () => {},
+  setServerSetting: () => { },
   solution: "",
-  setSolution: () => {},
+  setSolution: () => { },
 
   showSolution: false,
-  setShowSolution: () => {},
+  setShowSolution: () => { },
 });
 
 const QuestionEngineProvider = ({

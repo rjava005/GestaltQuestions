@@ -1,6 +1,6 @@
 import CodeEditor from "./CodeEditorBase";
 import { LogOutput } from "./LogPrint";
-import { Loading } from "../Base/Loading";
+import { Loading } from "../Loading";
 import { useCodeEditorContext } from "../../context/CodeEditorContext";
 import { CodeEditorToolBar } from "./CodeEditorToolBar";
 import { useQuestionFiles } from "../../hooks/useCodeEditor";

@@ -24,7 +24,7 @@ export const QuestionRuntimeProvider: React.FC<{ children: React.ReactNode }> = 
 
   return (
     <QuestionRuntimeContext.Provider
-      value={{ answers, setAnswer}}
+      value={{ answers, setAnswer }}
     >
       {children}
     </QuestionRuntimeContext.Provider>
