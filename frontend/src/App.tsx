@@ -1,21 +1,33 @@
 import { MathJaxContext } from "better-react-mathjax";
-import QuestionSettingsProvider from "./context/GeneralSettingsContext";
-import { AuthProvider } from "./context/AuthContext";
-import NavBar from "./features/NavBar/NavBar";
 import { ToastContainer } from "react-toastify";
+
+import NavBar from "./features/NavBar/NavBar";
+
+/* =========================
+   Context / Providers
+========================= */
+import { AuthProvider } from "./context/AuthContext";
+import { AuthModeProvider } from "./context/AuthMode";
+import QuestionSettingsProvider from "./context/GeneralSettingsContext";
 import CodeEditorProvider from "./context/CodeEditorContext";
 import { QuestionCollectionProvider } from "./context/QuestionCollectionContext";
 import { QuestionRuntimeProvider } from "./context/QuestionAnswerContext";
-import { AuthModeProvider } from "./context/AuthMode";
-import { QuestionTableProvider } from "./features/QuestionTable/context";
+
+import QuestionEngineProvider from "./features/QuestionEngine/context";
+import CreateQuestionProvider from "./features/CreateQuestion/context";
 import {
   QuestionCollectionViewProvider,
 } from "./features/QuestionBuilder";
 import { QuestionWorkspaceProvider } from "./features/QuestionWorkspace";
-import CreateQuestionProvider from "./features/CreateQuestion/context";
+import { QuestionTableProvider } from "./features/QuestionTable/context";
 
+/* =========================
+   MathJax Config
+========================= */
 const config = {
-  loader: { load: ["[tex]/ams"] },
+  loader: {
+    load: ["[tex]/ams"],
+  },
   tex: {
     inlineMath: [["$", "$"]],
     displayMath: [
@@ -33,35 +45,39 @@ const config = {
 function App() {
   return (
     <AuthProvider>
-      <CreateQuestionProvider>
-        <QuestionCollectionViewProvider>
-          <QuestionCollectionProvider>
-            <QuestionWorkspaceProvider>
-              <QuestionTableProvider>
-                <MathJaxContext version={3} config={config}>
-                  <AuthModeProvider>
-                    <QuestionRuntimeProvider>
-                      <QuestionSettingsProvider>
-                        <QuestionCollectionProvider>
-                          <CodeEditorProvider>
-                            {/* Main Content */}
-                            <NavBar />
-                            <ToastContainer />
+      <QuestionEngineProvider>
+        <CreateQuestionProvider>
+          <QuestionCollectionViewProvider>
+            <QuestionCollectionProvider>
+              <QuestionWorkspaceProvider>
+                <QuestionTableProvider>
+                  <MathJaxContext version={3} config={config}>
+                    <AuthModeProvider>
+                      <QuestionRuntimeProvider>
+                        <QuestionSettingsProvider>
+                          <QuestionCollectionProvider>
+                            <CodeEditorProvider>
+                              {/* =========================
+                                  Main Content
+                              ========================= */}
+                              <NavBar />
+                              <ToastContainer />
 
-                            {/* <LecturePage /> */}
-                            {/* <LegacyQuestion /> */}
-                            {/* End of Main Content */}
-                          </CodeEditorProvider>
-                        </QuestionCollectionProvider>
-                      </QuestionSettingsProvider>
-                    </QuestionRuntimeProvider>
-                  </AuthModeProvider>
-                </MathJaxContext>
-              </QuestionTableProvider>
-            </QuestionWorkspaceProvider>
-          </QuestionCollectionProvider>
-        </QuestionCollectionViewProvider>
-      </CreateQuestionProvider>
+                              {/* <LecturePage /> */}
+                              {/* <LegacyQuestion /> */}
+                              {/* ========================= */}
+                            </CodeEditorProvider>
+                          </QuestionCollectionProvider>
+                        </QuestionSettingsProvider>
+                      </QuestionRuntimeProvider>
+                    </AuthModeProvider>
+                  </MathJaxContext>
+                </QuestionTableProvider>
+              </QuestionWorkspaceProvider>
+            </QuestionCollectionProvider>
+          </QuestionCollectionViewProvider>
+        </CreateQuestionProvider>
+      </QuestionEngineProvider>
     </AuthProvider>
   );
 }

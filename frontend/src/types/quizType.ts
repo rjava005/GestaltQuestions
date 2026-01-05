@@ -6,7 +6,7 @@ export type QuestionValues = Record<
 export type QuestionParams = {
   params: QuestionValues;
   correct_answers: QuestionValues;
-  sigfigs: number
+  sigfigs: number;
 };
 
 export type QuizData = QuestionParams & {

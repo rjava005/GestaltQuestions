@@ -15,9 +15,6 @@ type CodeEditorContext = {
     showLogs: boolean;
     setShowLogs: React.Dispatch<React.SetStateAction<boolean>>
 
-    codeRunningSettings: CodeLanguage;
-    setCodeRunningSettings: React.Dispatch<React.SetStateAction<CodeLanguage>>;
-
     refreshKey: number;
     setRefreshKey: React.Dispatch<React.SetStateAction<number>>;
 };
@@ -35,8 +32,6 @@ export const CodeEditorContex = createContext<CodeEditorContext>({
     setLogs: () => { },
     showLogs: false,
     setShowLogs: () => { },
-    codeRunningSettings: "javascript",
-    setCodeRunningSettings: () => { },
 
     refreshKey: 0,
     setRefreshKey: () => { }
@@ -47,8 +42,6 @@ const CodeEditorProvider = ({ children }: { children: React.ReactNode }) => {
     const [fileNames, setFileNames] = useState<string[]>([]);
     const [selectedFile, setSelectedFile] = useState<string>("");
     const [fileContent, setFileContent] = useState<string>("");
-    const [codeRunningSettings, setCodeRunningSettings] =
-        useState<CodeLanguage>("javascript");
     const [showLogs, setShowLogs] = useState<boolean>(false)
     const [refreshKey, setRefreshKey] = useState(0);
 
@@ -60,8 +53,6 @@ const CodeEditorProvider = ({ children }: { children: React.ReactNode }) => {
                 setFileNames,
                 selectedFile,
                 setSelectedFile,
-                codeRunningSettings,
-                setCodeRunningSettings,
                 fileContent,
                 setFileContent,
                 logs,

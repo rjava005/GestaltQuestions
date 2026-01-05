@@ -122,7 +122,8 @@ export const HandleTags = (node: DOMNode) => {
     }
 };
 
-export default function QuestionHTMLToReact({ html }: { html: string }) {
+export default function QuestionHTMLToReact({ html }: { html: string | null }) {
+    if (!html) return
     let parsed;
     try {
         parsed = parse(html, { replace: (node) => HandleTags(node) });
