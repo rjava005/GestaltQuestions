@@ -5,16 +5,22 @@ import { ToggleField } from "../../components/Toggles";
 import { useState } from "react";
 import { FaPython } from "react-icons/fa";
 import { IoLogoJavascript } from "react-icons/io5";
-import { useCodeEditorContext } from "../../context/CodeEditorContext";
+import { useQuestionEngineContext } from "./context";
 
-
-
-export default function QuestionInfo({ qmetadata }: { qmetadata: QuestionData | QuestionMeta }) {
+export default function QuestionInfo({
+  qmetadata,
+}: {
+  qmetadata: QuestionData | QuestionMeta;
+}) {
   const { topics = [], isAdaptive } = qmetadata;
 
   return (
     <div className="flex flex-col gap-5 p-2 sm:p-4">
-      <GenericInfo title="Topics" data={topics.map((t) => (typeof t === "object" ? t.name : t))} theme="info" />
+      <GenericInfo
+        title="Topics"
+        data={topics.map((t) => (typeof t === "object" ? t.name : t))}
+        theme="info"
+      />
 
       <div className="flex items-center gap-4">
         <p className="text-base font-semibold text-gray-800 dark:text-gray-200">
@@ -29,9 +35,13 @@ export default function QuestionInfo({ qmetadata }: { qmetadata: QuestionData | 
 }
 
 // --- Header with Toggle ---
-export function QuestionHeader({ question }: { question: QuestionData | QuestionMeta }) {
+export function QuestionHeader({
+  question,
+}: {
+  question: QuestionData | QuestionMeta;
+}) {
   const [showMeta, setShowMeta] = useState(true);
-  const { codeRunningSettings } = useCodeEditorContext();
+  const { serverSetting } = useQuestionEngineContext();
 
   return (
     <div className="flex flex-col items-center w-full max-w-5xl mx-auto space-y-6 px-4 sm:px-6 lg:px-8 mt-8">
@@ -39,13 +49,18 @@ export function QuestionHeader({ question }: { question: QuestionData | Question
       <div className="relative flex flex-col sm:flex-row items-center justify-between gap-4 ">
         <h1 className="flex items-center gap-2 text-2xl sm:text-3xl lg:text-4xl font-bold text-center sm:text-left text-gray-800 dark:text-gray-100 tracking-tight">
           <span>{question.title}</span>
-          {question.isAdaptive && (
-            codeRunningSettings === "javascript" ? (
-              <IoLogoJavascript className="text-yellow-500 dark:text-yellow-400" size={28} />
+          {question.isAdaptive &&
+            (serverSetting === "javascript" ? (
+              <IoLogoJavascript
+                className="text-yellow-500 dark:text-yellow-400"
+                size={28}
+              />
             ) : (
-              <FaPython className="text-blue-600 dark:text-blue-400" size={28} />
-            )
-          )}
+              <FaPython
+                className="text-blue-600 dark:text-blue-400"
+                size={28}
+              />
+            ))}
         </h1>
       </div>
       <ToggleField
