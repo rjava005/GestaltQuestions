@@ -9,10 +9,8 @@ import pytest
 
 
 @pytest.mark.asyncio
-async def test_get_model_relationship_data(
-    create_question_with_relationship, relationship_payload
-):
-    q = await create_question_with_relationship
+async def test_get_model_relationship_data(create_question_with_relationship):
+    q, relationship_payload = await create_question_with_relationship
     for rel_name, data in relationship_payload.items():
         data = getattr(q, rel_name)
         assert [d.name in relationship_payload[rel_name] for d in data]
@@ -20,9 +18,9 @@ async def test_get_model_relationship_data(
 
 @pytest.mark.asyncio
 async def test_get_all_model_relationship_data(
-    create_question_with_relationship, relationship_payload
+    create_question_with_relationship
 ):
-    q = await create_question_with_relationship
+    q,relationship_payload = await create_question_with_relationship
     rel_data = gdb.get_all_model_relationship_data(q, Question)
     assert rel_data
     for rel_name, data in rel_data.items():

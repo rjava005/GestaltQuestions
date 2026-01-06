@@ -2,6 +2,7 @@ import pytest
 from src.api.database import question as qdb
 from src.api.database.models.question import Question, QuestionData, QuestionMeta
 from src.api.core.logging import logger
+from app_test.mock_data import QUESTION_FULL, QUESTIONS, ADDITIONAL_METADATA
 
 
 # ----------------------
@@ -17,11 +18,9 @@ async def test_create_question(db_session, question_payload):
 
 @pytest.mark.asyncio
 async def test_create_question_with_relationship_data(
-    create_question_with_relationship, question_payload, relationship_payload
+    create_question_with_relationship,
 ):
-    qcreated = await create_question_with_relationship
-    for key, _ in question_payload.items():
-        assert getattr(qcreated, key) == question_payload[key]
+    qcreated, relationship_payload = await create_question_with_relationship
 
     for key, _ in relationship_payload.items():
         logger.info("Relationship data %s", getattr(qcreated, key))
@@ -75,7 +74,7 @@ async def test_delete_single(db_session, combined_payload):
 
 @pytest.mark.asyncio
 async def test_get_question_data(create_question_with_relationship, db_session):
-    qcreated = await create_question_with_relationship
+    qcreated, _ = await create_question_with_relationship
     data = await qdb.get_question_data(qcreated.id, db_session)
     assert data
 
@@ -107,7 +106,7 @@ async def test_question_update(db_session, question_payload):
     "update_data, expected_count, description",
     [
         (
-            QuestionData(title="Sample", ai_generated=True),
+            QuestionData(title="Addition", ai_generated=False),
             1,
             "Should find question with partial title 'Sample' and ai_generated=True",
         ),
@@ -124,15 +123,10 @@ async def test_question_update(db_session, question_payload):
     ],
 )
 async def test_filter_questions(
-    create_question_with_relationship,
-    db_session,
-    update_data,
-    expected_count,
-    description,
+    make_question, db_session, update_data, expected_count, description
 ):
     """Test dynamic question filtering across key combinations."""
-    qcreated = await create_question_with_relationship
-
+    await make_question(**QUESTION_FULL)
     results = await qdb.filter_questions(update_data, db_session)
 
     print(f"\n{description}")

@@ -11,6 +11,15 @@ from src.api.database.models.users import (
 )
 
 
+user_data = {
+    "first_name": "Luciano",
+    "last_name": "Bermudez",
+    "username": "luci123",
+    "email": "luci123@gmail.com",
+    "fb_id": "1234",
+}
+
+
 def test_user_create(make_user):
     user = make_user()
     user.role
@@ -24,15 +33,15 @@ def test_get_user(make_user, db_session):
     assert cuser == ruser
 
 
-def test_get_user_by_email(make_user, user_data, db_session):
+def test_get_user_by_email(make_user, db_session):
     cuser = make_user()
-    ruser = user_db.get_user_by_email(user_data.email, db_session)
+    ruser = user_db.get_user_by_email(cuser.email, db_session)
     assert cuser == ruser
 
 
-def test_get_user_by_fb(make_user, user_data, db_session):
+def test_get_user_by_fb(make_user, db_session):
     cuser = make_user()
-    ruser = user_db.get_user_by_fb(user_data.fb_id, db_session)
+    ruser = user_db.get_user_by_fb(cuser.fb_id, db_session)
     assert cuser == ruser
 
 
@@ -60,7 +69,7 @@ async def test_set_user_question(make_user, make_question, db_session):
     qcreated = await make_question()
     user = make_user()
     user_db.set_user_created_questions(user.id, qcreated, db_session)
-    result = user_db.get_user_created_questions(make_user.id, db_session)
+    result = user_db.get_user_created_questions(user.id, db_session)
     assert result
 
 
