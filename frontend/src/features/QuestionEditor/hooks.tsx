@@ -4,7 +4,6 @@ import { useCodeEditorContext } from "./context";
 import { useCallback, useState, useEffect } from "react";
 import type { FileData } from "../../types/questionTypes";
 import { toast } from "react-toastify";
-import { downloadJson } from "../../utils/downloadUtils";
 import { downloadBlob } from "../../components/QuestionTable/utils/services";
 
 export function useQuestionFiles() {
