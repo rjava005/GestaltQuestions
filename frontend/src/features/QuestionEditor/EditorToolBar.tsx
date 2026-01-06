@@ -1,16 +1,20 @@
 import { ActionButton } from "../../components/Button";
 import { EditorToolBarItems } from "./config";
 import type { FileActions, FileOptions } from "./types";
-import { useSaveQuestionFile, useDeleteQuestionFile } from "./hooks";
+import { useSaveQuestionFile, useDeleteQuestionFile, useDownloadFile } from "./hooks";
 import { useCodeEditorContext } from "./context";
 import { useQuestionCollectionContext } from "./../../context/QuestionCollectionContext";
-import { MyModal } from "../../components/Modal/Modal";
+import { Modal } from "../../components/Modal";
+import { UploadFilesToQuestion } from "./UploadFilesToQuestion";
+import { useState } from "react";
 
 export default function EditorToolBar() {
+    const [showUploadModal, setShowUploadModal] = useState<boolean>(false);
     const { selectedFile, fileContent } = useCodeEditorContext();
     const { selectedQuestionID } = useQuestionCollectionContext();
     const { saveFile } = useSaveQuestionFile();
     const { deleteFile } = useDeleteQuestionFile();
+    const { downloadFile } = useDownloadFile()
     const handleOption = async (action: FileActions, options: FileOptions) => {
         switch (action) {
             case "save":
@@ -25,18 +29,21 @@ export default function EditorToolBar() {
                 break;
 
             case "upload":
-                console.log("Upload");
+                setShowUploadModal((prev) => !prev);
                 break;
 
             case "delete":
                 if (!options.questionID || !options.filename) {
                     return;
                 }
-                deleteFile(options.questionID, options.filename);
+                await deleteFile(options.questionID, options.filename);
                 break;
 
             case "download":
-                console.log("Download");
+                if (!options.questionID || !options.filename) {
+                    return;
+                }
+                await downloadFile(options.filename, options.questionID)
                 break;
 
             default: {
@@ -63,6 +70,11 @@ export default function EditorToolBar() {
                     }
                 />
             ))}
+            {showUploadModal && (
+                <Modal setShowModal={setShowUploadModal}>
+                    <UploadFilesToQuestion questionID={selectedQuestionID} />
+                </Modal>
+            )}
         </div>
     );
 }

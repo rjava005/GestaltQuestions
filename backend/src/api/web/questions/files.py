@@ -26,7 +26,7 @@ from src.api.response_models import (
     SuccessDataResponse,
     SuccessFileResponse,
 )
-from src.api.database.question import Question,QuestionData
+from src.api.database.question import Question, QuestionData
 from src.api.service.file_service import FileServiceDep, FileService
 from src.api.service.question_manager import QuestionManagerDependency
 from src.api.service.question_resource import QuestionResourceDepencency
@@ -365,37 +365,6 @@ async def get_filedata(
         raise HTTPException(status_code=500, detail=f"Could not get file data {e}")
 
 
-@router.post("/files/{id}/{filename}/download")
-async def download_question_file(
-    qid: str | UUID,
-    filename: str,
-    qm: QuestionManagerDependency,
-    qr: QuestionResourceDepencency,
-):
-    try:
-        question = qm.get_question(qid)
-        folder_name = f"{question.title}_download"
-        file_path = await qr.get_question_file(qid, filename)
-
-        zip_bytes = await FileService().download_zip(
-            files=[file_path], folder_name=folder_name
-        )
-
-        return Response(
-            content=zip_bytes,
-            media_type="application/zip",
-            headers={"Content-Disposition": f"attachment; filename={folder_name}.zip"},
-        )
-
-    except HTTPException:
-        raise
-    except Exception as e:
-        raise HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=f"Could not read file {filename}: {e}",
-        )
-
-
 @router.post("/files/{qid}/download")
 async def download_question(
     qid: str | UUID,
@@ -425,6 +394,37 @@ async def download_question(
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"Could not get files {e}",
+        )
+
+
+@router.post("/files/{qid}/{filename}/download")
+async def download_question_file(
+    qid: str | UUID,
+    filename: str,
+    qm: QuestionManagerDependency,
+    qr: QuestionResourceDepencency,
+):
+    try:
+        question = qm.get_question(qid)
+        folder_name = f"{question.title}_download"
+        file_path = await qr.get_question_file(qid, filename)
+
+        zip_bytes = await FileService().download_zip(
+            files=[file_path], folder_name=folder_name
+        )
+
+        return Response(
+            content=zip_bytes,
+            media_type="application/zip",
+            headers={"Content-Disposition": f"attachment; filename={folder_name}.zip"},
+        )
+
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Could not read file {filename}: {e}",
         )
 
 

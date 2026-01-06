@@ -2,11 +2,11 @@ import { Button } from "../Button";
 import FileDropDown from "../Generic/FileDropDown";
 import { useCodeEditorContext } from "../../features/QuestionEditor";
 import { CodeSettings } from "../QuestionFilter/CodeSettings";
-import { MyModal } from "../Modal/Modal";
+
 import { useQuestionCollectionContext } from "../../context/QuestionCollectionContext";
 
 import { useState } from "react";
-import { UploadCodeFile } from "./UploadCodeFiles";
+
 import { DeleteCodeFile } from "./DeletedCodeFiles";
 import QuestionUpdateForm from "../Forms/UpdateQuestionMeta";
 
@@ -96,28 +96,28 @@ export function CodeEditorToolBar() {
 
       {/* Modals */}
       {showUpload && (
-        <MyModal setShowModal={() => setShowUpload((prev) => !prev)}>
+        <Modal setShowModal={() => setShowUpload((prev) => !prev)}>
           <UploadCodeFile
             questionId={selectedQuestionID ?? ""}
             onSubmit={uploadFile}
           />
-        </MyModal>
+        </Modal>
       )}
 
       {showEditMeta && (
-        <MyModal setShowModal={() => setShowEditMeta((prev) => !prev)}>
+        <Modal setShowModal={() => setShowEditMeta((prev) => !prev)}>
           <QuestionUpdateForm />
-        </MyModal>
+        </Modal>
       )}
 
       {showDelete && (
-        <MyModal setShowModal={() => setShowDelete((prev) => !prev)}>
+        <Modal setShowModal={() => setShowDelete((prev) => !prev)}>
           <DeleteCodeFile
             questionId={selectedQuestionID ?? ""}
             filename={selectedFile}
             onSubmit={() => deleteFile(selectedQuestionID ?? "", selectedFile)}
           />
-        </MyModal>
+        </Modal>
       )}
     </div>
   );
