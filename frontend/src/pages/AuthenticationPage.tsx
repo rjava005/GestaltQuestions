@@ -57,7 +57,7 @@ export default function AuthenticationPage({
             </ToggleButtonGroup>
           )}
           <Header
-            style={"Authentication"}
+            variant={"Authentication"}
             title={
               showLogin
                 ? "Log In"

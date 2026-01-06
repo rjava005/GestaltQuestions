@@ -2,7 +2,7 @@ import { IoMdAddCircleOutline } from "react-icons/io";
 
 import { Button } from "../../components/Button";
 import { Divider } from "../../components/Divider";
-import { SideBar } from "../../components/SideBar";
+import SideBar from "../../components/SideBar/SideBar";
 
 import { sidebarItems } from "./config";
 import {
@@ -18,7 +18,7 @@ export default function QuestionBuilderSideBar() {
       <SideBar
         options={sidebarItems}
         selected={view}
-        setSelected={(val) => {
+        setSelected={(val:string) => {
           return setView(val as QuestionCollectionView);
         }}
       />

@@ -1,5 +1,3 @@
-import { QuestionAPI } from "../../services";
-import type { QuestionData } from "../../types/questionTypes";
 import { InputTextForm, BooleanField } from "../../components/FormInputs";
 import { useEffect, useState } from "react";
 import { useCreateMode } from "./context";
@@ -26,13 +24,13 @@ export default function QuestionMeta() {
 
     useEffect(() => {
         setTopics(handleCommaSeparation(topicsInput))
-    }, [topicsInput,setTopicsInput])
+    }, [topicsInput, setTopicsInput])
 
     useEffect(() => {
         setQuestionType(handleCommaSeparation(questionTypeInput))
     }, [questionTypeInput, setQuestionTypeInput])
 
-
+    console.log(topics, questionType)
     return (
         <section className="w-full h-full rounded-lg border border-slate-200 bg-white p-4 shadow-sm">
             {/* Header */}

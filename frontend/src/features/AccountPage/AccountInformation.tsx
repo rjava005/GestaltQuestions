@@ -81,7 +81,7 @@ export default function AccountInformation() {
             onChange={(e) => setUsername(e.target.value)}
             disabled={!editMode}
             className="w-full"
-            style={editMode ? "default" : "hidden"}
+            variant={editMode ? "default" : "hidden"}
             label=""
           />
         </AccountFieldContainer>
@@ -93,7 +93,7 @@ export default function AccountInformation() {
             onChange={(e) => setEmail(e.target.value)}
             disabled={!editMode}
             className="w-full"
-            style={editMode ? "default" : "hidden"}
+            variant={editMode ? "default" : "hidden"}
             label=""
           />
         </AccountFieldContainer>
@@ -103,7 +103,7 @@ export default function AccountInformation() {
             onChange={(e) => setPassword(e.target.value)}
             disabled={!editMode}
             className="w-full"
-            style={editMode ? "default" : "hidden"}
+            variant={editMode ? "default" : "hidden"}
             label=""
             type="password"
             placeholder="**************"

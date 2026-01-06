@@ -13,7 +13,6 @@ import TextGenerator from "../../components/CodeGenerators/TextGenerator";
 import ImageGenerator from "../../components/CodeGenerators/ImageGenerator";
 
 // import GestaltStudio from "../Gestalt Studio/GestaltStudioPage";
-import { QuestionViewPage } from '../../components/QuestionView/QuestionViewPage';
 import GestaltStudio from "../GestaltStudio/GestaltStudioPage";
 import QuestionPlayGroundPage from "../QuestionPlayGround/page";
 
@@ -40,15 +39,7 @@ export const Navigation: NavigationItem[] = [
         requiresAuth: false,
         allowedRoles: []
     },
-    {
-        type: "route",
-        name: "Questions",
-        href: "/questions",
-        element: <QuestionViewPage />,
-        includeNavBar: true,
-        requiresAuth: false,
-        allowedRoles: []
-    },
+
 
     //
     // GENERATORS DROPDOWN

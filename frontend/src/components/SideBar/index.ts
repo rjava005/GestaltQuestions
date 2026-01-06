@@ -1,3 +1,3 @@
-export { default as SideBar } from "./Sidebar";
+export * from "./SideBar"
 export { SideBarItem } from "./SideBarItem";
 export type { SideBarItemProps } from "./SideBarItem";

@@ -1,4 +1,4 @@
-import type { QuestionParams, QuestionValues } from "../types/quizType";
+import type { QuestionParams,QuestionValues } from "../features/QuestionEngine";
 import { roundToSigFigs } from "./mathHelpers";
 
 export function checkObject(obj: Object, errorMessage: string) {
