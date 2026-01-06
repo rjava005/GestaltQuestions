@@ -335,7 +335,6 @@ async def get_filedata(
                 continue
             try:
                 mime_type, _ = mimetypes.guess_type(f.name)
-                logger.info(f"File is {f} and mime type {mime_type}")
                 if mime_type and (
                     mime_type.startswith("text")
                     or mime_type.startswith("application/json")
@@ -343,7 +342,7 @@ async def get_filedata(
                     content = f.read_text(encoding="utf-8")
                 else:
                     content = encode_image(f)
-                    logger.info("Encoded image just fine")
+                    logger.debug("Encoded image just fine")
 
                 file_data.append(
                     FileData(

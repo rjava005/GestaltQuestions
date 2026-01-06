@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Panel, PanelGroup, PanelResizeHandle } from "react-resizable-panels";
 
 import { Section } from "../../components/Section";
-import CodeEditorGeneric from "../../components/CodeEditor/CodeEditorGeneric";
+import CodeEditorGeneric from "../../components/CodeEditor/CodeEditor";
 import { type DropDownAdvanceOption, DropDownAdvance } from "../../components/DropDown";
 
 import QuestionHTMLToReact from "../QuestionComponents/ParseQuestionHTML";

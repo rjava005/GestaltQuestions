@@ -1,10 +1,6 @@
 import { type ToggleVariant } from "./types";
 import { toggleStyles } from "./config";
 
-
-
-
-
 type ToggleProps = {
   checked: boolean;
   setToggle: () => void;
@@ -12,8 +8,6 @@ type ToggleProps = {
   id: string;
   variant?: ToggleVariant;
 };
-
-
 
 const ToggleField = ({
   checked,
@@ -25,11 +19,7 @@ const ToggleField = ({
   const styles = toggleStyles[variant];
 
   return (
-    <label
-      htmlFor={id}
-      onClick={setToggle}
-      className={styles.container}
-    >
+    <label htmlFor={id} onClick={setToggle} className={styles.container}>
       <input
         type="checkbox"
         id={id}
