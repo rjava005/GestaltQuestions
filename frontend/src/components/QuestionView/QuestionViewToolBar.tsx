@@ -10,7 +10,7 @@ import { ActionButton } from "../Button";
 
 
 import SearchBar from "../SearchBar/SearchBar";
-import { MyModal } from "../Base/MyModal";
+import { Modal } from "../Modal";
 
 import UploadZipQuestionModal from "../../features/CreateQuestion/UploadZipQuestionModal";
 
@@ -85,9 +85,9 @@ export default function QuestionViewToolBar() {
       )}
 
       {showModal && (
-        <MyModal setShowModal={setShowModal}>
+        <Modal setShowModal={setShowModal}>
           <UploadZipQuestionModal setShowModal={setShowModal} />
-        </MyModal>
+        </Modal>
       )}
     </div>
   );

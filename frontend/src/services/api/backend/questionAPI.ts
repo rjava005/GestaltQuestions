@@ -171,6 +171,23 @@ export class QuestionAPI {
       header: response.headers["content-disposition"],
     };
   }
+  static async downloadQuestionFile(questionId: string, filename: string) {
+    const response = await api.post(
+      `${this.base}/files/${encodeURIComponent(
+        questionId
+      )}/${encodeURIComponent(filename)}/download`,
+      null,
+      {
+        responseType: "blob",
+        
+      }
+    );
+
+    return {
+      blob: response.data as Blob,
+      header: response.headers["content-disposition"],
+    };
+  }
 
   static async uploadQuestionZip(zipFile: File[]) {
     if (zipFile.length > 1) return;

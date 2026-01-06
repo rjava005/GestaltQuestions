@@ -8,30 +8,10 @@ import {
 } from "react-icons/tb";
 
 import { Section } from "../../components/Section";
-import CodeEditorBase from "../../components/CodeEditor/CodeEditorBase";
 
-import QuestionBuilderHeader from "./Header";
-import { QuestionEditorSections } from "./QuestionEditorSections";
 import QuestionBuilderSideBar from "./QuestionBuilderSideBar";
-import { useQuestionBuildingContext, useQuestionCollectionViewContext } from "./context";
-
-
-const Mockdata = {
-  title: "Adding 2 Numbers",
-};
-
-function MainContent() {
-  const { section } = useQuestionBuildingContext();
-  return (
-    <div className="flex flex-col">
-      <QuestionBuilderHeader title={Mockdata.title} />
-      <QuestionEditorSections />
-      <div className="w-full h-8/10">
-        {section === "code" ? <CodeEditorBase /> : <div>{section}</div>}
-      </div>
-    </div>
-  );
-}
+import { useQuestionCollectionViewContext } from "./context";
+import QuestionWorkspace from "./../QuestionWorkspace/page";
 
 export default function QuestionBuilder() {
   const [showDashboard, setShowDashboard] = useState(true);
@@ -85,13 +65,14 @@ export default function QuestionBuilder() {
         <Panel className="bg-slate-50" defaultSize={22} minSize={18}>
           <div className="p-6 max-w-[1400px] mx-auto">
             {view === "current" ? (
-              <MainContent />
+              <QuestionWorkspace />
             ) : view === "all" ? (
               <AllQuestions />
             ) : view === "create" ? (
               <CreateQuestion />
-            ) :
-              <div>{view}</div>}
+            ) : (
+              <div>{view}</div>
+            )}
           </div>
         </Panel>
       </PanelGroup>

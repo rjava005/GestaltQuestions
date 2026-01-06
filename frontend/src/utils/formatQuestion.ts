@@ -21,14 +21,13 @@ export function replaceParameters(
   for (const key in questionParams) {
     const value = questionParams[key];
     const valueType = typeof value;
-    console.log(value);
 
     // Handle differeent cases
     if (valueType === "object") {
       if (Array.isArray(value)) {
-        console.log("Got an array", value);
+        // console.log("Got an array", value);
       }
-      console.log("Got an object", key, value);
+      // console.log("Got an object", key, value);
     }
 
     if (typeof value === "object" && value !== null && !Array.isArray(value)) {
@@ -56,7 +55,6 @@ export function replaceParameters(
       String(replacement)
     );
   }
-  console.log("Finished updating");
 
   return updatedTemplate;
 }

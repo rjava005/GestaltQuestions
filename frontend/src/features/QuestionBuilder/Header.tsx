@@ -1,9 +1,9 @@
 import { Button } from "../../components/Button";
 import { DropDown } from "../../components/DropDown";
-import { QuestionOptionsToolBar } from "./QuestionToolBarItems";
 import { useState } from "react";
 import clsx from "clsx";
 import { FiMoreHorizontal } from "react-icons/fi";
+import { QuestionOptionsToolBar } from './config';
 
 type QuestionBuilderMode = "Editing" | "Preview";
 const EditorOptions: QuestionBuilderMode[] = ["Editing", "Preview"];

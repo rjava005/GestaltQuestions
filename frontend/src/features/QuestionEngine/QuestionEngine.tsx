@@ -1,111 +1,90 @@
-import api from "../../services/api/client";
-import {
-  useEffect,
-  useMemo,
-  useState,
-  useCallback,
-  type FormEvent,
-} from "react";
-import { useAdaptiveParams } from "../../services";
-import { useRawQuestionHTML, useParsedQuestionHTML } from "../../services";
-import { useQuestionCollectionContext } from "../../context/QuestionCollectionContext";
-import { useQuestionRuntime } from "../../context/QuestionAnswerContext";
-import { trueish } from "../../utils";
-import { Error } from "../../components/Generic/Error";
-import { Loading } from "../../components/Base/Loading";
+import { useState, type FormEvent } from "react";
+
 import { QuestionHeader } from "./QuestionHeader";
-import { QuestionButtons } from "./QuestionButtons";
-import DisplayCorrectAnswer from "./DisplayCorrectAnswer";
-import QuestionHTMLToReact from "../QuestionComponents/ParseQuestionHTML";
-import { getIdToken } from "firebase/auth";
+import { useQuestion, getCurrentQuestionMetadata } from "./hooks";
+import { QuestionHTMLToReact } from "../QuestionComponents";
+import DisplayAnswers from "./DisplayAnswers";
+import { useQuestionEngineContext } from "./context";
 
-import { useAuth } from "../../context/AuthContext";
+import { Section } from "../../components/Section";
+import { Button } from "../../components/Button";
+import { Loading } from "../../components/Loading";
+import { Error } from "../../components/Error";
 
+import { useQuestionRuntime } from "../../context/QuestionAnswerContext";
 
 export default function QuestionEngine() {
-  const { questionMeta: qdata } = useQuestionCollectionContext();
-  const { answers, setSolution, setShowSolution } = useQuestionRuntime();
-  const { user } = useAuth()
+  /* =========================
+     Question + Runtime State
+  ========================= */
+  const { formattedQuestion, error, loading, refetch, params } = useQuestion({
+    isAdaptive: true,
+  });
 
-  const [formattedQuestion, setFormattedQuestion] = useState<string>("");
-  const [isSubmitted, setIsSubmitted] = useState(false);
+  const { questionMeta } = getCurrentQuestionMetadata();
+  const { setShowSolution } = useQuestionEngineContext();
+  const { answers } = useQuestionRuntime();
 
-  const isAdaptive = useMemo(() => trueish(qdata?.isAdaptive), [qdata?.isAdaptive]);
+  const [isSubmitted, setIsSubmitted] = useState<boolean>(false);
 
-  // Fetch adaptive params if needed
-  const { params, loading: pLoading, refetch, error: adaptiveError } = useAdaptiveParams(isAdaptive);
+  /* =========================
+     Guard States
+  ========================= */
+  if (!questionMeta) {
+    return <div>Error: Could not get question</div>;
+  }
 
-  // Raw question & solution HTML (user edited)
-  const { questionHtml, solutionHTML } = useRawQuestionHTML();
+  if (loading) {
+    return <Loading />;
+  }
 
-  // Parameter substitution for adaptive questions
-  const parsed = useParsedQuestionHTML(
-    questionHtml ?? "",
-    isAdaptive && params ? params : null,
-    solutionHTML ?? ""
-  );
+  if (error) {
+    return <Error error={error} />;
+  }
 
-  useEffect(() => {
-    if (parsed) {
-      setFormattedQuestion(parsed.qHTML);
-      setSolution(parsed.sHTML);
-    } else {
-      setFormattedQuestion(questionHtml ?? "");
-      setSolution(solutionHTML ?? "");
-    }
-  }, [parsed, questionHtml, solutionHTML, setSolution]);
-
-  const handleSubmit = async (e: FormEvent) => {
+  /* =========================
+     Handlers
+  ========================= */
+  const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
-
-    console.log("Saving the question answers", answers);
-    const token = await getIdToken(user)
-
-    const data = await api.post("/run_server/submit", answers, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    })
-    console.log("This is the response", data)
     setIsSubmitted(true);
   };
 
-  const generateVariant = useCallback(async () => {
-    await refetch();
-    setIsSubmitted(false);
-  }, [refetch]);
-
-  if (!qdata || adaptiveError) {
-    return <Error error={`Failed to get question data: ${adaptiveError ?? ""}`} />;
-  }
-  if (pLoading) return <Loading />;
-
-
-  console.log("My Answers", answers)
-
+  /* =========================
+     Render
+  ========================= */
   return (
-    <>
-      <QuestionHeader question={qdata} />
+    <Section className="w-9/10">
+      <div className="rounded-md border-2 border-gray-400">
+        <QuestionHeader question={questionMeta} />
 
-      <form onSubmit={handleSubmit}>
-        <QuestionHTMLToReact html={formattedQuestion} />
+        <form onSubmit={handleSubmit}>
+          <QuestionHTMLToReact html={formattedQuestion} />
 
-        <QuestionButtons
-          isSubmitted={isSubmitted}
-          handleSubmit={handleSubmit}
-          generateVariant={generateVariant}
-          showSolution={() => setShowSolution((prev) => !prev)}
-        />
-      </form>
+          {/* Action Button Toolbar */}
+          <div className="grid sm:grid-cols-3 gap-10 mb-10">
+            <Button
+              name="Generate Variant"
+              color="generateVariant"
+              onClick={refetch}
+            />
 
-      <div>My Answers{ }</div>
+            <Button name="Submit Answer" color="submitQuestion" type="submit" />
 
-      {isSubmitted && (
-        <div className="w-full flex justify-center flex-col items-center mb-10">
-          <DisplayCorrectAnswer questionParams={params ?? null} />
-        </div>
-      )}
-    </>
+            <Button
+              name="Show Solution"
+              color="showSolution"
+              onClick={() => setShowSolution((prev) => !prev)}
+            />
+          </div>
+        </form>
+
+        {isSubmitted && (
+          <div className="w-full flex flex-col items-center justify-center mb-10">
+            <DisplayAnswers quizData={params} submittedAnswer={answers} />
+          </div>
+        )}
+      </div>
+    </Section>
   );
 }
-

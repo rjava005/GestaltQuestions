@@ -1,6 +1,6 @@
 import { UseAuthMode, type UserMode } from "../context/AuthMode";
 import { Section } from "../components/Section";
-import { MyModal } from "../components/Base/MyModal";
+import { Modal } from "../components/Modal";
 import { useAuth } from "../context/AuthContext";
 import ToggleButton from "@mui/material/ToggleButton";
 import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
@@ -36,7 +36,7 @@ export default function AuthenticationPage({
   return (
     <Section id="AuthenticationPage">
       {show && (
-        <MyModal
+        <Modal
           setShowModal={setShow}
           className="flex flex-col items-center justify-center gap-y-5"
         >
@@ -71,7 +71,7 @@ export default function AuthenticationPage({
           {showLogin && <LogInForm />}
           {showSignup && <SignUpForm />}
           {showVerify && <VerifyAccount />}
-        </MyModal>
+        </Modal>
       )}
     </Section>
   );

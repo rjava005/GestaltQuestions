@@ -1,29 +1,14 @@
-import { BsCollection } from "react-icons/bs";
-import { FaBoxArchive } from "react-icons/fa6";
-import {
-  FaRegFileAlt,
-  FaRegPaperPlane,
-  FaRegQuestionCircle,
-} from "react-icons/fa";
 import { IoMdAddCircleOutline } from "react-icons/io";
-import { MdFileUpload } from "react-icons/md";
 
 import { Button } from "../../components/Button";
-import Divider from "../../components/Divider/Divider";
-import { SideBar, SideBarItem } from "../../components/SideBar";
+import { Divider } from "../../components/Divider";
+import { SideBar } from "../../components/SideBar";
 
+import { sidebarItems } from "./config";
 import {
   type QuestionCollectionView,
   useQuestionCollectionViewContext,
 } from "./context";
-
-export const sidebarItems: SideBarItem<QuestionCollectionView>[] = [
-  { key: "all", label: "All Questions", icon: BsCollection },
-  { key: "current", label: "Current", icon: FaRegQuestionCircle },
-  { key: "drafts", label: "Drafts", icon: FaRegFileAlt },
-  { key: "published", label: "Published", icon: FaRegPaperPlane },
-  { key: "archived", label: "Archived", icon: FaBoxArchive },
-] as const;
 
 export default function QuestionBuilderSideBar() {
   const { view, setView } = useQuestionCollectionViewContext();
@@ -34,7 +19,6 @@ export default function QuestionBuilderSideBar() {
         options={sidebarItems}
         selected={view}
         setSelected={(val) => {
-          console.log("New val", val);
           return setView(val as QuestionCollectionView);
         }}
       />

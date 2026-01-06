@@ -9,7 +9,6 @@ export type TableColumn<T> = {
   render?: (row: T, className?: string) => React.ReactNode;
 };
 
-
 // Types for the toolbar actions
 export type ToolBarAction =
   | "TOGGLE_MULTI_SELECT"
@@ -26,7 +25,7 @@ export type ToolBarItemBase = {
 };
 
 export type ToolBarDropdownItem<T> = {
-  key: keyof T|string;
+  key: keyof T | string;
   label: string;
   default: boolean;
 };
