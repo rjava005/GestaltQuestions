@@ -6,7 +6,6 @@ import {
   PanelResizeHandle,
 } from "react-resizable-panels";
 import { Button } from "../Button";
-import QuestionCodeEditor from "../CodeEditor/QuestionCodeEditor";
 import QuestionEngine from "../../features/QuestionEngine/QuestionEngine";
 import { useQuestionRuntime } from "../../context/QuestionAnswerContext";
 import QuestionHTMLToReact from "../../features/QuestionComponents/ParseQuestionHTML";

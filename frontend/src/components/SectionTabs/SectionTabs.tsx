@@ -7,6 +7,7 @@ export type SectionItem<K extends string = string> = {
 export type SectionTabProps = SectionItem & {
   selected: boolean;
   setSelected: (val: string) => void;
+  onClick?: () => void
 };
 
 export default function SectionTab({

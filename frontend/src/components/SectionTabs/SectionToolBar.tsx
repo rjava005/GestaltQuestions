@@ -3,12 +3,15 @@ import { Button } from "../Button";
 import { IoMdAddCircleOutline } from "react-icons/io";
 import { CiCircleMinus } from "react-icons/ci";
 import { SectionTab, type SectionItem } from "../../components/SectionTabs";
+import type { MouseEvent as ReactMouseEvent } from "react";
+
 
 type SectionToolBarProps = {
     options: SectionItem[];
     selected: string;
     setSelected: (val: string) => void;
     id?: string;
+    onClick?: (e: ReactMouseEvent<HTMLElement>, val: string) => void;
 };
 
 export default function SectionToolBar({
@@ -16,6 +19,7 @@ export default function SectionToolBar({
     selected,
     setSelected,
     id,
+    onClick,
 }: SectionToolBarProps) {
     const [showOptions, setShowOptions] = useState(false);
     const [sections, setSections] = useState<SectionItem[]>([options[0]]);
@@ -32,12 +36,14 @@ export default function SectionToolBar({
             {/* LEFT: Section Tabs */}
             <div className="flex items-center gap-6 overflow-x-auto">
                 {sections.map((s) => (
-                    <SectionTab
-                        key={s.key}
-                        label={s.label}
-                        selected={s.key === selected}
-                        setSelected={() => setSelected(s.key)}
-                    />
+                    <div className="" onClick={(e) => onClick?.(e, s.key)}>
+                        <SectionTab
+                            key={s.key}
+                            label={s.label}
+                            selected={s.key === selected}
+                            setSelected={() => setSelected(s.key)}
+                        />
+                    </div>
                 ))}
             </div>
 

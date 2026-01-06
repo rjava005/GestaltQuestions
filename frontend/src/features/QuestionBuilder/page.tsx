@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import AllQuestions from "../AllQuestionsView/page";
 import { Panel, PanelGroup, PanelResizeHandle } from "react-resizable-panels";
 import { CreateQuestion } from "../CreateQuestion";
@@ -16,6 +16,7 @@ import QuestionWorkspace from "./../QuestionWorkspace/page";
 export default function QuestionBuilder() {
   const [showDashboard, setShowDashboard] = useState(true);
   const { view } = useQuestionCollectionViewContext();
+  
 
   return (
     <Section

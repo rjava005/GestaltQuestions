@@ -44,7 +44,7 @@ export default function QuestionEditor() {
     }, [filesData, selectedFile]);
 
     return (
-        <div className="flex flex-col gap-4 w-full h-full">
+        <div className="flex flex-col gap-4 w-full h-full" >
             {/* ───────── Top Toolbar ───────── */}
             <div
                 className="flex flex-wrap items-center justify-between gap-3

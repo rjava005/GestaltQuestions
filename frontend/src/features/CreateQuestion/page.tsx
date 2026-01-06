@@ -14,7 +14,7 @@ export default function CreateQuestion() {
     return (
         <Section variant="questionBuilder" id="create-question" className="gap-3">
             <Header
-                style={"QuestionBuilder"}
+                variant={"QuestionBuilder"}
                 title="Create Question"
                 className="flex flex-row justify-between "
             >
