@@ -1,27 +1,23 @@
+import type React from "react";
 import type { AllowedRoles } from "../../types/userTypes";
 
-export type BaseNavRoutes = {
-  name: string;
-  includeNavBar?: boolean;
-  requiresAuth: boolean;
-  allowedRoles: AllowedRoles;
-};
-
-export type SingleNavRoute = BaseNavRoutes & {
-  type: "route";
-  href: string;
+export type Base = {
+  path: string;
   element: React.ReactNode;
+  includeNavBar?: boolean;
+  displayName: string;
+  allowedRoles?: AllowedRoles;
+  requiresAuth?: boolean;
 };
 
-export type DropDownNavRoute = BaseNavRoutes & {
+export type BaseRoute = Base & {
+  type: "route";
+  items?: Base[];
+};
+
+export type DropDownNavRoute = Base & {
   type: "dropdown";
-  items: {
-    name: string;
-    href: string;
-    element: React.ReactNode;
-    allowedRoles?: AllowedRoles;
-    requiresAuth?: boolean;
-  }[];
+  items: Base[];
 };
 
-export type NavigationItem = SingleNavRoute | DropDownNavRoute;
+export type NavigationItem = BaseRoute | DropDownNavRoute;

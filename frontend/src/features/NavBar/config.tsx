@@ -13,12 +13,13 @@ import ImageGenerator from "../../components/CodeGenerators/ImageGenerator";
 // import GestaltStudio from "../Gestalt Studio/GestaltStudioPage";
 import GestaltStudio from "../GestaltStudio/GestaltStudioPage";
 import QuestionPlayGroundPage from "../QuestionPlayGround/page";
+import AllQuestions from "../AllQuestionsView/page";
 
 export const Navigation: NavigationItem[] = [
     {
         type: "route",
-        name: "Home",
-        href: "/",
+        displayName: "Home",
+        path: "/",
         element: <Home />,
         includeNavBar: true,
         requiresAuth: false,
@@ -26,8 +27,8 @@ export const Navigation: NavigationItem[] = [
     },
     {
         type: "route",
-        name: "Home",
-        href: "/home",
+        displayName: "Home",
+        path: "/home",
         element: <Home />,
         includeNavBar: false,
         requiresAuth: false,
@@ -35,12 +36,19 @@ export const Navigation: NavigationItem[] = [
     },
     {
         type: "route",
-        name: "QuestionBuilder",
-        href: "/question_builder",
-        element: <QuestionBuilder />,
         includeNavBar: true,
         requiresAuth: false,
         allowedRoles: [],
+        displayName: "QuestionBuilder",
+        path: "/question_builder",
+        element: <QuestionBuilder />,
+        items: [
+            {
+                displayName: "AllQuestions",
+                element: <AllQuestions />,
+                path: "/question_builder/all",
+            },
+        ],
     },
 
     //

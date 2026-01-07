@@ -1,6 +1,6 @@
 import { QuestionSyncAPI } from "../../services/api/backend/questionSyncAPI";
 import { toast } from "react-toastify";
-import { FormatMetrics } from "./FormatMetrics";
+import FormatMetrics from "./FormatMetrics";
 
 export const useSyncedQuestions = () => {
   const syncQuestion = async () => {

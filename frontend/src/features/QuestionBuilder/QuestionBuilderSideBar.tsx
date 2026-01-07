@@ -1,12 +1,11 @@
 import { IoMdAddCircleOutline } from "react-icons/io";
-
+import { NavLink } from "react-router-dom";
 import { Button } from "../../components/Button";
 import { Divider } from "../../components/Divider";
-import SideBar from "../../components/SideBar/SideBar";
+import { SideBarItem } from "../../components/SideBar";
 
 import { sidebarItems } from "./config";
 import {
-  type QuestionCollectionView,
   useQuestionCollectionViewContext,
 } from "./context";
 
@@ -15,13 +14,18 @@ export default function QuestionBuilderSideBar() {
   return (
     <div className="flex flex-col h-full  gap-y-2 my-4">
       {/* Functions for Handling viewing questions that were created or archived */}
-      <SideBar
-        options={sidebarItems}
-        selected={view}
-        setSelected={(val:string) => {
-          return setView(val as QuestionCollectionView);
-        }}
-      />
+      {sidebarItems.map((v) => {
+        return <NavLink to={v.key}>
+          <SideBarItem
+            label={v.label}
+            key={v.key}
+            icon={v.icon}
+            onSelect={() => setView(v.key)}
+            selected={v.key === view}
+          />
+        </NavLink>
+      })}
+
       <Divider />
       <div className="flex flex-col  gap-y-5 items-center justify-center my-4 w-full">
         <Button

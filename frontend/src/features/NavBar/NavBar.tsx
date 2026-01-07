@@ -2,66 +2,27 @@ import {
   Disclosure,
   DisclosureButton,
   DisclosurePanel,
-  Menu,
-  MenuButton,
-  MenuItem,
-  MenuItems,
 } from "@headlessui/react";
 
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
-import { ChevronDownIcon } from "@heroicons/react/20/solid";
 
 import { useState } from "react";
 import { BrowserRouter as Router, Routes, Link } from "react-router-dom";
 
-import { Navigation } from "./NavigationSettings";
+import { Navigation } from "./config";
 import AuthenticationPage from "../../pages/AuthenticationPage";
 import { useAuth } from "../../context/AuthContext";
-import { handleRoutes } from "./Routes";
+
 import { canAccessRoute } from "./utils";
-import type { NavigationItem } from "../../types/navbarTypes";
-import { DarkModeToggle } from "../DarkModeToggle/DarkModeToggle";
-
-function DropDownNav({ nav }: { nav: NavigationItem }) {
-  if (nav.type !== "dropdown") return;
-  return (
-    <Menu key={nav.name} as="div" className="relative">
-      <MenuButton className="flex items-center text-lg text-white hover:text-gray-200">
-        <span>{nav.name}</span>
-        <ChevronDownIcon className="ml-1 h-4 w-4" />
-      </MenuButton>
-      <MenuItems className="absolute left-0 mt-2 w-40 rounded-xl border border-white/20 bg-gray-800 text-white text-sm shadow-lg ring-1 ring-black/5 focus:outline-none">
-        {nav.items.map((child) => (
-          <MenuItem key={child.name}>
-            <Link
-              to={child.href}
-              className="block px-3 py-2 rounded-md hover:bg-white/10"
-            >
-              {child.name}
-            </Link>
-          </MenuItem>
-        ))}
-      </MenuItems>
-    </Menu>
-  );
-}
-
-function SingleNav({ nav }: { nav: NavigationItem }) {
-  if (nav.type !== "route") return;
-  return (<Link
-    key={nav.name}
-    to={nav.href}
-    className="px-3 py-2 rounded-md text-base font-medium text-gray-300 hover:bg-gray-700 hover:text-white"
-  >
-    {nav.name}
-  </Link>)
-}
+import DropDownNav from "./DropDownItem";
+import { HandleLink } from "./DropDownItem";
+import { handleRoutes } from "./utils";
 
 function NavBar() {
   const [showLogin, setShowLogin] = useState(false);
   const { user, logout, userData } = useAuth();
 
-  const accountNav = Navigation.find((v) => v.name === "My Account");
+  const accountNav = Navigation.find((v) => v.displayName === "My Account");
 
   return (
     <Router>
@@ -81,22 +42,22 @@ function NavBar() {
               <div className="hidden sm:block sm:ml-6">
                 <div className="flex items-center space-x-4">
                   {/* Start the mapping of the navigation items */}
-                  {Navigation.map((nav) =>
-                    nav.includeNavBar &&
-                    canAccessRoute(nav, user, userData?.role ?? "student") && (
-                      nav.type === "dropdown" ? (
-                        <DropDownNav key={nav.name} nav={nav} />
+
+                  {Navigation.map(
+                    (nav) =>
+                      nav.includeNavBar &&
+                      canAccessRoute(nav, user, userData?.role ?? "student") &&
+                      (nav.type === "dropdown" ? (
+                        <DropDownNav key={nav.displayName} nav={nav} />
                       ) : (
-                        <SingleNav key={nav.name} nav={nav} />
-                      )
-                    )
+                        <HandleLink nav={nav} />
+                      ))
                   )}
                 </div>
               </div>
 
               {/* Right-side buttons */}
               <div className="ml-auto flex items-center text-white space-x-4">
-                <DarkModeToggle />
                 {user ? (
                   <>
                     <button
@@ -108,10 +69,10 @@ function NavBar() {
 
                     {accountNav && (
                       <Link
-                        to={accountNav.type === "route" ? accountNav.href : ""}
+                        to={accountNav.type === "route" ? accountNav.path : ""}
                         className="px-3 py-2 rounded-md text-base font-medium text-gray-300 hover:bg-gray-700 hover:text-white"
                       >
-                        {accountNav.name}
+                        {accountNav.displayName}
                       </Link>
                     )}
                   </>
@@ -143,12 +104,12 @@ function NavBar() {
                 item.type === "route" &&
                 item.includeNavBar && (
                   <DisclosureButton
-                    key={item.name}
+                    key={item.displayName}
                     as={Link}
-                    to={item.href}
+                    to={item.path}
                     className="block rounded-md px-3 py-2 text-base font-medium text-gray-300 hover:bg-gray-700 hover:text-white"
                   >
-                    {item.name}
+                    {item.displayName}
                   </DisclosureButton>
                 )
             )}

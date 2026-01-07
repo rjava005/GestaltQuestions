@@ -1,4 +1,4 @@
-import {  useState } from "react";
+import { useState } from "react";
 import AllQuestions from "../AllQuestionsView/page";
 import { Panel, PanelGroup, PanelResizeHandle } from "react-resizable-panels";
 import { CreateQuestion } from "../CreateQuestion";
@@ -6,9 +6,10 @@ import {
   TbLayoutSidebarRightCollapseFilled,
   TbLayoutSidebarRightExpandFilled,
 } from "react-icons/tb";
-
+import { Outlet } from "react-router-dom";
+import { useEffect } from "react";
 import { Section } from "../../components/Section";
-
+import { useNavigate } from "react-router-dom";
 import QuestionBuilderSideBar from "./QuestionBuilderSideBar";
 import { useQuestionCollectionViewContext } from "./context";
 import QuestionWorkspace from "./../QuestionWorkspace/page";
@@ -16,7 +17,6 @@ import QuestionWorkspace from "./../QuestionWorkspace/page";
 export default function QuestionBuilder() {
   const [showDashboard, setShowDashboard] = useState(true);
   const { view } = useQuestionCollectionViewContext();
-  
 
   return (
     <Section
@@ -65,15 +65,7 @@ export default function QuestionBuilder() {
         {/* Main Content */}
         <Panel className="bg-slate-50" defaultSize={22} minSize={18}>
           <div className="p-6 max-w-[1400px] mx-auto">
-            {view === "current" ? (
-              <QuestionWorkspace />
-            ) : view === "all" ? (
-              <AllQuestions />
-            ) : view === "create" ? (
-              <CreateQuestion />
-            ) : (
-              <div>{view}</div>
-            )}
+            <Outlet />
           </div>
         </Panel>
       </PanelGroup>
