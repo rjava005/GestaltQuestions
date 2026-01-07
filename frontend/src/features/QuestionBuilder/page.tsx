@@ -1,22 +1,15 @@
 import { useState } from "react";
-import AllQuestions from "../QuestionTable/page";
 import { Panel, PanelGroup, PanelResizeHandle } from "react-resizable-panels";
-import { CreateQuestion } from "../CreateQuestion";
 import {
   TbLayoutSidebarRightCollapseFilled,
   TbLayoutSidebarRightExpandFilled,
 } from "react-icons/tb";
 import { Outlet } from "react-router-dom";
-import { useEffect } from "react";
 import { Section } from "../../components/Section";
-import { useNavigate } from "react-router-dom";
 import QuestionBuilderSideBar from "./QuestionBuilderSideBar";
-import { useQuestionCollectionViewContext } from "./context";
-import QuestionWorkspace from "./../QuestionWorkspace/page";
 
 export default function QuestionBuilder() {
   const [showDashboard, setShowDashboard] = useState(true);
-  const { view } = useQuestionCollectionViewContext();
 
   return (
     <Section

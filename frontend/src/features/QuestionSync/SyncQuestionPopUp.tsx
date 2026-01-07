@@ -2,7 +2,7 @@
 import { FaSyncAlt } from "react-icons/fa";
 import { toast } from "react-toastify";
 import { PopUpHelpIcon } from "../../components/Base/PopUpHelper";
-import { FormatMetrics } from "./FormatMetrics";
+import FormatMetrics from "./FormatMetrics";
 // Local utilities / API / types
 import { QuestionSyncAPI } from "../../services/api/backend/questionSyncAPI";
 
