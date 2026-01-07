@@ -1,24 +1,25 @@
+# --- Standard Library ---
+from typing import cast
+
 # --- Third-Party ---
-from fastapi import APIRouter
+from fastapi import APIRouter, HTTPException
+from pydantic import BaseModel
+from starlette import status
 
 # --- Internal ---
-from pydantic import BaseModel
-from src.api.db_models.users import User
-from src.api.service.user_manager import UserManagerDependeny
+from src.api.core.firebase import initialize_firebase_app
 from src.api.core.logging import logger
-from src.api.dependencies import FireBaseToken
-from fastapi import HTTPException
-from starlette import status
-from src.api.initialize_firebase import initialize_firebase_app
-from src.api.db_models.users import (
+from src.api.database.models.users import (
     User,
     UserBase,
-    UserRoles,
-    ValidInstitutions,
-    UserUpdate,
     UserRead,
+    UserRoles,
+    UserUpdate,
+    ValidInstitutions,
 )
-from typing import cast
+from src.api.dependencies import FireBaseToken
+from src.api.service.user_manager import UserManagerDependeny
+
 
 router = APIRouter(prefix="/users", tags=["users"])
 initialize_firebase_app()

@@ -4,9 +4,8 @@ from sqlalchemy.exc import SQLAlchemyError
 from sqlmodel import select
 
 from src.api.core import logger
-from src.api.database.database import SessionDep
-from src.api.db_models.users import Role, UserRoles
-
+from src.api.core.database import SessionDep
+from src.api.database.models.users import Role, UserRoles
 
 
 def seed_roles(session: SessionDep) -> None:

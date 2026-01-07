@@ -14,9 +14,9 @@ export const firebaseConfig = {
 
 export const firebase = initializeApp(firebaseConfig);
 export const auth = getAuth(firebase);
-console.log("")
+console.log("");
 if (import.meta.env.VITE_MODE == "dev") {
-  console.log("Setting up emulator")
+  console.log("Setting up emulator");
   const authEmulatorAPI = import.meta.env.VITE_FIREBASE_AUTH_EMULATOR_HOST;
   connectAuthEmulator(auth, authEmulatorAPI);
 }

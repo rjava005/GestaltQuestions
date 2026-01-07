@@ -1,6 +1,7 @@
 # --- Standard Library ---
 import asyncio
-from typing import Sequence, Union, Literal
+from pathlib import Path
+from typing import Literal, Sequence
 from uuid import UUID
 
 # --- Third-Party ---
@@ -8,16 +9,15 @@ from pydantic import ValidationError
 from sqlalchemy import or_
 from sqlalchemy.exc import SQLAlchemyError
 from sqlmodel import delete, select
-from pathlib import Path
 
 # --- Internal ---
 from src.api.core import logger
-from src.api.database.database import SessionDep
-from src.api.database import generic_db as gdb
-from src.api.database.generic_db import filter_conditional
-from src.api.db_models.question import Question
-from src.api.db_models.question import QuestionMeta, QuestionData
+from src.api.core.database import SessionDep
+from src.api.database import generic as gdb
+from src.api.database.generic import filter_conditional
 from src.utils import convert_uuid
+
+from .models.question import Question, QuestionData, QuestionMeta
 
 
 async def create_question(
@@ -252,7 +252,7 @@ async def filter_questions(
         if key in relationships:
             relationship_model = relationships[key]
             joins.add(key)
-            logger.info("This is join %s", joins)
+            logger.debug("This is join %s", joins)
             if isinstance(value, list):
                 rel_conds = [
                     filter_conditional(

@@ -1,5 +1,5 @@
-import Card from "../Base/Card";
-import { MyButton } from "../Base/Button";
+import Card from "../Card/Card";
+import { Button } from "../Button";
 import { generators } from "./generatorInfo";
 import type { GeneratorConfig } from "./generatorInfo";
 import { Link } from "react-router-dom";
@@ -15,7 +15,7 @@ function AIGeneratorBox({ config }: AIGeneratorBoxProps) {
             <h1 className="text-lg font-bold">{config.name}</h1>
             <p className="text-sm ">{config.description}</p>
             <Link to={config.link}>
-                <MyButton name={config.name} className="mt-10" ></MyButton>
+                <Button name={config.name} className="mt-10" ></Button>
             </Link>
         </Card>
     )

@@ -1,8 +1,6 @@
 from fastapi import APIRouter
 from starlette import status
-
-from src.api.db_models import *
-from src.api.dependencies import AppSettings, SettingDependency
+from src.api.dependencies import SettingDependency
 from src.api.core.config import get_settings
 
 router = APIRouter()

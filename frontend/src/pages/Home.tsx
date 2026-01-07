@@ -1,19 +1,19 @@
-import SectionContainer from "../components/Base/SectionContainer";
-import { MyButton } from "../components/Base/Button";
+import { Section } from "../components/Section";
+import { Button } from "../components/Button";
 import { HashLink } from "react-router-hash-link";
 import { GeneratorContainer } from "../components/CodeGenerators/AIGeneratorBox";
-import Card from "../components/Base/Card";
+import Card from "../components/Card/Card";
 import { Link } from "react-router-dom";
 
 
 
 function Hero() {
     return (
-        <SectionContainer id="hero" style="hero" className="bg-gray-50 dark:bg-gray-900">
+        <Section id="hero" variant="hero" className="bg-gray-50 dark:bg-gray-900">
             <div className="text-center space-y-6 px-6 max-w-3xl mx-auto py-20">
                 {/* Title */}
                 <h1 className="font-extrabold text-4xl sm:text-6xl text-gray-900 dark:text-white">
-                    Gestalt Questions 
+                    Gestalt Questions
                 </h1>
 
                 <hr className="border-primary-yellow dark:border-primary-yellow/70 w-24 mx-auto" />
@@ -25,20 +25,20 @@ function Hero() {
 
                 {/* Call to Action */}
                 <HashLink smooth to="/home/#about">
-                    <MyButton
+                    <Button
                         name="Get Started"
                         color="secondary"
                         className="px-8 py-4 mt-6 rounded-2xl text-xl sm:text-2xl font-extrabold shadow-lg hover:scale-105 transition-transform"
                     />
                 </HashLink>
             </div>
-        </SectionContainer>
+        </Section>
     );
 }
 
 function AboutSection() {
     return (
-        <SectionContainer id="about" style="hero" className="bg-white dark:bg-gray-800">
+        <Section id="about" variant="hero" className="bg-white dark:bg-gray-800">
             <div className="max-w-4xl mx-auto text-center space-y-8 px-6 py-16">
                 {/* Heading */}
                 <h2 className="text-3xl sm:text-5xl font-extrabold text-gray-900 dark:text-white">
@@ -66,37 +66,37 @@ function AboutSection() {
                 </div>
 
                 <HashLink smooth to="/home/#how-it-works">
-                    <MyButton
+                    <Button
                         name="How It Works"
                         color="primary"
                         className="px-6 py-3 rounded-xl text-lg font-bold shadow hover:scale-105 transition-transform"
                     />
                 </HashLink>
             </div>
-        </SectionContainer>
+        </Section>
     );
 }
 
 function GeneratorSection() {
     return (
-        <SectionContainer id="generator-section" style="hero" className="bg-gray-50 dark:bg-gray-900">
+        <Section id="generator-section" variant="hero" className="bg-gray-50 dark:bg-gray-900">
             <div className="flex flex-col items-center justify-center space-y-10 py-20">
                 <GeneratorContainer />
                 <HashLink smooth to="#learn-more">
-                    <MyButton
+                    <Button
                         name="Learn More"
                         color="secondary"
                         className="px-6 py-3 rounded-xl text-lg sm:text-xl font-bold shadow-md hover:scale-105 transition-transform"
                     />
                 </HashLink>
             </div>
-        </SectionContainer>
+        </Section>
     );
 }
 
 function LearnMore() {
     return (
-        <SectionContainer id="learn-more" style="hero" className="bg-white dark:bg-gray-800">
+        <Section id="learn-more" variant="hero" className="bg-white dark:bg-gray-800">
             <div className="max-w-6xl mx-auto text-center space-y-10 px-6 py-16">
                 {/* Heading */}
                 <h2 className="text-3xl sm:text-5xl font-extrabold text-gray-900 dark:text-white">
@@ -157,13 +157,13 @@ function LearnMore() {
                     <span className="font-semibold text-primary-yellow">accurate, contextual, and ready to use</span>.
                 </p>
             </div>
-        </SectionContainer>
+        </Section>
     );
 }
 
 function HowItWorks() {
     return (
-        <SectionContainer id="how-it-works" style="hero" className="bg-gray-50 dark:bg-gray-900">
+        <Section id="how-it-works" variant="hero" className="bg-gray-50 dark:bg-gray-900">
             <div className="max-w-5xl w-full mx-auto text-center space-y-10 px-6 py-16">
                 {/* Heading */}
                 <h2 className="text-3xl sm:text-5xl font-extrabold text-gray-900 dark:text-white">
@@ -193,7 +193,7 @@ function HowItWorks() {
                         {
                             step: "4",
                             title: "Review & Customize",
-                            text: "Adjust content, add your own questions, and download files to fit your course or study style."
+                            text: "Adjust content, add your own questions, and download files to fit your course or study variant."
                         }
                     ].map((item) => (
                         <Card
@@ -212,14 +212,14 @@ function HowItWorks() {
                 {/* CTA Buttons */}
                 <div className="flex flex-col sm:flex-row gap-6 justify-center pt-6">
                     <HashLink smooth to="/home/#generator-section">
-                        <MyButton
+                        <Button
                             name="Start with Generators"
                             color="primary"
                             className="px-6 py-3 rounded-xl text-lg font-bold shadow hover:scale-105 transition-transform"
                         />
                     </HashLink>
                     <HashLink smooth to="#questions">
-                        <MyButton
+                        <Button
                             name="Explore Questions"
                             color="secondary"
                             className="px-6 py-3 rounded-xl text-lg font-bold shadow-md hover:scale-105 transition-transform"
@@ -227,12 +227,12 @@ function HowItWorks() {
                     </HashLink>
                 </div>
             </div>
-        </SectionContainer>
+        </Section>
     );
 }
 function QuestionsSection() {
     return (
-        <SectionContainer id="questions" style="hero" className="bg-gray-50 dark:bg-gray-900">
+        <Section id="questions" variant="hero" className="bg-gray-50 dark:bg-gray-900">
             <div className="max-w-5xl mx-auto text-center space-y-10 px-6 py-16">
                 {/* Heading */}
                 <h2 className="text-3xl sm:text-5xl font-extrabold text-gray-900 dark:text-white">
@@ -273,14 +273,14 @@ function QuestionsSection() {
                 <div className="flex flex-col sm:flex-row justify-center gap-6 pt-8">
 
                     <Link to="/questions">
-                        <MyButton
+                        <Button
                             name="Go to Question Page"
                             color="primary"
                             className="px-6 py-3 rounded-xl text-lg font-bold shadow hover:scale-105 transition-transform"
                         />
                     </Link>
                     <Link to="/createQuestion">"
-                        <MyButton
+                        <Button
                             name="Create Manual Question"
                             color="secondary"
                             className="px-6 py-3 rounded-xl text-lg font-bold shadow hover:scale-105 transition-transform"
@@ -289,7 +289,7 @@ function QuestionsSection() {
 
                 </div>
             </div>
-        </SectionContainer>
+        </Section>
     );
 }
 

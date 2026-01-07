@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { ToggleButton, ToggleButtonGroup } from "@mui/material";
-import UploadFilesButton from "../Forms/UploadFileComponent";
-import { MyButton } from "../Base/Button";
+import UploadFilesButton from "../UploadFile/UploadFileComponent";
+import { Button } from "../Button";
 import type { QuestionData } from "../../types/questionTypes";
 import { QuestionAPI } from "../../services/api/backend/questionAPI";
 
@@ -257,7 +257,7 @@ function QuestionCreationForm({ onFinish }: FormProps) {
 
                 {/* Submit */}
                 <div className="flex justify-center">
-                    <MyButton name="Create Question" type="submit" />
+                    <Button name="Create Question" type="submit" />
                 </div>
             </form>
         </div>

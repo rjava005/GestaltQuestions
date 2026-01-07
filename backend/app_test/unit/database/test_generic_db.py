@@ -1,7 +1,6 @@
-from src.api.db_models.question import Question
-from src.api.database import generic_db as gdb
+from src.api.database.models.question import Question, Topic, Language, QuestionType
+from src.api.database import generic as gdb
 import pytest
-from src.api.db_models.question import Topic, Language, QuestionType
 
 # def test_get_all_model_relationships():
 #     question_relationships = ["topics", "languages", "qtypes"]
@@ -10,10 +9,8 @@ from src.api.db_models.question import Topic, Language, QuestionType
 
 
 @pytest.mark.asyncio
-async def test_get_model_relationship_data(
-    create_question_with_relationship, relationship_payload
-):
-    q = await create_question_with_relationship
+async def test_get_model_relationship_data(create_question_with_relationship):
+    q, relationship_payload = await create_question_with_relationship
     for rel_name, data in relationship_payload.items():
         data = getattr(q, rel_name)
         assert [d.name in relationship_payload[rel_name] for d in data]
@@ -21,9 +18,9 @@ async def test_get_model_relationship_data(
 
 @pytest.mark.asyncio
 async def test_get_all_model_relationship_data(
-    create_question_with_relationship, relationship_payload
+    create_question_with_relationship
 ):
-    q = await create_question_with_relationship
+    q,relationship_payload = await create_question_with_relationship
     rel_data = gdb.get_all_model_relationship_data(q, Question)
     assert rel_data
     for rel_name, data in rel_data.items():

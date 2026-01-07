@@ -3,7 +3,7 @@ import { FaSyncAlt } from "react-icons/fa";
 import { toast } from "react-toastify";
 
 // Local components
-import { MyButton } from "../Base/Button";
+import { Button } from "../Button";
 import { PopUpHelpIcon } from "../Base/PopUpHelper";
 
 // Local utilities / API / types
@@ -42,11 +42,11 @@ const FormatMetrics: React.FC<FormatMetricsProps> = ({
 
       <p>🗑️ Deleted Questions: {deleted.deleted_from_db}</p>
 
-      <MyButton
+      <Button
         onClick={() => downloadJson(raw, "raw_sync_metrics")}
         className="my-2"
         name="Download raw Sync Results"
-      ></MyButton>
+      ></Button>
     </div>
   );
 };

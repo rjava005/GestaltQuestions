@@ -7,7 +7,7 @@ import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
 import { CiCircleInfo } from "react-icons/ci";
 import clsx from "clsx";
 import { useToggleButtonSx } from "../../styles/ToggleButtonStyles";
-import { useTheme } from "../Generic/DarkModeToggle";
+import { useTheme } from "../../features/DarkModeToggle/DarkModeToggle";
 
 type QuestionStorageProps = {
     questionStorageType: QuestionStorage

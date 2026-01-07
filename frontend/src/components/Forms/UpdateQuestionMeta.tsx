@@ -1,8 +1,8 @@
-import { useQuestionContext } from "../../context/QuestionContext";
+import { useQuestionCollectionContext } from "../../context/QuestionCollectionContext";
 import type { QuestionMeta } from "../../types/questionTypes";
-import { InputTextForm } from "./InputComponents";
+import { InputTextForm } from "../FormInputs/InputComponents";
 import { useState, type FormEvent } from "react";
-import { MyButton } from "../Base/Button";
+import { Button } from "../Button";
 import { QuestionAPI } from "../../services/api/backend/questionAPI";
 import type { QuestionData } from "../../types/questionTypes";
 import { toast } from "react-toastify";
@@ -17,7 +17,7 @@ function QuestionFormHeader({ questionMeta }: { questionMeta: QuestionMeta }) {
     );
 }
 export default function QuestionUpdateForm() {
-    const { questionMeta, selectedQuestionID } = useQuestionContext();
+    const { questionMeta, selectedQuestionID } = useQuestionCollectionContext();
 
     const [title, setTitle] = useState<string>(questionMeta?.title ?? "");
     const [topics, setTopics] = useState<string>(
@@ -138,7 +138,7 @@ export default function QuestionUpdateForm() {
                     </label>
                 </div>
 
-                <MyButton name="Submit" type="submit" />
+                <Button name="Submit" type="submit" />
             </form>
         </div>
     );

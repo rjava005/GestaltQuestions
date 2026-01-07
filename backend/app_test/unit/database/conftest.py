@@ -1,18 +1,18 @@
 import pytest
-from src.api.database import question as qdb
-from src.api.db_models.question import QuestionData
+from app_test.mock_data import QUESTION_FULL, QUESTIONS, ADDITIONAL_METADATA
 
-@pytest.fixture
-def combined_payload(question_payload, question_payload_2):
-    return [question_payload, question_payload_2]
+# Keep these factories present
+from app_test.factories import make_question, make_submission_attempt, make_user
 
 
 @pytest.fixture
 @pytest.mark.asyncio
-async def create_question_with_relationship(
-    db_session, question_payload, relationship_payload
-):
-    qdata = QuestionData(**question_payload, **relationship_payload)
-    qcreated = await qdb.create_question(qdata, db_session)
+async def create_question_with_relationship(make_question):
+    qcreated = await make_question(**QUESTION_FULL)
     assert qcreated
-    return qcreated
+    return qcreated, ADDITIONAL_METADATA
+
+
+@pytest.fixture
+def combined_payload():
+    return QUESTIONS

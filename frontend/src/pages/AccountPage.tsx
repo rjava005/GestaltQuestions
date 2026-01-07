@@ -1,15 +1,15 @@
-import SectionContainer from "../components/Base/SectionContainer";
-import AccountPageHeader from "../features/accountPage/AccountPageHeader";
-import AccountProfilePic from "../features/accountPage/AccountProfilePic";
-import AccountInformation from "../features/accountPage/AccountInformation";
-import AccountOptions from "../features/accountPage/AccountOptions";
+import { Section } from "../components/Section";
+import AccountPageHeader from "../features/AccountPage/AccountPageHeader";
+import AccountProfilePic from "../features/AccountPage/AccountProfilePic";
+import AccountInformation from "../features/AccountPage/AccountInformation";
+import AccountOptions from "../features/AccountPage/AccountOptions";
 import { useAuth } from "../context/AuthContext";
 
 export default function AccountPage() {
   const { user } = useAuth();
 
   return (
-    <SectionContainer
+    <Section
       id="AccountPage"
       className="flex flex-col gap-y-8 py-8 max-w-4xl mx-auto min-h-screen"
     >
@@ -37,6 +37,6 @@ export default function AccountPage() {
           </div>
         </>
       )}
-    </SectionContainer>
+    </Section>
   );
 }

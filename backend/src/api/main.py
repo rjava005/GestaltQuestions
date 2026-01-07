@@ -12,12 +12,12 @@ from pathlib import Path
 from src.api.core import logger
 
 # Local application imports
-from src.api.database.database import create_db_and_tables
+from src.api.core.database import create_db_and_tables
 from src.api.web import routes
 from src.api.core.config import get_settings
 from src.api.database.role import seed_roles
 from src.api.database.institution import seed_institution
-from src.api.database.database import Session
+from src.api.core.database import Session
 
 
 settings = get_settings()

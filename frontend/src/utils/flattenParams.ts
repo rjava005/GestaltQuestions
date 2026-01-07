@@ -1,14 +1,4 @@
-// const questionParams = {
-//   speed: 60,
-//   time: 2,
-//   unitsSpeed: "km/h",
-//   unitsTime: "s",
-//   intermediate: {
-//     conversionFactor: 0.27778,
-//     convertedSpeed: 16.667,
-//   },
-//   arr: [1, 2, { x: 3 }],
-// };
+
 
 // const template = `
 // Speed: [[params.speed]] [[params.unitsSpeed]]

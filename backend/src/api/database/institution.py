@@ -4,9 +4,8 @@ from sqlalchemy.exc import SQLAlchemyError
 from sqlmodel import select
 
 from src.api.core import logger
-from src.api.database.database import SessionDep
-from src.api.db_models.users import Institution, ValidInstitutions
-
+from src.api.core.database import SessionDep
+from .models.institution import ValidInstitutions, Institution
 
 
 def seed_institution(session: SessionDep):

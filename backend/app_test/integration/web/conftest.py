@@ -1,6 +1,6 @@
 from pathlib import Path
 import pytest
-from src.api.models import FileData
+from src.api.response_models import FileData
 
 
 @pytest.fixture
