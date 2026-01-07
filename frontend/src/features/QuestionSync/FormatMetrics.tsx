@@ -11,7 +11,7 @@ export type FormatMetricsProps = {
   raw?: UnsyncedQuestion[];
 };
 
-export const FormatMetrics: React.FC<FormatMetricsProps> = ({
+const FormatMetrics: React.FC<FormatMetricsProps> = ({
   metrics,
   deleted,
   raw,
@@ -39,3 +39,6 @@ export const FormatMetrics: React.FC<FormatMetricsProps> = ({
     </div>
   );
 };
+
+
+export default FormatMetrics
