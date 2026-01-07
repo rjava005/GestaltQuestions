@@ -5,7 +5,6 @@ from uuid import UUID
 import httpx
 from pydantic import ValidationError
 import json
-from starlette import status
 
 # Third-party libraries
 from fastapi import APIRouter, HTTPException
@@ -79,16 +78,23 @@ async def run_server(
                 "code": server_content,
             }
             res = await client.post(generate_endpoint, json=payload)
-            res.raise_for_status()
 
-    except httpx.HTTPStatusError as e:
-        logger.error(
+    except Exception as e:
+        logger.exception(
             f"Sandbox execution failed for question '{qid}' "
             f"language='{server_language}' file='{server_file}'"
         )
         raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST, detail=f"{e.response.text}"
-        )
+            status_code=500,
+            detail=(
+                f"Failed to execute {server_language} server file '{server_file}'. "
+                f"Sandbox error: {str(e)}"
+            ),
+        ) from e
+
+    # -----------------------
+    # Parse and validate response
+    # -----------------------
     try:
         raw_data = res.json()
     except ValueError:
@@ -130,6 +136,7 @@ async def run_server(
             )
 
     try:
+        logger.info(f"The raw output {data.output}")
         quiz_data = QuizData.model_validate(data.output)
         quiz_data.logs.extend(data.logs)
 

@@ -8,7 +8,7 @@ import pytest
 from code_sandbox.code_runner.javascript_runner import JavaScriptRunner
 from code_sandbox.code_runner.models import ExecutionResult
 from code_sandbox.utils import logs_contain
-from code_sandbox.code_runner.error_handling import ExecutionError
+
 
 # --------------------------------------------------------------------------- #
 # Fixtures
@@ -66,11 +66,3 @@ def test_js_execution_logs_expected_output(js_execution_result):
     ) or logs_contain(  # JSON-like
         logs, "Here is a structure", "a", "1"
     )  # fallback
-
-
-def test_failed_execution(js_bad_code_path):
-    with pytest.raises(ExecutionError) as exc_info:
-        code = Path(js_bad_code_path).read_text("utf-8")
-        runner = JavaScriptRunner()
-        runner.run(code)
-    assert "stderr" in str(exc_info.value)

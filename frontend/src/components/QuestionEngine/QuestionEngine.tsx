@@ -28,7 +28,7 @@ export default function QuestionEngine() {
   const isAdaptive = useMemo(() => trueish(qdata?.isAdaptive), [qdata?.isAdaptive]);
 
   // Fetch adaptive params if needed
-  const { params, loading: pLoading, refetch, error: adaptiveError } = useAdaptiveParams(isAdaptive);
+  const { params, loading: pLoading, refetch } = useAdaptiveParams(isAdaptive);
 
   // Raw question & solution HTML (user edited)
   const { questionHtml, solutionHTML } = useRawQuestionHTML();
@@ -61,9 +61,7 @@ export default function QuestionEngine() {
     setIsSubmitted(false);
   }, [refetch]);
 
-  if (!qdata || adaptiveError) {
-    return <Error error={`Failed to get question data: ${adaptiveError ?? ""}`} />;
-  }
+  if (!qdata) return <Error error="Failed to get question data" />;
   if (pLoading) return <Loading />;
 
   return (

@@ -37,9 +37,7 @@ def run_generate(
         valid_extensions = generator.extensions
 
         logger.info(f"[Runtime Switcher] Running {runner} from {language}")
-        output = runner.run(code)
-        logger.info("This is the output %s", output)
-        return output
+        return runner.run(code)
     except Exception as e:
         logger.exception(
             f"[Runtime Switcher] Unexpected error during {language} execution | '"

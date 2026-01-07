@@ -48,8 +48,7 @@ export function useAdaptiveParams(isAdaptive: boolean) {
       if (res?.logs) setLogs(res.logs);
     } catch (err: any) {
       console.error("Error fetching adaptive params:", err);
-      console.log(err.response.data.detail)
-      setError(err.response.data.detail ?? "Unknown error");
+      setError(err?.message ?? "Unknown error");
     } finally {
       setLoading(false);
     }

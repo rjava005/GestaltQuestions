@@ -6,7 +6,6 @@ import tempfile
 from contextlib import redirect_stdout
 from pathlib import Path
 from typing import Any
-from .error_handling import ExecutionError
 
 # Internal
 from code_sandbox.code_runner.base import CodeRunner
@@ -37,34 +36,29 @@ class PythonScriptRunner(CodeRunner):
         """
         spec = importlib.util.spec_from_file_location(self.func_name, path)
         if spec is None or spec.loader is None:
-            raise ExecutionError(f"Could not load spec from path: {path}")
+            raise ImportError(f"Could not load spec from path: {path}")
         module = importlib.util.module_from_spec(spec)
         try:
             spec.loader.exec_module(module)
         except Exception as e:
-            raise ExecutionError(f"Error executing module '{path}': {e}")
+            raise ImportError(f"Error executing module '{path}': {e}")
         return module
 
     def run(self, code: str) -> ExecutionResult:
+        with tempfile.NamedTemporaryFile(
+            mode="w", delete=False, suffix=self.suffix
+        ) as tmp:
+            tmp.write(code)
+            tmp_path = tmp.name
+        tmp_path_posix = Path(tmp_path).as_posix()
         try:
-            with tempfile.NamedTemporaryFile(
-                mode="w",
-                delete=False,
-                suffix=self.suffix,
-                errors="replace",
-                encoding="utf-8",
-            ) as tmp:
-                tmp.write(code)
-                tmp_path = tmp.name
-            tmp_path_posix = Path(tmp_path).as_posix()
-        except UnicodeError as e:
-            raise ExecutionError(
-                f"Could not execute code received a Unicode failure during execution: Error {e} "
-            )
-        module = self.import_module_from_path(tmp_path_posix)
+            module = self.import_module_from_path(tmp_path_posix)
+        except Exception as e:
+            raise ValueError(f"Could not import python module {e}")
+
         generate = getattr(module, self.func_name, None)
         if not callable(generate):
-            raise ExecutionError(
+            raise ValueError(
                 "Function 'generate' not found or not callable in the Python module."
             )
         # Get the print statements
@@ -75,7 +69,7 @@ class PythonScriptRunner(CodeRunner):
                 result = generate()
             captured = f.getvalue().splitlines()
         except Exception as e:
-            raise ExecutionError(f"Error executing python {self.func_name} : {e}")
+            raise ValueError(f"Error executing python {self.func_name} : {e}")
         return ExecutionResult(output=json.dumps(result), logs=captured)
 
 
