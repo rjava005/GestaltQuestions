@@ -11,6 +11,7 @@ import { SearchBar } from "../../components/SearchBar";
 
 import { useRetrievedQuestions } from "../../hooks";
 import { useQuestionCollectionContext } from "../../context/QuestionCollectionContext";
+import { useSyncedQuestions } from "../QuestionSync/hooks";
 
 import { useQuestionTableContext } from "./context";
 import { useQuestionToolBarActions } from "./hooks";
@@ -28,6 +29,7 @@ export default function TableToolBar() {
   const { selectedQuestions } = useQuestionCollectionContext();
   const [showDropDown, setShowDropDown] = useState<boolean>(false);
   const [openDropDown, setOpenDropDown] = useState(true);
+  const { syncQuestion } = useSyncedQuestions();
 
   const debouncedSearchTerm = useDebounce(searchTitle, 300);
   const questionFilter = useMemo(
@@ -59,7 +61,7 @@ export default function TableToolBar() {
         break;
 
       case "SYNC":
-        console.log("syncing…");
+        await syncQuestion();
         break;
 
       case "TABLE_SETTINGS":
