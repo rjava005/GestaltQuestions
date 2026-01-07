@@ -44,14 +44,14 @@ class State(TypedDict):
     files: Annotated[dict, lambda a, b: {**a, **b}]
 
 
-async def classify_question(state: State):
+def classify_question(state: State):
     input_state = {"question": state["question"], "metadata": None}
     result = question_metadata_generator.invoke(input_state, config)  # type: ignore
 
     return {"metadata": result["metadata"]}
 
 
-async  def generate_question_html(state: State):
+def generate_question_html(state: State):
     metadata = state["metadata"]
     assert metadata
 
@@ -75,7 +75,7 @@ async  def generate_question_html(state: State):
     }
 
 
-async def generate_solution_html(state: State):
+def generate_solution_html(state: State):
     metadata = state["metadata"]
     assert metadata
 
@@ -92,7 +92,7 @@ async def generate_solution_html(state: State):
     return {"files": {"solution.html": result["solution_html"]}}
 
 
-async def generate_server_js(state: State):
+def generate_server_js(state: State):
     metadata = state["metadata"]
     assert metadata
 
@@ -109,7 +109,7 @@ async def generate_server_js(state: State):
     return {"files": {"server.js": result["server_js"]}}
 
 
-async def generate_server_py(state: State):
+def generate_server_py(state: State):
     metadata = state["metadata"]
     assert metadata
 
@@ -126,7 +126,7 @@ async def generate_server_py(state: State):
     return {"files": {"server.py": result["server_py"]}}
 
 
-async def generate_info_json(state: State):
+def generate_info_json(state: State):
     metadata = state["metadata"]
     assert metadata
 
@@ -143,7 +143,7 @@ async def generate_info_json(state: State):
     return {"files": {"info.json": json.dumps(to_serializable(info_metadata))}}
 
 
-async def router(
+def router(
     state: State,
 ) -> Sequence[
     Literal["generate_solution_html", "generate_server_js", "generate_server_py"]
