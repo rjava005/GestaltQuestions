@@ -5,6 +5,7 @@ from ai_workspace.code_generator.graphs.gestalt_generator import (
 from app_test.mock_data.mock import QUESTIONS
 from ai_workspace.models import Question
 import pytest
+from ai_workspace.api.core import logger
 
 
 @pytest.fixture
@@ -24,4 +25,5 @@ def test_gestalt_generator(question_data):
     )
     input_state: State = {"question": input_q, "metadata": None, "files": {}}
     result = gestalt_code_generator.invoke(input_state, config=config)  # type: ignore
+    logger.info("This is the actual result of the code generation", result)
     assert result
