@@ -10,8 +10,6 @@ import { LogOutput } from "../../components/LogOutput.tsx";
 import { useEffect, useState } from "react";
 import { getImageBase64FileData, isImageExt } from "../../utils/parsers";
 
-
-
 export default function QuestionEditor() {
     const {
         fileNames,

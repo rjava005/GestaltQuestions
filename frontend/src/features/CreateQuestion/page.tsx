@@ -11,6 +11,8 @@ import UploadZipQuestionModal from "./UploadZipQuestionModal";
 
 export default function CreateQuestion() {
     const { mode } = useCreateMode();
+
+
     return (
         <Section variant="questionBuilder" id="create-question" className="gap-3">
             <Header
@@ -18,14 +20,10 @@ export default function CreateQuestion() {
                 title="Create Question"
                 className="flex flex-row justify-between "
             >
-                <div className="flex flex-row gap-4">
-                    <Button size="md" name="Save" className="grow" />
-                    <Button size="md" name="Cancel" color="secondary" className="grow" />
-                </div>
+
             </Header>
             <Divider />
             <ModeToggle />
-
             {mode === "blank" ? <CreateQuestionFromBlank /> : <UploadZipQuestionModal setShowModal={() => { }} />}
         </Section>
     );

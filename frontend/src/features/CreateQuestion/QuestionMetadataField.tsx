@@ -3,34 +3,52 @@ import { useEffect, useState } from "react";
 import { useCreateMode } from "./context";
 
 export default function QuestionMeta() {
-    const [title, setTitle] = useState("");
+    const {
+        questionData,
+        setQuestionData,
+        setIsAdaptive: setAdaptiveFlag,
+    } = useCreateMode();
 
-    // Handle raw values
-    const [topicsInput, setTopicsInput] = useState<string>("");
-    const [topics, setTopics] = useState<string[]>([]);
-    const [questionTypeInput, setQuestionTypeInput] = useState("");
-    const [questionType, setQuestionType] = useState<string[]>([]);
-    // boolean
-    const [isAdaptive, setIsAdaptive] = useState(false);
-    const [aiGenerated, setAIGenerated] = useState(false);
-
-    const { setIsAdaptive: setAdaptiveFlag } = useCreateMode()
-
+    /* -----------------------------
+     Helpers
+    ------------------------------ */
     const handleCommaSeparation = (val: string) =>
         val
             .split(",")
             .map((v) => v.trim())
             .filter(Boolean);
 
+    /* -----------------------------
+     UI-only local state
+    ------------------------------ */
+    const [topicsInput, setTopicsInput] = useState(
+        (questionData.topics ?? []).join(", ")
+    );
+
+    const [qtypesInput, setQtypesInput] = useState(
+        (questionData.qtypes ?? []).join(", ")
+    );
+
+    /* -----------------------------
+     Sync parsed arrays → context
+    ------------------------------ */
     useEffect(() => {
-        setTopics(handleCommaSeparation(topicsInput))
-    }, [topicsInput, setTopicsInput])
+        setQuestionData((prev) => ({
+            ...prev,
+            topics: handleCommaSeparation(topicsInput),
+        }));
+    }, [topicsInput, setQuestionData]);
 
     useEffect(() => {
-        setQuestionType(handleCommaSeparation(questionTypeInput))
-    }, [questionTypeInput, setQuestionTypeInput])
+        setQuestionData((prev) => ({
+            ...prev,
+            qtypes: handleCommaSeparation(qtypesInput),
+        }));
+    }, [qtypesInput, setQuestionData]);
 
-    console.log(topics, questionType)
+    /* -----------------------------
+     Render
+    ------------------------------ */
     return (
         <section className="w-full h-full rounded-lg border border-slate-200 bg-white p-4 shadow-sm">
             {/* Header */}
@@ -45,14 +63,19 @@ export default function QuestionMeta() {
                 {/* Title */}
                 <InputTextForm
                     label="Question Title"
-                    value={title}
+                    value={questionData.title ?? ""}
                     type="text"
                     id="question-title"
-                    onChange={(e) => setTitle(e.target.value)}
                     variant="createQuestion"
+                    onChange={(e) =>
+                        setQuestionData((prev) => ({
+                            ...prev,
+                            title: e.target.value,
+                        }))
+                    }
                 />
 
-                {/* Topics + Types */}
+                {/* Topics + Question Types */}
                 <div className="grid grid-cols-1 gap-2 md:grid-cols-2">
                     <InputTextForm
                         id="topics"
@@ -66,29 +89,38 @@ export default function QuestionMeta() {
 
                     <InputTextForm
                         id="question-type"
-                        value={questionTypeInput}
+                        value={qtypesInput}
                         type="text"
                         label="Question Types"
                         hint="e.g. conceptual, numerical, coding"
                         variant="createQuestion"
-                        onChange={(e) =>
-                            setQuestionTypeInput(e.target.value)
-                        }
+                        onChange={(e) => setQtypesInput(e.target.value)}
                     />
                 </div>
 
                 {/* Toggles */}
-                <div className="mt-2 flex flex-row gap-2">
+                <div className="mt-2 flex flex-row gap-4">
                     <BooleanField
                         label="Adaptive Question"
-                        value={isAdaptive}
-                        onChange={(value) => { setIsAdaptive(value); setAdaptiveFlag(value); }}
+                        value={questionData.isAdaptive ?? false}
+                        onChange={(value) => {
+                            setAdaptiveFlag(value);
+                            setQuestionData((prev) => ({
+                                ...prev,
+                                isAdaptive: value,
+                            }));
+                        }}
                     />
 
                     <BooleanField
                         label="AI Generated"
-                        value={aiGenerated}
-                        onChange={setAIGenerated}
+                        value={questionData.ai_generated ?? false}
+                        onChange={(value) =>
+                            setQuestionData((prev) => ({
+                                ...prev,
+                                ai_generated: value,
+                            }))
+                        }
                     />
                 </div>
             </div>

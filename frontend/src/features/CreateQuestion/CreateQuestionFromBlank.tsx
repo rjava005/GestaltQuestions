@@ -7,9 +7,11 @@ import { useState } from "react";
 import { QuestionDirectoryPreview } from "./QuestionDirectoryPreview";
 
 import { Button } from "../../components/Button";
+import { useQuestionCreation } from './hooks';
 
 export function CreateQuestionFromBlank() {
   const [showPreview, setShowPreview] = useState(false);
+  const { createQuestion } = useQuestionCreation()
 
   return (
     <div className="flex h-full w-full gap-6">
@@ -43,7 +45,12 @@ export function CreateQuestionFromBlank() {
             </div>
           )}
         </div>
-        {/* Preview panel */}
+        {/* Go to editor for final confirm */}
+        <div className="flex flex-row gap-4 items-center justify-center">
+          <Button onClick={async () => await createQuestion()} size="md" name="Create Question" className="max-w-1/2 grow" />
+
+        </div>
+
       </div>
     </div>
   );

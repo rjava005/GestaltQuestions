@@ -89,7 +89,7 @@ class FileService:
 
     async def convert_to_filedata(self, path: Union[Path, str, UploadFile]) -> FileData:
         try:
-            if isinstance(path, UploadFile) or hasattr(path,"file"):
+            if isinstance(path, UploadFile) or hasattr(path, "file"):
                 upload = cast(UploadFile, path)
                 await self.validate_file(upload)
                 content = await upload.read()

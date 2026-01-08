@@ -1,7 +1,10 @@
 import Checkbox from "@mui/material/Checkbox";
 import Divider from "../../components/Divider/Divider";
 import { useEffect } from "react";
-import { type Filenames, useCreateMode } from "./context";
+import { type Filenames } from "./types";
+import { useCreateMode } from "./context";
+import { QUESTION_FILE_SPECS } from "./config";
+
 
 type QuestionFileSpec = {
     filename: Filenames;
@@ -11,32 +14,7 @@ type QuestionFileSpec = {
 };
 
 
-const QUESTION_FILE_SPECS: QuestionFileSpec[] = [
-    {
-        filename: "question.html",
-        required: true,
-        isAdaptive: false,
-        description: "Defines the question content and user inputs.",
-    },
-    {
-        filename: "solution.html",
-        required: false,
-        isAdaptive: false,
-        description: "Provides an optional worked solution or explanation.",
-    },
-    {
-        filename: "server.js",
-        required: false,
-        isAdaptive: true,
-        description: "Generates dynamic parameters for adaptive questions.",
-    },
-    {
-        filename: "server.py",
-        required: false,
-        isAdaptive: false,
-        description: "Generates dynamic parameters for adaptive questions.",
-    },
-];
+
 
 function QuestionFileDisplay({
     filename,

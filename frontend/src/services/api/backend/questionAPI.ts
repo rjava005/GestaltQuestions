@@ -16,6 +16,25 @@ export class QuestionAPI {
     return response.data;
   }
 
+  static async createWithFiles(payload: QuestionData, files: File[]) {
+    const formData = new FormData();
+    formData.append("question_data", JSON.stringify(payload));
+
+    files.forEach((file) => formData.append("files", file));
+    const response = await api.post(
+      `${this.base}/files`,
+
+      formData,
+
+      {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      }
+    );
+    return response.data;
+  }
+
   /** Delete all questions (use carefully) */
   static async deleteAll(): Promise<any> {
     const response = await api.delete(this.base);
@@ -179,7 +198,6 @@ export class QuestionAPI {
       null,
       {
         responseType: "blob",
-        
       }
     );
 

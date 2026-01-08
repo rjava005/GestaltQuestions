@@ -4,7 +4,7 @@
 import asyncio
 import json
 import mimetypes
-from typing import List
+from typing import List, Optional
 from uuid import UUID
 from pathlib import Path
 
@@ -15,6 +15,7 @@ from fastapi import APIRouter, HTTPException, UploadFile
 from fastapi.responses import Response
 from starlette import status
 from pydantic import ValidationError
+from fastapi import UploadFile, File, Form
 
 # -------------------------
 # Internal Project Imports
@@ -53,76 +54,45 @@ def get_file(files: list[UploadFile], name: str) -> UploadFile | None:
 async def create_question_file_upload(
     qr: QuestionResourceDepencency,
     files: List[UploadFile],
-    fm: FileServiceDep,
-    question_data: QuestionData | None = None,
+    question_data: Optional[str] = Form(None),
     auto_handle_images: bool = True,
 ) -> Question:
-    """
-    Create a new question and upload its initial set of files.
 
-    This endpoint supports two ways of specifying question metadata:
-    1. Providing an `info.json` file in the upload bundle.
-    2. Supplying `question_data` directly via the request body.
+    # Check payload first
+    if not question_data:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST, detail="Question data is None"
+        )
+    if not files or len(files) == 0:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST, detail="Files data is None"
+        )
 
-    If `info.json` is present, it will be validated using Pydantic. If validation
-    fails and no fallback `question_data` is provided, the request is rejected.
-
-    File processing involves:
-    - Converting uploaded files (`UploadFile`) to internal `FileData`
-    - Sending metadata + files to `QuestionResourceService`
-    - Allowing automatic separation of client files (images) if enabled
-
-    Args:
-        qr: Injected QuestionResource service.
-        files: Uploaded files belonging to the question (HTML, JS, images, metadata, etc.).
-        fm: FileService used to convert `UploadFile` → `FileData`.
-        question_data: Optional fallback metadata if `info.json` is missing or invalid.
-        auto_handle_images: When True, image-like files are routed into a dedicated
-            client directory.
-
-    Returns:
-        Question: The newly created question record.
-
-    Raises:
-        HTTPException(400): Invalid/missing metadata when required.
-        HTTPException(500): Unexpected failure while creating the question or processing files.
-    """
-    qdata_file = get_file(files, "info.json")
+    # Try to validate the model
+    try:
+        if isinstance(question_data, str):
+            question_data = json.loads(question_data)
+        qdata = QuestionData.model_validate(question_data)
+    except ValidationError as e:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=f"Failed to validate the question data {e}",
+        )
+    # Try to convert the question files
 
     try:
-        if qdata_file:
-            logger.info("info.json provided. Attempting to validate...")
-
-            # Read and decode the uploaded file
-            raw = await qdata_file.read()
-            json_data = json.loads(raw.decode("utf-8"))
-            # Validate using Pydantic, ignoring extra fields
-            qdata = QuestionData.model_validate(json_data, from_attributes=False)
-        else:
-            qdata = None
-
-    except (ValidationError, json.JSONDecodeError) as e:
-        logger.error(f"Failed to validate info.json: {e}")
-
-        # Fallback logic: if no valid info.json and no provided question_data: fail
-        if question_data is None:
-            raise HTTPException(
-                status_code=400,
-                detail=(
-                    "info.json was provided but is invalid, and no fallback question_data "
-                    "was provided. Cannot continue."
-                ),
-            )
-        # Otherwise fall back to provided question_data
-        qdata = question_data
-
-    try:
-        assert qdata
+        fm = FileService()
         tasks = [fm.convert_to_filedata(f) for f in (files or [])]
         fdata = await asyncio.gather(*tasks)
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to convert the files {e}")
+
+    # Finally create the question
+    try:
         qcreated = await qr.create_question(qdata, fdata, auto_handle_images)
-        logger.info("Successfully created question")
         return qcreated
+    except HTTPException:
+        raise
     except Exception as e:
         raise HTTPException(
             status_code=500, detail=f"Failed to create question {e} from uploaded files"
