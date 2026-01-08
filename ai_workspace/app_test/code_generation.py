@@ -6,19 +6,11 @@ from pathlib import Path
 # --- Third-Party ---
 import pytest
 from fastapi import UploadFile
-from pydantic_settings import BaseSettings
 
 # --- Internal ---
 from src.api.service import code_generation as cd
 from src.api.core.logging import logger
 from src.api.database.models.question import QuestionData
-
-
-class TestConfig(BaseSettings):
-    asset_path: Path
-
-
-test_config = TestConfig(asset_path=Path("app_test/test_assets").resolve())
 
 
 @pytest.fixture
