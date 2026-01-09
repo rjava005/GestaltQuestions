@@ -181,7 +181,8 @@ async def get_all_questions_data(
     qm: QuestionManagerDependency, offset: int, limit: int
 ) -> Sequence[QuestionMeta]:
     try:
-        return await qm.get_all_question_data(offset, limit)
+        question_meta =  await qm.get_all_question_data(offset, limit)
+        return question_meta
     except Exception:
         raise
 

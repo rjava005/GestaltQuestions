@@ -460,7 +460,6 @@ class QuestionResourceService:
                 indent=2,
                 ensure_ascii=False,
             )
-
             self.storage_manager.save_file(metadata_path, serialized_metadata)
 
             return created_question, absolute_storage_path
