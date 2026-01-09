@@ -3,15 +3,15 @@ name: AI Workspace CI
 # Only triggers if there is a  change
 on:
   push:
-    paths: 
-      - 'ai_workspace/**'
-      - '.github/workflows/ai_workspace_build.yml'
+    paths:
+      - "ai_workspace/**"
+      - ".github/workflows/ai_workspace_build.yml"
     branches: ["main", "dev"]
-    
+
   pull_request:
-    paths: 
-      - 'ai_workspace/**'
-      - '.github/workflows/ai_workspace_build.yml'
+    paths:
+      - "ai_workspace/**"
+      - ".github/workflows/ai_workspace_build.yml"
     branches: ["dev", "main"]
 
 jobs:
@@ -33,14 +33,12 @@ jobs:
       AI_base_model__API_KEY: ${{ secrets.OPENAI_API_KEY }}
       AI_EMBEDDING_MODEL: text-embedding-3-large
 
-
     steps:
       - uses: actions/checkout@v5
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
           python-version: ${{matrix.python-version}}
-
 
       - name: Install Poetry
         run: |

@@ -16,48 +16,49 @@ from src.api.core.database import SessionDep
 from src.api.database import generic as gdb
 from src.api.database.generic import filter_conditional
 from src.utils import convert_uuid
-
-from .models.question import Question, QuestionData, QuestionMeta
+from .models.question import (
+    Question,
+    QuestionData,
+    QuestionMeta,
+    Topic,
+    Language,
+    QuestionType,
+)
 
 
 async def create_question(
     question: QuestionData | dict,
     session: SessionDep,
 ) -> Question:
-    relationships = gdb.get_all_model_relationships(Question)
-
     try:
         if isinstance(question, dict):
             question = QuestionData.model_validate(question)
     except ValidationError as e:
         raise ValueError("Relationship data is not of type QRelationshipData")
-    question = question.model_dump()
 
-    relation_values = {k: v for k, v in question.items() if k in relationships}
-    base_values = {k: v for k, v in question.items() if k not in relationships}
+    topic_names = question.topics
+    language_names = question.languages
+    qtype_names = question.qtypes
 
-    # Contains the basic fields for the question
-    question_base = Question.model_validate(base_values)
-    session.add(question_base)
+    question_orm = Question(
+        **question.model_dump(exclude={"topics", "languages", "qtypes"})
+    )
 
-    for key, value in relation_values.items():
-        target_class = relationships[key]
-        if isinstance(value, list):
-            rel_val = [
-                gdb.create_or_resolve(target_class, v, session)[0] for v in value
-            ]
-        elif isinstance(value, str):
-            rel_val = gdb.create_or_resolve(target_class, value, session)[0]
-        else:
-            raise NotImplementedError(
-                "Have not implmeneted method to handle non list or string values "
-            )
-        setattr(Question, key, rel_val)
+    session.add(question_orm)
 
+    question_orm.topics = await gdb.get_or_create_many(session, Topic, topic_names)
+    question_orm.languages = await gdb.get_or_create_many(
+        session, Language, language_names
+    )
+    question_orm.qtypes = await gdb.get_or_create_many(
+        session, QuestionType, qtype_names
+    )
+
+    session.add(question_orm)
     try:
         session.commit()
-        session.refresh(question_base)
-        return question_base
+        session.refresh(question_orm)
+        return question_orm
     except SQLAlchemyError as e:
         session.rollback()
         logger.error(f"[DB] could not create question {e}")
@@ -196,34 +197,26 @@ async def get_all_question_data(
 async def update_question(
     id: str | UUID, update_data: QuestionData, session: SessionDep
 ) -> QuestionMeta:
-    relationships = gdb.get_all_model_relationships(Question)
+    # Basic validation for the question and data
     question = get_question(id, session)
     if not question:
         raise ValueError("Question is not found")
-    for key, value in update_data.model_dump(exclude_unset=True).items():
-        if value is None:
-            continue
-        if key in relationships:
-            target_class = relationships[key]
-            if isinstance(value, list):
-                rel_val = [
-                    gdb.create_or_resolve(target_class, v, session)[0] for v in value
-                ]
-
-            elif isinstance(value, str):
-                rel_val = gdb.create_or_resolve(target_class, value, session)[0]
-
-            else:
-                raise ValueError(
-                    f"Got value of type {type(value)} not expected and not implemented yet"
-                )
-
-            logger.info("Updating question %s %s %s", question, key, rel_val)
-            setattr(question, key, rel_val)
-        else:
-            setattr(question, key, value)
     try:
-        logger.info("Adding question after update %s", question)
+        if isinstance(update_data, dict):
+            update_data = QuestionData.model_validate(update_data)
+    except ValidationError as e:
+        raise ValueError("Relationship data is not of type QRelationshipData")
+
+    topic_names = update_data.topics
+    language_names = update_data.languages
+    qtype_names = update_data.qtypes
+
+    question.topics = await gdb.get_or_create_many(session, Topic, topic_names)
+    question.languages = await gdb.get_or_create_many(session, Language, language_names)
+    question.qtypes = await gdb.get_or_create_many(session, QuestionType, qtype_names)
+
+    try:
+        logger.debug("Adding question after update %s", question)
         session.commit()
         return await get_question_data(question.id, session)
     except SQLAlchemyError as e:
