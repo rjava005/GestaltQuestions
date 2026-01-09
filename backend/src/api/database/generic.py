@@ -1,5 +1,5 @@
 # --- Standard Library ---
-from typing import Any, Dict, List, Type, TypeVar
+from typing import Any, Dict, List, Type, TypeVar, Sequence
 
 # --- Third-Party ---
 from sqlalchemy import func
@@ -17,40 +17,35 @@ from src.api.core.database import SessionDep
 T = TypeVar("T", bound=SQLModel)
 
 
-def create_or_resolve(
-    target_cls: Type[T],
-    target_value: str,
-    session: SessionDep,
-    lookup_field: str = "name",
-    create: bool = True,
-):
+async def get_or_create_many(
+    session: SessionDep, model: Type[T], names: Sequence[str], lookup_field="name"
+) -> List[T]:
+
+    if model is None:
+        logger.error(f"MODEL PASSED: {model=} ({type(model)=})")
+        raise RuntimeError("get_or_create_many received model=None")
+
+    if not hasattr(model, lookup_field):
+        raise ValueError(f"Model {model} does not have attribute {lookup_field}")
+
+    results = []
 
     try:
-        getattr(target_cls, lookup_field)
-    except Exception as e:
-        raise ValueError(f"{lookup_field} is not a property of {target_cls}")
-
-    stmt = select(target_cls).where(
-        func.lower(getattr(target_cls, lookup_field)) == target_value.lower()
-    )
-    result = session.exec(stmt).first()
-    if result:
-        return result, True
-    if create:
-        try:
-            obj: SQLModel = target_cls(**{lookup_field: target_value.strip()})
-            session.add(obj)
-            session.commit()
-            session.refresh(obj)
-            return obj, False
-        except SQLAlchemyError as e:
-            session.rollback()
-            logger.error(f"[DB] could not create {target_cls} {e}")
-            raise ValueError(f"[DB] failed to create {target_cls} an error occured {e}")
-    raise ValueError(
-        f"Object of type '{target_cls.__name__}' with {lookup_field}='{target_value}' not found "
-        f"and create_field=False"
-    )
+        for name in names:
+            stmt = select(model).where(
+                func.lower(getattr(model, lookup_field)) == name.lower()
+            )
+            obj = session.exec(stmt).one_or_none()
+            if not obj:
+                obj = model(**{lookup_field: name})
+                session.add(obj)
+                session.flush()
+            results.append(obj)
+        return results
+    except SQLAlchemyError as e:
+        session.rollback()
+        logger.error(f"[DB] could not create {model} {e}")
+        raise ValueError(f"[DB] failed to create {model} an error occured {e}")
 
 
 def get_all_model_relationships(model: Type[SQLModel]) -> Dict[str, Type[SQLModel]]:
