@@ -23,6 +23,7 @@ def test_gestalt_generator(question_data):
         solution_guide=None,
         final_answer=None,
     )
+    config = {"configurable": {"thread_id": "customer_123"}}
     input_state: State = {"question": input_q, "metadata": None, "files": {}}
     result = gestalt_code_generator.invoke(input_state, config=config)  # type: ignore
     logger.info("This is the actual result of the code generation", result)
