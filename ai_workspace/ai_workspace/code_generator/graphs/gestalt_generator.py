@@ -200,10 +200,12 @@ if __name__ == "__main__":
         question_html="",
     )
     input_state: State = {"question": question, "metadata": None, "files": {}}
-    result = app.ainvoke(input_state, config=config)  # type: ignore
+    result = app.invoke(input_state, config=config)  # type: ignore
 
     # Save output
-    output_path = Path(r"src/ai_processing/code_generator/outputs/gestalt_generator")
+    output_path = Path(
+        r"ai_workspace\code_generator\outputs\gestalt_generator"
+    )
     save_graph_visualization(app, output_path, filename="gestalt_generator_graph.png")
     data_path = output_path / "output.json"
     data_path.write_text(json.dumps(to_serializable(result)))
