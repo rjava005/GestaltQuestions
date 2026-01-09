@@ -30,7 +30,11 @@ class QuestionSync:
         self,
         storage: StorageDependency,
         qr: QuestionResourceDepencency,
-        flag: Sequence[str] = ["metadata.json", "info.json", "info2.json"],
+        flag: Sequence[str] = [
+            "info2.json",
+            "metadata.json",
+            "info.json",
+        ],
     ):
         self.storage = storage
         self.qr = qr
@@ -125,7 +129,7 @@ class QuestionSync:
     async def get_question_status(
         self, question_dir: Path
     ) -> Union["Question", "UnsyncedQuestion"]:
-        metadata = self.resolve_metadata(question_dir)
+        metadata = self.resolve_metadata_path(question_dir)
         question_name = question_dir.name
         question_path = question_dir.as_posix()
         payload = {
@@ -230,13 +234,21 @@ class QuestionSync:
                 metadata=unsynced.metadata,
             )
 
-    def resolve_metadata(self, question_dir: Path) -> Path | None:
-        "Uses the flags and checks if the path exist"
+    def resolve_metadata_path(self, question_dir: Path) -> Path | None:
+        """
+        Resolve the authoritative metadata file for a question.
+
+        Priority:
+        1. Synced metadata (contains DB ID)
+        2. Base metadata (legacy / no ID)
+        """
+
         for f in self.flags:
             meta_path = question_dir / f
             if meta_path.exists():
-                logger.info(f"Found metadata path for filename {f}")
+                logger.info(f"Using authoritative metadata: {f}")
                 return meta_path
+
         return None
 
     def find_question_directory(self, question_dir: Path) -> str | None:
