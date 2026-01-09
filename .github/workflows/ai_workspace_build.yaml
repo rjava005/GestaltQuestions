@@ -31,6 +31,7 @@ jobs:
       AI_base_model__PROVIDER: openai
       AI_base_model__MODEL: gpt-4o-mini
       AI_base_model__API_KEY: ${{ secrets.OPENAI_API_KEY }}
+      AI_EMBEDDING_MODEL: text-embedding-3-large
 
 
     steps:
