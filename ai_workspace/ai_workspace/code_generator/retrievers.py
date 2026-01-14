@@ -29,19 +29,19 @@ question_html_vectorstore = load_vectorstore(
 )
 
 server_js_vectorstore = load_vectorstore(
-    JS_STORE_PATH,
+    Path(JS_STORE_PATH).resolve().as_posix(),
     name="server_js_store",
     embeddings=embeddings,
 )
 
 server_py_vectorstore = load_vectorstore(
-    PY_STORE_PATH,
+    Path(PY_STORE_PATH).resolve().as_posix(),
     name="server_py_store",
     embeddings=embeddings,
 )
 
 solution_html_vectorstore = load_vectorstore(
-    SOLUTION_STORE_PATH,
+   Path(SOLUTION_STORE_PATH).resolve().as_posix(),
     name="solution_store",
     embeddings=embeddings,
 )
