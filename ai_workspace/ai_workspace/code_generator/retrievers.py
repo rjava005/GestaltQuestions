@@ -1,6 +1,6 @@
 from ai_workspace.utils import load_vectorstore
 from ai_workspace.ai_base.settings import get_settings
-
+from pathlib import Path
 # --- LangChain / OpenAI ---
 from langchain_openai import OpenAIEmbeddings
 
@@ -23,7 +23,7 @@ SOLUTION_STORE_PATH = "ai_workspace/code_generator/vectorstores/solution_store"
 # Loaded Vectorstores
 # ---------------------------------------------------------------------
 question_html_vectorstore = load_vectorstore(
-    QUESTION_STORE_PATH,
+    Path(QUESTION_STORE_PATH).resolve().as_posix(),
     name="question_html_vectorstore",
     embeddings=embeddings,
 )
