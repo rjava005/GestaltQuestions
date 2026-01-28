@@ -5,31 +5,94 @@ import pytest
 from fastapi import FastAPI
 from fastapi.testclient import TestClient
 from sqlmodel import Session, create_engine
-from app_test.fixtures.fixture_crud import *
-from src.api.core import logger, in_test_ctx
-from src.api.core.config import get_settings
-from src.api.core.database import Base, get_session
-from src.api.main import get_application
-from src.api.response_models import FileData
-from src.storage.base import StorageService
-from src.api.service.question_manager import (
-    QuestionManager,
-    get_question_manager,
+
+from app_test.shared.fixtures.fixture_crud import *
+
+from src.core import (
+    get_settings,
+    in_test_ctx,
+    initialize_firebase_app,
+    logger,
+    get_session,
+    Base,
 )
-from src.api.service.storage_manager import (
+from src.main import get_application
+from src.service import (
+    FirebaseStorage,
+    LocalStorageService,
+    StorageService,
     get_storage_manager,
+    get_question_manager,
+    QuestionManager,
 )
-from src.api.core.firebase import initialize_firebase_app
-from src.storage.firebase_storage import FirebaseStorage
-from src.storage.local_storage import LocalStorageService
-from src.api.service.question_resource import (
-    QuestionResourceService,
-    get_question_resource,
-)
-from src.api.dependencies import get_storage_type
+from src.data import QuestionDB
+from src.service import QuestionManager
+from src.types import FileData, QuestionBase
+from src.web.dependencies import get_STORAGE_TYPE
+
 
 settings = get_settings()
 initialize_firebase_app()
+
+
+# DATA Fixtures
+@pytest.fixture
+def question_db(db_session) -> QuestionDB:
+    return QuestionDB(db_session)
+
+
+# SERVICE FIXTURES
+
+
+# -----------------------------
+# Storage Fixtures
+# -----------------------------
+@pytest.fixture(scope="function")
+def cloud_storage_service():
+    """Provide a FirebaseStorage instance connected to the test bucket."""
+    root = "test"
+    base = "questions"
+    return FirebaseStorage(settings.STORAGE_BUCKET, root=root, base=base)
+
+
+@pytest.fixture(scope="function")
+def local_storage(tmp_path):
+    """Provide a LocalStorageService rooted in a temporary directory."""
+    root = tmp_path
+    base = "questions"
+    return LocalStorageService(root, base="questions")
+
+
+@pytest.fixture(autouse=True)
+def clean_up_cloud(cloud_storage_service):
+    """Clean up the test bucket after each test."""
+    yield
+    cloud_storage_service.hard_delete()
+    logger.debug("Deleting Bucket - Cleaning Up")
+
+
+@pytest.fixture(scope="function")
+def question_manager(
+    storage_mode,
+    cloud_storage_service,
+    local_storage,
+    question_db,
+):
+    """
+    Provides a configured QuestionManager based on the active storage backend.
+    """
+    if storage_mode == "cloud":
+        storage = cloud_storage_service
+    elif storage_mode == "local":
+        storage = local_storage
+    else:
+        raise ValueError(f"Invalid storage type: {storage_mode}")
+
+    return QuestionManager(
+        question_db,
+        storage,
+        storage_mode,
+    )
 
 
 @asynccontextmanager
@@ -71,33 +134,6 @@ def _clean_db(db_session, test_engine):
     Base.metadata.create_all(test_engine)
 
 
-# -----------------------------
-# Storage Fixtures
-# -----------------------------
-@pytest.fixture(scope="function")
-def cloud_storage_service():
-    """Provide a FirebaseStorage instance connected to the test bucket."""
-    root = "test"
-    base = "questions"
-    return FirebaseStorage(settings.STORAGE_BUCKET, root=root, base=base)
-
-
-@pytest.fixture(scope="function")
-def local_storage(tmp_path):
-    """Provide a LocalStorageService rooted in a temporary directory."""
-    root = tmp_path
-    base = "questions"
-    return LocalStorageService(root, base="questions")
-
-
-@pytest.fixture(autouse=True)
-def clean_up_cloud(cloud_storage_service):
-    """Clean up the test bucket after each test."""
-    yield
-    cloud_storage_service.hard_delete()
-    logger.debug("Deleting Bucket - Cleaning Up")
-
-
 # =========================================
 # API Fixtures
 # =========================================
@@ -132,38 +168,6 @@ def active_storage_backend(
 
 
 @pytest.fixture(scope="function")
-def question_manager(db_session):
-    """
-    Provides a fresh QuestionManager for each test.
-    """
-    return QuestionManager(db_session)
-
-
-@pytest.fixture(scope="function")
-def question_resource(
-    storage_mode,
-    cloud_storage_service,
-    local_storage,
-    question_manager,
-):
-    """
-    Provides a configured QuestionResourceService based on the active storage backend.
-    """
-    if storage_mode == "cloud":
-        storage = cloud_storage_service
-    elif storage_mode == "local":
-        storage = local_storage
-    else:
-        raise ValueError(f"Invalid storage type: {storage_mode}")
-
-    return QuestionResourceService(
-        question_manager,
-        storage,
-        storage_mode,
-    )
-
-
-@pytest.fixture(scope="function")
 def api_client(
     db_session,
     question_manager,
@@ -185,9 +189,6 @@ def api_client(
     async def override_get_question_manager():
         yield question_manager
 
-    async def override_get_question_resource():
-        yield question_resource
-
     async def override_get_storage():
         yield active_storage_backend
 
@@ -196,9 +197,9 @@ def api_client(
 
     app.dependency_overrides[get_session] = override_get_db
     app.dependency_overrides[get_question_manager] = override_get_question_manager
-    app.dependency_overrides[get_question_resource] = override_get_question_resource
+    app.dependency_overrides[get_question_manager] = override_get_question_manager
     app.dependency_overrides[get_storage_manager] = override_get_storage
-    app.dependency_overrides[get_storage_type] = override_storage_mode
+    app.dependency_overrides[get_STORAGE_TYPE] = override_storage_mode
 
     # --- Start test client ---
     with TestClient(app, raise_server_exceptions=True) as client:
@@ -263,3 +264,17 @@ def question_additional_metadata():
         "languages": ["python", "javascript"],
         "qtype": ["numeric"],
     }
+
+
+@pytest.fixture
+def question_payload():
+    return {
+        "title": "Sample Question",
+        "ai_generated": True,
+        "isAdaptive": False,
+    }
+
+
+@pytest.fixture
+def question_payload_2():
+    return QuestionBase(title="Question 2", ai_generated=False, isAdaptive=True)

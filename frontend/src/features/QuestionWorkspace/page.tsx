@@ -3,17 +3,18 @@ import { EditorSections } from "./EditorSections";
 import { useQuestionWorkspaceContext } from "./context";
 import { QuestionEngine } from "../QuestionEngine";
 import { QuestionEditor } from "../QuestionEditor";
-import { getCurrentQuestionMetadata } from "../QuestionEngine";
+import { useCurrentQuestionMeta, RenderSolution } from "../QuestionEngine";
 import { Panel, PanelGroup, PanelResizeHandle } from "react-resizable-panels";
 import type { QuestionWorkspaceOptions } from "./types";
 import React from "react";
 import { ToggleField } from "../../components/Toggles";
+import EditQuestion from "./EditQuestion";
 
 const PaneComponentMap: Record<QuestionWorkspaceOptions, React.ReactNode> = {
   code: <QuestionEditor />,
   question: <QuestionEngine />,
-  solution: <div>Solution</div>,
-  metadata: <div>Metadata</div>,
+  solution: <RenderSolution />,
+  metadata: <EditQuestion />,
 };
 
 export default function QuestionWorkspace() {
@@ -23,7 +24,7 @@ export default function QuestionWorkspace() {
     splitScreenEnabled,
     setSplitScreenEnabled,
   } = useQuestionWorkspaceContext();
-  const { questionMeta } = getCurrentQuestionMetadata();
+  const { questionMeta } = useCurrentQuestionMeta();
 
   const panesToRender = splitScreenEnabled
     ? splitScreenPanes.length
@@ -42,7 +43,7 @@ export default function QuestionWorkspace() {
         />
       </div>
       <EditorSections />
-      <div className="w-full h-8/10">
+      <div className="w-full full">
         <PanelGroup
           autoSaveId="conditional"
           direction="horizontal"
@@ -55,6 +56,7 @@ export default function QuestionWorkspace() {
                 order={index + 1}
                 defaultSize={100 / arr.length}
                 minSize={25}
+                className="gap-2"
               >
                 {PaneComponentMap[v] ?? (
                   <div className="p-4 text-muted-foreground">

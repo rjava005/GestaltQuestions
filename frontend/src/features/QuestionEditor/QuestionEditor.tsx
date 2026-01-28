@@ -8,7 +8,7 @@ import { ServerSettingsToggle, ToggleField } from "../../components/Toggles";
 import { useQuestionEngineContext } from "../QuestionEngine";
 import { LogOutput } from "../../components/LogOutput.tsx";
 import { useEffect, useState } from "react";
-import { getImageBase64FileData, isImageExt } from "../../utils/parsers";
+import { getImageBase64FileData, isImageExt } from "../../utils/parsingUtils.ts";
 
 export default function QuestionEditor() {
     const {

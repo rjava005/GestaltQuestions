@@ -1,4 +1,4 @@
-export type CreateMode = "blank" | "upload" | "editor";
+export type CreateMode = "blank" | "upload" | "text-ai" | "image-ai";
 
 export type Filenames =
   | "question.html"

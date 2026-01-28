@@ -1,7 +1,7 @@
-import { useState, type FormEvent } from "react";
+import { useEffect, useState, type FormEvent } from "react";
 
 import { QuestionHeader } from "./QuestionHeader";
-import { useQuestion, getCurrentQuestionMetadata } from "./hooks";
+import { useQuestion, useCurrentQuestionMeta } from "./hooks";
 import { QuestionHTMLToReact } from "../QuestionComponents";
 import DisplayAnswers from "./DisplayAnswers";
 import { useQuestionEngineContext } from "./context";
@@ -17,15 +17,17 @@ export default function QuestionEngine() {
   /* =========================
      Question + Runtime State
   ========================= */
-  const { formattedQuestion, error, loading, refetch, params } = useQuestion({
+  const { formattedQuestion, formattedSolution, error, loading, refetch, params } = useQuestion({
     isAdaptive: true,
   });
 
-  const { questionMeta } = getCurrentQuestionMetadata();
-  const { setShowSolution } = useQuestionEngineContext();
+  const { questionMeta } = useCurrentQuestionMeta();
+  const { setShowSolution, setSolution } = useQuestionEngineContext();
   const { answers } = useQuestionRuntime();
 
   const [isSubmitted, setIsSubmitted] = useState<boolean>(false);
+
+  useEffect(() => setSolution(formattedSolution ?? ""), [formattedSolution])
 
   /* =========================
      Guard States

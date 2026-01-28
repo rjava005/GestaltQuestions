@@ -1,4 +1,4 @@
-import type { QuestionFileSpec } from "./types";
+import type { QuestionFileSpec,CreateMode } from "./types";
 
 const QUESTION_FILE_SPECS: QuestionFileSpec[] = [
   {
@@ -143,4 +143,30 @@ def generate():
   },
 ];
 
+export const CREATE_MODE_OPTIONS: {
+  value: CreateMode;
+  label: string;
+  ariaLabel: string;
+}[] = [
+    {
+      value: "blank",
+      label: "Blank Template",
+      ariaLabel: "Create a blank question template",
+    },
+    {
+      value: "upload",
+      label: "Upload Question",
+      ariaLabel: "Upload an existing question",
+    },
+    {
+      value: "text-ai",
+      label: "AI (Text)",
+      ariaLabel: "Generate a question using text-based AI",
+    },
+    {
+      value: "image-ai",
+      label: "AI (Image)",
+      ariaLabel: "Generate a question from images using AI",
+    },
+  ];
 export { QUESTION_FILE_SPECS };

@@ -1,7 +1,6 @@
 import clsx from "clsx";
 import type { QuestionData, QuestionMeta } from "../../types/questionTypes";
 import type { TableColumn } from "./types";
-import { formatRelationshipField } from "./utils";
 import { BiSelectMultiple } from "react-icons/bi";
 import { IoMdDownload } from "react-icons/io";
 import { MdDelete } from "react-icons/md";
@@ -9,7 +8,7 @@ import { IoSettings } from "react-icons/io5";
 import { FaSyncAlt } from "react-icons/fa";
 import { type ToolBarItem } from "./types";
 
-export const QuestionTableColumns: TableColumn<QuestionData | QuestionMeta>[] =
+export const QuestionTableColumns: TableColumn<QuestionData>[] =
   [
     {
       key: "select",
@@ -37,7 +36,7 @@ export const QuestionTableColumns: TableColumn<QuestionData | QuestionMeta>[] =
       label: "Topics",
       default: false,
       render: (q) => {
-        return formatRelationshipField(q.topics) ?? "-";
+        return q.topics;
       },
     },
     {
@@ -67,14 +66,14 @@ export const QuestionTableColumns: TableColumn<QuestionData | QuestionMeta>[] =
       key: "languages",
       label: "Languages",
       default: false,
-      render: (q) => formatRelationshipField(q.languages) ?? "-",
+      render: (q) => q.languages,
     },
     {
       key: "storage_path",
       label: "Storage Path",
       default: true,
       render: (q) => (
-        <code className="text-xs opacity-70">{q.storage_path}</code>
+        <code className="text-xs opacity-70">{q.question_path}</code>
       ),
     },
     {
@@ -86,6 +85,12 @@ export const QuestionTableColumns: TableColumn<QuestionData | QuestionMeta>[] =
           {q.status}
         </span>
       ),
+    },
+    {
+      key: "qtypes",
+      label: "Question Type",
+      default: false,
+      render: (q) => q.qtypes
     },
   ];
 

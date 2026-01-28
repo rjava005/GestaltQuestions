@@ -10,7 +10,7 @@ from sqlmodel import SQLModel
 from datetime import datetime
 
 
-def convert_uuid(uuid: str | UUID) -> UUID:
+def convert_uuid(uuid: str | UUID | None) -> UUID:
     try:
         if isinstance(uuid, UUID):
             return uuid
@@ -18,9 +18,6 @@ def convert_uuid(uuid: str | UUID) -> UUID:
             return UUID(uuid)
     except Exception as e:
         raise ValueError(f"Could not convert {type(uuid)} into UUID")
-
-
-T = TypeVar("T", bound=SQLModel)
 
 
 def pick_related_label_col(target_cls):

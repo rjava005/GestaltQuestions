@@ -1,11 +1,11 @@
-import { useCodeEditorContext } from "../../features/QuestionEditor";
 
+import { useQuestionEngineContext } from './../../features/QuestionEngine/context';
 interface LogOutputProps {
     filename?: string;
 }
 
 export function LogOutput({ filename }: LogOutputProps) {
-    const { logs } = useCodeEditorContext();
+    const { logs } = useQuestionEngineContext();
 
     return (
         <div className="w-full border-gray-500 border-2 bg-white p-4">

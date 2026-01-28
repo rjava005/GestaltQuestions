@@ -6,6 +6,7 @@ import type {
 } from "../../../types/questionTypes";
 import type { SuccessDataResponse } from "../../../types/responseModels";
 import type { FileData } from "../../../types/questionTypes";
+import type { QuizData } from "../../../features/QuestionEngine";
 
 export class QuestionAPI {
   private static readonly base = "/questions";
@@ -54,7 +55,7 @@ export class QuestionAPI {
   }
 
   /** Get question metadata only by ID */
-  static async getQuestionMeta(id: string | number): Promise<QuestionMeta> {
+  static async getQuestionMeta(id: string | number): Promise<QuestionData> {
     const response = await api.get(
       `${this.base}/${encodeURIComponent(id)}/all_data`
     );
@@ -89,7 +90,7 @@ export class QuestionAPI {
   }
 
   /** Filter questions by given criteria */
-  static async filterQuestions(filter: QuestionData): Promise<QuestionMeta[]> {
+  static async filterQuestions(filter: QuestionData): Promise<QuestionData[]> {
     const response = await api.post(`${this.base}/filter`, filter);
     return response.data;
   }
@@ -164,7 +165,7 @@ export class QuestionAPI {
   static async runServer(
     questionId: string,
     language: "python" | "javascript"
-  ) {
+  ): Promise<QuizData> {
     try {
       const response = await api.post(
         `run_server/${encodeURIComponent(questionId)}/${encodeURIComponent(

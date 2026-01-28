@@ -12,6 +12,9 @@ type QuestionEngineContext = {
   /** Whether to show the solution panel */
   showSolution: boolean;
   setShowSolution: React.Dispatch<React.SetStateAction<boolean>>;
+
+  logs: string[];
+  setLogs: React.Dispatch<React.SetStateAction<string[]>>;
 };
 
 export const QuestionEngineContext = createContext<QuestionEngineContext>({
@@ -19,6 +22,8 @@ export const QuestionEngineContext = createContext<QuestionEngineContext>({
   setServerSetting: () => { },
   solution: "",
   setSolution: () => { },
+  logs: [],
+  setLogs: () => { },
 
   showSolution: false,
   setShowSolution: () => { },
@@ -33,6 +38,7 @@ const QuestionEngineProvider = ({
     useState<ServerSetting>("javascript");
   const [solution, setSolution] = useState<string>("");
   const [showSolution, setShowSolution] = useState<boolean>(false);
+  const [logs, setLogs] = useState<string[]>([])
 
   return (
     <QuestionEngineContext.Provider
@@ -43,6 +49,7 @@ const QuestionEngineProvider = ({
         setSolution,
         showSolution,
         setShowSolution,
+        logs, setLogs
       }}
     >
       {children}

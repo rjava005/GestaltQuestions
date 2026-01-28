@@ -1,7 +1,7 @@
 import { InputTextForm, BooleanField } from "../../components/FormInputs";
 import { useEffect, useState } from "react";
 import { useCreateMode } from "./context";
-
+import { handleCommaSeperatedValues } from "../../utils";
 export default function QuestionMeta() {
     const {
         questionData,
@@ -9,15 +9,7 @@ export default function QuestionMeta() {
         setIsAdaptive: setAdaptiveFlag,
     } = useCreateMode();
 
-    /* -----------------------------
-     Helpers
-    ------------------------------ */
-    const handleCommaSeparation = (val: string) =>
-        val
-            .split(",")
-            .map((v) => v.trim())
-            .filter(Boolean);
-
+ 
     /* -----------------------------
      UI-only local state
     ------------------------------ */
@@ -35,14 +27,14 @@ export default function QuestionMeta() {
     useEffect(() => {
         setQuestionData((prev) => ({
             ...prev,
-            topics: handleCommaSeparation(topicsInput),
+            topics: handleCommaSeperatedValues(topicsInput),
         }));
     }, [topicsInput, setQuestionData]);
 
     useEffect(() => {
         setQuestionData((prev) => ({
             ...prev,
-            qtypes: handleCommaSeparation(qtypesInput),
+            qtypes: handleCommaSeperatedValues(qtypesInput),
         }));
     }, [qtypesInput, setQuestionData]);
 

@@ -5,7 +5,7 @@ import type { QuizData } from "./types";
 import { useQuestionEngineContext } from "./context";
 import applyPlaceHolders from "../../utils/flattenParams";
 
-export function getCurrentQuestionMetadata() {
+export function useCurrentQuestionMeta() {
   const { selectedQuestionID, setQuestionMeta, questionMeta } =
     useQuestionCollectionContext();
   const [error, setError] = useState<string | null>(null);
@@ -70,7 +70,7 @@ export function fetchQuestion() {
 }
 
 export function fetchAdaptiveParameters() {
-  const { serverSetting } = useQuestionEngineContext();
+  const { serverSetting, setLogs } = useQuestionEngineContext();
   const { selectedQuestionID } = useQuestionCollectionContext();
   // Storing the parameters for the question
   const [params, setParams] = useState<QuizData | null>(null);
@@ -90,6 +90,8 @@ export function fetchAdaptiveParameters() {
         serverSetting
       );
       setParams(res);
+      setLogs(res.logs ?? [])
+
     } catch (error: any) {
       let errorMsg =
         ErrorBase +

@@ -10,7 +10,8 @@ export type QuestionCollectionView =
   | "drafts"
   | "published"
   | "archived"
-  | "create";
+  | "create"
+  | "ai";
 
 export const QuestionCollectionViewLabels: Record<
   QuestionCollectionView,
@@ -22,6 +23,7 @@ export const QuestionCollectionViewLabels: Record<
   published: "Published",
   archived: "Archived",
   create: "Create Question",
+  ai: "AI"
 };
 
 /* =======================
@@ -36,7 +38,7 @@ type QuestionCollectionViewContextType = {
 export const QuestionCollectionViewContext =
   createContext<QuestionCollectionViewContextType>({
     view: "all",
-    setView: () => {},
+    setView: () => { },
   });
 
 /* =======================
