@@ -1,4 +1,4 @@
-from .question import QuestionDB, QuestionDBDependency
+from .question import QuestionDB
 from .user import UserDB,UserManagerDependeny
 from .role import RoleManager
 from .institution import InstitutionDB

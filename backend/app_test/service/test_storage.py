@@ -1,11 +1,9 @@
 import pytest
-from typing import Literal, Tuple
+from typing import Tuple
 from pathlib import Path
 from src.utils import normalize, normalize_newlines
 from io import BytesIO
-
-
-STORAGE_TYPE: Literal["local", "cloud"]
+from src.core import logger
 
 
 @pytest.fixture
@@ -216,7 +214,8 @@ def test_save_file(
 def test_read_file(active_storage_backend, create_test_dir, filename, content):
     target, _ = create_test_dir
     # --- Write file ---
-    active_storage_backend.save_file(target, content, filename, overwrite=True)
+    f = active_storage_backend.save_file(target, content, filename, overwrite=True)
+    logger.info(f"Saved file to {f}")
     # --- Read file as raw bytes ---
     raw_bytes = active_storage_backend.read_file(target, filename)
 

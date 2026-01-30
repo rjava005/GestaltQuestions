@@ -1,9 +1,4 @@
-from contextlib import asynccontextmanager
-from typing import List
-
 import pytest
-from fastapi import FastAPI
-from fastapi.testclient import TestClient
 from sqlmodel import Session, create_engine
 
 from app_test.shared.fixtures.fixture_crud import *
@@ -13,22 +8,16 @@ from src.core import (
     in_test_ctx,
     initialize_firebase_app,
     logger,
-    get_session,
     Base,
 )
-from src.main import get_application
 from src.service import (
     FirebaseStorage,
     LocalStorageService,
     StorageService,
-    get_storage_manager,
-    get_question_manager,
     QuestionManager,
 )
 from src.data import QuestionDB
 from src.service import QuestionManager
-from src.types import FileData, QuestionBase
-from src.web.dependencies import get_STORAGE_TYPE
 
 
 settings = get_settings()
@@ -95,12 +84,6 @@ def question_manager(
     )
 
 
-@asynccontextmanager
-async def on_startup_test(app: FastAPI):
-    """Async startup context for tests (skips DB initialization)."""
-    yield
-
-
 # -----------------------------
 # Database Fixtures
 # -----------------------------
@@ -137,16 +120,10 @@ def _clean_db(db_session, test_engine):
 # =========================================
 # API Fixtures
 # =========================================
-@pytest.fixture(scope="session")
-def app_instance():
-    """Create the FastAPI app once for all tests."""
-    app = get_application()
-    app.router.lifespan_context = on_startup_test
-    return app
 
 
 @pytest.fixture(scope="function", params=["local", "cloud"])
-def storage_mode(request):
+def storage_mode(request) -> Literal["local", "cloud"]:
     """
     Controls whether tests run against local or cloud-backed storage.
     """
@@ -167,45 +144,6 @@ def active_storage_backend(
     raise ValueError(f"Invalid storage type: {storage_mode}")
 
 
-@pytest.fixture(scope="function")
-def api_client(
-    db_session,
-    question_manager,
-    question_resource,
-    active_storage_backend,
-    storage_mode,
-):
-    """
-    Provides a FastAPI TestClient with dependency overrides for DB, storage,
-    question manager, and resource service.
-    """
-    app = get_application()
-    app.router.lifespan_context = on_startup_test
-
-    # --- Dependency overrides ---
-    def override_get_db():
-        yield db_session
-
-    async def override_get_question_manager():
-        yield question_manager
-
-    async def override_get_storage():
-        yield active_storage_backend
-
-    async def override_storage_mode():
-        yield storage_mode
-
-    app.dependency_overrides[get_session] = override_get_db
-    app.dependency_overrides[get_question_manager] = override_get_question_manager
-    app.dependency_overrides[get_question_manager] = override_get_question_manager
-    app.dependency_overrides[get_storage_manager] = override_get_storage
-    app.dependency_overrides[get_STORAGE_TYPE] = override_storage_mode
-
-    # --- Start test client ---
-    with TestClient(app, raise_server_exceptions=True) as client:
-        yield client
-
-
 # ---------------------------------------------------------------------------
 # Fixtures
 # ---------------------------------------------------------------------------
@@ -217,64 +155,3 @@ def mark_logs_in_test():
     token = in_test_ctx.set(True)
     yield
     in_test_ctx.reset(token)
-
-
-@pytest.fixture
-def question_payload_full_dict():
-    """Full question payload including topics, qtypes, and languages."""
-    return {
-        "title": "SomeTitle",
-        "ai_generated": True,
-        "isAdaptive": True,
-        "topics": ["Topic1", "Topic2"],
-        "qtype": ["Numerical", "Matrix"],
-        "languages": ["Python", "Go", "Rust"],
-    }
-
-
-@pytest.fixture
-def file_data_payload() -> List[FileData]:
-    """Provide a list of FileData objects with string, dict, and binary content."""
-    text_content = "Hello World"
-    dict_content = {"key": "value", "number": 123}
-    binary_content = b"\x00\x01\x02\x03"
-
-    return [
-        FileData(filename="Test.txt", content=text_content),
-        FileData(filename="Config.json", content=dict_content),
-        FileData(filename="Binary.bin", content=binary_content),
-    ]
-
-
-@pytest.fixture
-def question_file_payload() -> List[FileData]:
-    files_data = [
-        ("question.html", "Some question text"),
-        ("solution.html", "Some solution"),
-        ("server.js", "some code content"),
-        ("meta.json", {"content": "some content"}),
-    ]
-    return [FileData(filename=f[0], content=f[1]) for f in files_data]
-
-
-@pytest.fixture
-def question_additional_metadata():
-    return {
-        "topics": ["Mechanics", "Statics"],
-        "languages": ["python", "javascript"],
-        "qtype": ["numeric"],
-    }
-
-
-@pytest.fixture
-def question_payload():
-    return {
-        "title": "Sample Question",
-        "ai_generated": True,
-        "isAdaptive": False,
-    }
-
-
-@pytest.fixture
-def question_payload_2():
-    return QuestionBase(title="Question 2", ai_generated=False, isAdaptive=True)

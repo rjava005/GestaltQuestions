@@ -14,7 +14,7 @@ from sqlmodel import Session
 
 # Local application imports
 from src.data import RoleManager, InstitutionDB
-from src.web.web import routes
+from src.web import ALL_ROUTES
 from src.core import get_settings, create_db_and_tables
 
 
@@ -36,7 +36,7 @@ async def on_startup(app: FastAPI):
     yield
 
 
-def add_routes(app: FastAPI, routes: list[APIRouter] = routes):
+def add_routes(app: FastAPI, routes: list[APIRouter] = ALL_ROUTES):
     for r in routes:
         app.include_router(r)
 

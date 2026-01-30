@@ -1,8 +1,10 @@
-from fastapi.routing import APIRouter
-from src.web.dependencies import SettingDependency
-import httpx
-from src.core import logger
 from pathlib import Path
+
+import httpx
+from fastapi.routing import APIRouter
+
+from src.core import logger
+from src.web.dependencies import SettingDependency
 
 router = APIRouter(prefix="/sandbox", tags=["sandbox"])
 

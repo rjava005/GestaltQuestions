@@ -9,6 +9,7 @@ from sqlalchemy.exc import SQLAlchemyError
 from sqlmodel import delete, select
 
 from src.core import SessionDep, logger
+from sqlmodel import Session
 from src.data import generic as gdb
 from src.model.question import (
     Language,
@@ -23,7 +24,7 @@ from src.types import STORAGE_TYPE, ID
 
 
 class QuestionDB:
-    def __init__(self, session: SessionDep):
+    def __init__(self, session: Session):
         self.session = session
         self.metadata_rel = ["topics", "languages", "qtypes"]
         self.relationship_map = {
@@ -199,7 +200,7 @@ class QuestionDB:
             raise ValueError(f"[DB] failed todelete all questions an error occured {e}")
 
     # Setter and Getters
-    async def get_question_path(self, id: ID, STORAGE_TYPE: STORAGE_TYPE) -> str:
+    async def get_question_path(self, id: ID, STORAGE_TYPE: STORAGE_TYPE) -> str | None:
         question = await self.get_question(id)
         if not question:
             raise ValueError("Question not found")
@@ -209,9 +210,6 @@ class QuestionDB:
             path = question.local_path
         else:
             raise ValueError(f"Invalid storage type: {STORAGE_TYPE}")
-
-        if path is None:
-            raise ValueError("[DB] Failed to get storage path")
         return path
 
     async def set_question_path(
@@ -272,10 +270,3 @@ class QuestionDB:
             return question
         except ValidationError as e:
             raise Exception(f"Question is not type QuestionData Validation Error {e}")
-
-
-def get_question_database(session: SessionDep) -> QuestionDB:
-    return QuestionDB(session)
-
-
-QuestionDBDependency = Annotated[QuestionDB, Depends(get_question_database)]

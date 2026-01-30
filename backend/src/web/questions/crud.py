@@ -5,19 +5,21 @@ from typing import Sequence
 
 # --- Internal ---
 from src.core import logger
-from src.service.storage.dependecies import StorageDependency
 from src.model.question import Question
 from src.types import QuestionData
 from src.utils import safe_dir_name
-from src.web.dependencies import StorageTypeDep
-from src.service.question_manager.question_manager import QuestionManagerDependency
+from src.web.dependencies import (
+    StorageTypeDep,
+    QuestionDBDependency,
+    QuestionManagerDependency,
+    StorageDependency,
+)
 from src.types import ID
+
 
 router = APIRouter(
     prefix="/questions",
-    tags=[
-        "questions",
-    ],
+    tags=["questions", "database"],
 )
 
 
@@ -53,46 +55,10 @@ async def create_question(
         raise
 
 
-@router.delete("/")
-async def delete_all(
-    qm: QuestionManagerDependency,
-    storage: StorageDependency,
-    delete_storage: bool = False,
-):
-    """
-    Delete all questions from the database, with an optional flag to remove the entire storage directory.
-
-    This endpoint removes every question record from the database. When the `delete_storage` flag is set to `True`,
-    it additionally deletes the entire storage directory associated with question files.
-    **Use caution**: enabling this flag will permanently remove *all* files and subdirectories under the storage path.
-
-    Args:
-        qm (QuestionManagerDependency): Handles bulk deletion of all question records from the database.
-        storage (StorageDependency): Provides access to the file storage system (local or cloud).
-        delete_storage (bool, optional): When `True`, deletes the entire storage directory on disk or in cloud storage.
-            This operation is irreversible and should be used only when you are certain that all files can be removed.
-            Defaults to `False`.
-
-    Returns:
-        dict: A confirmation message indicating successful deletion of all questions (and optionally the storage).
-
-    Raises:
-        Exception: Propagates any database or file system errors encountered during deletion.
-    """
-    try:
-        qm.delete_all_questions()
-        if delete_storage:
-            logger.info("Deleting storage")
-            storage.hard_delete()
-        return {"status": "ok", "detail": "Deleted all questions"}
-    except Exception as e:
-        raise
-
-
 @router.get("/{offset:int}/{limit:int}")
 async def get_all_questions(
-    qm: QuestionManagerDependency, offset: int = 0, limit: int = 100
-) -> Sequence[Question]:
+    qdb: QuestionDBDependency, offset: int = 0, limit: int = 100
+) -> Sequence[Question | QuestionData]:
     """
     Retrieve a paginated list of all questions stored in the database.
 
@@ -112,13 +78,16 @@ async def get_all_questions(
         Exception: Propagates any unexpected database or query-related errors during retrieval.
     """
     try:
-        return qm.get_all_questions(offset, limit)
-    except Exception:
-        raise
+        return await qdb.get_all_questions(offset, limit)
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=f"Failed to get all questions {e}",
+        )
 
 
 @router.get("/{id}")
-async def get_question(id: ID, qm: QuestionManagerDependency) -> Question:
+async def get_question(id: ID, qdb: QuestionDBDependency) -> Question:
     """
     Retrieve a single question from the database by its ID.
 
@@ -137,20 +106,20 @@ async def get_question(id: ID, qm: QuestionManagerDependency) -> Question:
         Exception: Propagates any unexpected database or retrieval errors.
     """
     try:
-        question = qm.get_question(id)
+        question = await qdb.get_question(id)
         if not question:
             raise HTTPException(
                 status_code=status.HTTP_404_NOT_FOUND,
                 detail=f"Could not find question {id}",
             )
         return question
-    except Exception:
-        raise
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=f"Failed to get question {e}")
 
 
 @router.get("/{id}/all_data")
 async def get_question_all_data(
-    id: ID, qm: QuestionManagerDependency, STORAGE_TYPE: StorageTypeDep
+    id: ID, qdb: QuestionDBDependency, STORAGE_TYPE: StorageTypeDep
 ) -> QuestionData:
     """
     Retrieve a question and all associated metadata by its ID.
@@ -169,8 +138,8 @@ async def get_question_all_data(
         Exception: Propagates any database or data access errors encountered during retrieval.
     """
     try:
-        question_data = await qm.get_question_data(id)
-        question_data.question_path = qm.get_question_path(id, STORAGE_TYPE)
+        question_data = await qdb.get_question_data(id)
+        question_data.question_path = await qdb.get_question_path(id, STORAGE_TYPE)
         return question_data
     except Exception:
         raise
@@ -178,13 +147,19 @@ async def get_question_all_data(
 
 @router.get("/{offset:int}/{limit:int}/all_data")
 async def get_all_questions_data(
-    qm: QuestionManagerDependency, offset: int, limit: int
-) -> Sequence[QuestionData]:
-    try:
-        question_meta = await qm.get_all_question_data(offset, limit)
-        return question_meta
-    except Exception:
-        raise
+    qdb: QuestionDBDependency, offset: int, limit: int
+) -> Sequence[QuestionData | Question]:
+
+    data = await qdb.get_all_questions(offset, limit, method="full")
+    if not isinstance(data, list):
+        raise HTTPException(status_code=500, detail="Invalid data format")
+    if not all([isinstance(q, QuestionData) for q in data]):
+        raise HTTPException(
+            status_code=500,
+            detail=f"Invalid data format expected type of QuestionData",
+        )
+
+    return data
 
 
 @router.delete("/{id}")
@@ -251,7 +226,7 @@ async def update_question(
         Exception: For any other unexpected errors during the update or rename process.
     """
     try:
-        existing_question = qm.get_question(id)
+        existing_question = await qm.qdb.get_question(id)
         if not existing_question:
             logger.warning(f"Question with ID {id} not found — cannot update.")
             raise HTTPException(
@@ -293,7 +268,7 @@ async def update_question(
             )
 
         # Proceed with updating database fields
-        updated_question = await qm.update_question(id, update)
+        updated_question = await qm.qdb.update_question(id, update)
         logger.info(f"Successfully updated question {id}")
 
         return updated_question
@@ -311,7 +286,7 @@ async def filter_questions(
 ) -> Sequence[QuestionData]:
     try:
         logger.debug("Retrieved filter %s", filter_data)
-        return await qm.filter_questions(filter_data)
+        return await qm.qdb.filter_questions(filter_data)
     except HTTPException:
         raise
     except Exception as e:

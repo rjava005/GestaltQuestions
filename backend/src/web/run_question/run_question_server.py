@@ -16,8 +16,7 @@ from fastapi import APIRouter, HTTPException
 # Local application imports
 from src.core import logger
 from src.types import QuizData
-from src.service.question_manager.question_manager import QuestionManagerDependency
-from src.web.dependencies import SettingDependency
+from src.web.dependencies import QuestionManagerDependency,SettingDependency
 from pydantic import BaseModel
 
 router = APIRouter(prefix="/run_server", tags=["code_running", "questions"])

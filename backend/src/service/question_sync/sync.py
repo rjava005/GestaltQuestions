@@ -15,18 +15,14 @@ from src.types import UnsyncedQuestion, SyncMetrics, FolderCheckMetrics, Questio
 from src.model.question import Question
 
 from src.utils import to_serializable
-from src.service.storage.dependecies import StorageDependency, get_storage_manager
-from src.service.question_manager.question_manager import (
-    QuestionManagerDependency,
-    get_question_manager,
-)
+from src.service import StorageService, QuestionManager
 
 
 class QuestionSync:
     def __init__(
         self,
-        storage: StorageDependency,
-        qr: QuestionManagerDependency,
+        storage: StorageService,
+        qr: QuestionManager,
         flag: Sequence[str] = [
             "info2.json",
             "metadata.json",
@@ -260,6 +256,8 @@ class QuestionSync:
 
 # For testing
 async def main():
+    from src.web.dependencies import get_question_manager, get_storage_manager
+
     print("Running")
 
     session_gen = get_session()

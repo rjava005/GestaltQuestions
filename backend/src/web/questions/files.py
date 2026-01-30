@@ -27,10 +27,10 @@ from src.types import (
     SuccessFileResponse,
 )
 from src.model.question import Question
-from src.service import FileService,QuestionManagerDependency
-from src.service.storage.dependecies import StorageDependency
+from src.service import FileService
+from src.web.dependencies import StorageDependency
 from src.utils import encode_image
-
+from src.web.dependencies import QuestionManagerDependency
 
 router = APIRouter(
     prefix="/questions",

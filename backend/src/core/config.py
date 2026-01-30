@@ -7,6 +7,7 @@ from pydantic import AnyHttpUrl, field_validator
 from pydantic_core.core_schema import ValidationInfo
 from pydantic_settings import BaseSettings, SettingsConfigDict
 from dotenv import load_dotenv
+
 load_dotenv()
 
 # Points to the root directory adjust as needed
@@ -73,7 +74,7 @@ def get_settings() -> AppSettings:
         PROJECT_ROOT=ROOT_PATH,
         FIREBASE_CRED=os.getenv("FIREBASE_CRED", "default_firebase_cred"),
         STORAGE_BUCKET=os.getenv("STORAGE_BUCKET"),
-        SQLITE_DB_PATH=Path(os.getenv("SQLITE_DB_PATH", ":memory:"))
+        SQLITE_DB_PATH=(ROOT_PATH / Path(os.getenv("SQLITE_DB_PATH", ":memory:")))
         .resolve()
         .as_posix(),
         POSTGRES_URL=os.getenv("POSTGRES_URL"),

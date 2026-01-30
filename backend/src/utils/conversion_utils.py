@@ -75,3 +75,8 @@ def serialized_to_dict(data: Any, obj: Type[BaseModel]) -> dict:
     if isinstance(data, dict):
         return data
     raise ValueError(f"Could not normalize data received {data} of type {type(data)}")
+
+
+
+
+    
