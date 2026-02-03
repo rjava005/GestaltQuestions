@@ -149,6 +149,9 @@ class StorageService:
         """Copy a file between storage locations."""
         raise NotImplementedError
 
+    def copy_storage(self, old: str|Path, new:str|Path)->str:
+        """Copy the whole storage between storage locations."""
+        raise NotImplementedError
     def move_file(
         self,
         source_target: str | Path,

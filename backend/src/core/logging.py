@@ -1,6 +1,7 @@
 import logging
 import os
 import contextvars
+from dotenv import load_dotenv
 
 in_test_ctx = contextvars.ContextVar("in_test", default=False)
 
@@ -13,8 +14,9 @@ class TestFilter(logging.Filter):
 
 
 # Create the logger
+log_level = int(os.getenv("LOGLEVEL", logging.INFO))
 logger = logging.getLogger(__name__)
-logger.setLevel(int(os.getenv("LOGLEVEL", logging.INFO)))
+logger.setLevel(log_level)
 logger.propagate = False
 
 
@@ -40,3 +42,4 @@ if __name__ == "__main__":
     logger.warning("Warning logging test")
     logger.error("Error logging test")
     logger.exception(Exception("Exception logging test"))
+    logger.info(f"This is the log level {log_level}")

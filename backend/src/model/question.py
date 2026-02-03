@@ -64,7 +64,7 @@ class Question(SQLModel, table=True):
 
     # Status of the question whheter it is published, archived etc
     status: Status = SQLField(
-        default=Status.DRAFT,
+        default=Status.DRAFT.name,
         sa_column_kwargs={"server_default": Status.DRAFT.name.upper()},
     )
 

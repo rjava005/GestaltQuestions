@@ -19,7 +19,6 @@ from src.service import (
 from src.types import STORAGE_TYPE
 
 
-@lru_cache
 def get_app_settings() -> AppSettings:
     return get_settings()
 
@@ -27,7 +26,6 @@ def get_app_settings() -> AppSettings:
 SettingDependency = Annotated[AppSettings, Depends(get_app_settings)]
 
 
-@lru_cache
 def get_storage_type(
     settings: SettingDependency,
 ) -> STORAGE_TYPE:

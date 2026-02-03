@@ -71,10 +71,9 @@ class InstitutionDB:
     ) -> Institution | None:
         try:
             if isinstance(identifier, ValidInstitutions):
-                return self.session.get(
-                    Institution,
-                    identifier.value,
-                )
+                return self.session.exec(
+                    select(Institution).where(Institution.name == identifier.name)
+                ).first()
             if not identifier:
                 raise ValueError("[DB] Identifier cannot be None")
             institution_id = convert_uuid(identifier)

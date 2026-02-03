@@ -152,6 +152,7 @@ class LocalStorageService(StorageService):
             new = self.get_storage_path(new, relative=False)
 
         Path(old).rename(new)
+        logger.debug("[LocalStorage]: Renamed file  ok!")
         return Path(new).as_posix()
 
     # =========================================================================
@@ -318,6 +319,26 @@ class LocalStorageService(StorageService):
     # =========================================================================
     # Mutating operations: copy, move, delete
     # =========================================================================
+    def copy_storage(self, old: str | Path, new: str | Path) -> str:
+        old = Path(old)
+        new = Path(new)
+
+        logger.debug(f"[LocalStorage]: Copying {old} -> {new}")
+        if not old.exists():
+            raise FileNotFoundError(f"Source path does not exist: {old}")
+        new.mkdir(parents=True, exist_ok=True)
+        for item in old.iterdir():
+            dest = new / item.name
+            logger.info(f"This is the dest {dest}")
+
+            if item.is_dir():
+                if not dest.exists():
+                    shutil.copytree(item, dest)
+            else:
+                shutil.copy2(item, dest)
+        logger.debug("[LocalStorage]: Content copy completed successfully")
+        return new.as_posix()
+
     def copy_file(
         self,
         source_target: str | Path,

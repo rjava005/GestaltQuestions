@@ -157,7 +157,6 @@ class QuestionManager:
             question = self.qdb.get_question(qid)
             if not question:
                 raise HTTPException(status_code=404, detail="Question {qid} not found")
-
             question_path = await self.qdb.get_question_path(qid, self.STORAGE_TYPE)  # type: ignore
             if not question_path:
                 raise ValueError("Failed to get question path")
@@ -175,83 +174,6 @@ class QuestionManager:
             raise HTTPException(
                 status_code=500, detail=f"Failed to delete question {e}"
             )
-
-    async def sync_question(
-        self,
-        question_data: QuestionData | dict,
-        old_path: str | Path,
-    ) -> Tuple[Question, str | Path]:
-        """
-        Create a new question record, rename its storage directory to a clean
-        standardized name, update the database with the new path, and write metadata.
-
-        Workflow:
-        - Create the question in the DB
-        - Construct a new folder name based on {title}_{short-id}
-        - Rename the existing storage directory to avoid collisions
-        - Update the question's DB entry with the new relative path
-        - Serialize and save metadata (info2.json) inside the renamed directory
-        """
-
-        try:
-            # 1. Create the question DB entry
-            created_question = await self.qdb.create_question(question_data)
-
-            # Resolve the original absolute path from whatever format is passed in
-            abs_original_path = Path(
-                self.storage_manager.get_storage_path(old_path, relative=False)
-            )
-
-            # 2. Generate a new clean directory name (title + first 8 chars of UUID)
-            new_dir_name = safe_dir_name(
-                f"{created_question.title}_{str(created_question.id)[:8]}"
-            )
-
-            # Construct the new absolute path using the same parent directory
-            abs_renamed_path = abs_original_path.parent / new_dir_name
-
-            # 3. Perform the actual rename using the storage manager
-            renamed_path = self.storage_manager.rename_storage(
-                abs_original_path, abs_renamed_path
-            )
-            logger.info("📁 Renamed directory to %s", renamed_path)
-
-            # 4. Resolve both relative + absolute paths for DB storage
-            relative_storage_path = self.storage_manager.get_storage_path(
-                abs_renamed_path, relative=True
-            )
-            absolute_storage_path = self.storage_manager.get_storage_path(
-                abs_renamed_path, relative=False
-            )
-
-            logger.info(
-                "📄 Updated storage paths — old: %s | new relative: %s",
-                old_path,
-                relative_storage_path,
-            )
-
-            # Save the updated path into the question's DB record
-            self.qdb.set_question_path(
-                created_question.id, relative_storage_path, self.STORAGE_TYPE  # type: ignore
-            )
-
-            # 5. Load full question metadata from DB to write to disk
-            question_metadata = await self.qdb.get_question_data(created_question.id)
-
-            # Write it to info2.json inside the renamed folder
-            metadata_path = (Path(absolute_storage_path) / "info2.json").resolve()
-            serialized_metadata = json.dumps(
-                to_serializable(question_metadata.model_dump()),
-                indent=2,
-                ensure_ascii=False,
-            )
-            self.storage_manager.save_file(metadata_path, serialized_metadata)
-
-            return created_question, absolute_storage_path
-
-        except Exception as e:
-            # Preserve full traceback for debugging upstream
-            raise e
 
     # Handle any uploads to files
     async def handle_question_files(

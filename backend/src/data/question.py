@@ -1,14 +1,12 @@
 import asyncio
 from pathlib import Path
-from typing import Annotated, Any, Dict, Literal, Sequence
-
-from fastapi import Depends
+from typing import Any, Dict, Literal, Sequence
 from pydantic import ValidationError
 from sqlalchemy import or_
 from sqlalchemy.exc import SQLAlchemyError
 from sqlmodel import delete, select
 
-from src.core import SessionDep, logger
+from src.core import logger
 from sqlmodel import Session
 from src.data import generic as gdb
 from src.model.question import (
@@ -27,6 +25,7 @@ class QuestionDB:
     def __init__(self, session: Session):
         self.session = session
         self.metadata_rel = ["topics", "languages", "qtypes"]
+        self.excluded_fields = self.metadata_rel
         self.relationship_map = {
             "topics": (Topic, "name"),
             "languages": (Language, "name"),
@@ -35,7 +34,10 @@ class QuestionDB:
 
     async def create_question(self, question: QuestionData | dict) -> Question:
         question = self.validate_data(question)
-        question_orm = Question(**question.model_dump(exclude=set(self.metadata_rel)))
+        logger.info("This is the question %s", question)
+        question_orm = Question(
+            **question.model_dump(exclude=set(self.excluded_fields))
+        )
 
         self.session.add(question_orm)
         question_orm = await self.attach_question_relationships(question_orm, question)
@@ -267,6 +269,10 @@ class QuestionDB:
         try:
             if isinstance(question, dict):
                 question = QuestionData.model_validate(question)
+
+            if hasattr(question, "id") and getattr(question, "id"):
+                logger.info("[QDB] Question ID is in data converting")
+                question.id = convert_uuid(question.id)
             return question
         except ValidationError as e:
             raise Exception(f"Question is not type QuestionData Validation Error {e}")

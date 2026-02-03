@@ -14,7 +14,7 @@ from src.types import UnsyncedQuestion, SyncMetrics, FolderCheckMetrics, Questio
 
 from src.model.question import Question
 
-from src.utils import to_serializable
+from src.utils import to_serializable, safe_dir_name
 from src.service import StorageService, QuestionManager
 
 
@@ -38,6 +38,44 @@ class QuestionSync:
         logger.info(f"Initizalized the path to {self.path}")
         self.flags = flag
 
+    async def sync_question(
+        self,
+        question_data: QuestionData | dict,
+        old_path: str | Path,
+    ) -> Tuple[Question, str | Path]:
+        """
+        Create a new question record, rename its storage directory to a clean
+        standardized name, update the database with the new path, and write metadata.
+
+        Workflow:
+        - Create the question in the DB
+        - Construct a new folder name based on {title}_{short-id}
+        - Rename the existing storage directory to avoid collisions
+        - Update the question's DB entry with the new relative path
+        - Serialize and save metadata (info2.json) inside the renamed directory
+        """
+
+        try:
+            # Create question will create the path for us
+            q = await self.qr.create_question(question_data)
+            new_path = await self.qr.get_question_path(q.id, relative=False)
+            if not new_path:
+                raise ValueError(
+                    f"[QSync] Failed to sync question path {new_path} is None"
+                )
+            # Copy the storage
+            path = self.qr.storage_manager.copy_storage(old_path, new_path)
+            self.qr.storage_manager.delete_storage(old_path)
+            question_metadata = await self.qr.qdb.get_question_data(q.id)
+            await self.qr.update_file(
+                q.id, filename="info2.json", content=question_metadata.model_dump_json()
+            )
+            return q, path
+
+        except Exception as e:
+            # Preserve full traceback for debugging upstream
+            raise ValueError(f"[QSync] Failed to create question {e}")
+
     async def check_all_unsync(self) -> Sequence[UnsyncedQuestion]:
         """Checks the given directory for the sync"""
         try:
@@ -58,9 +96,7 @@ class QuestionSync:
     ) -> Tuple[SyncMetrics, Sequence[UnsyncedQuestion]]:
         unsynced = await self.check_all_unsync()
         logger.info(f" Found {len(unsynced)} unsynced questions to process.")
-        synced_results = await asyncio.gather(
-            *[self.sync_question(u) for u in unsynced]
-        )
+        synced_results = await asyncio.gather(*[self.sync(u) for u in unsynced])
         categorized = defaultdict(list)
         for original, result in zip(unsynced, synced_results):
             categorized[result.status].append(original.question_name)
@@ -164,6 +200,8 @@ class QuestionSync:
         logger.info(f"Found Question ID: {question_id}")
         try:
             qdb = await self.qr.qdb.get_question(question_id)
+            logger.info("Question is None: Will sync")
+            assert qdb
         except Exception:
             logger.info("Question is not in database")
             detail = (
@@ -180,7 +218,7 @@ class QuestionSync:
         )
         return qdb  # type: ignore
 
-    async def sync_question(self, unsynced: UnsyncedQuestion):
+    async def sync(self, unsynced: UnsyncedQuestion):
         # Check metadata
         if not getattr(unsynced, "metadata", None):
             logger.warning(
@@ -206,7 +244,7 @@ class QuestionSync:
         # First try to create the question in the database
         try:
             old_path = unsynced.question_path
-            qcreated, new_path = await self.qr.sync_question(qvalidated, old_path)
+            qcreated, new_path = await self.sync_question(qvalidated, old_path)
             question_path = (
                 str(new_path) if isinstance(new_path, str) else new_path.as_posix()
             )
@@ -247,6 +285,7 @@ class QuestionSync:
     def find_question_directory(self, question_dir: Path) -> str | None:
         "Uses the flag to determine if any of the flags exist"
         root = Path(question_dir)
+        logger.debug(f"Attempting to check unsync question at {root}")
         if root.is_dir():
             for f in self.flags:
                 if (root / f).exists():

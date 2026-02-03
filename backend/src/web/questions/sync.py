@@ -4,7 +4,7 @@ from fastapi import HTTPException
 from fastapi.routing import APIRouter
 
 from src.web.dependencies import QuestionManagerDependency
-from  src.web.dependencies import StorageDependency 
+from src.web.dependencies import StorageDependency
 from src.types import UnsyncedQuestion, SyncResponse, FolderCheckMetrics
 from src.service.question_sync.sync import QuestionSync
 
