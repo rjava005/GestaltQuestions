@@ -125,14 +125,12 @@ class StorageService:
     def list_file_names(self, target: str | Path) -> List[str]:
         raise NotImplementedError
 
-    def list_file_paths(
-        self, target: str | Path, recursive: bool = False
-    ) -> List[str]:
+    def list_file_paths(self, target: str | Path, recursive: bool = False) -> List[str]:
         raise NotImplementedError
 
     def does_file_exist(self, target: str | Path, filename: str | None = None) -> bool:
         raise NotImplementedError
-    
+
     def iterate(self, target: str | Path, recursive: bool = False):
         raise NotImplementedError
 
@@ -149,9 +147,10 @@ class StorageService:
         """Copy a file between storage locations."""
         raise NotImplementedError
 
-    def copy_storage(self, old: str|Path, new:str|Path)->str:
+    def copy_storage(self, old: str | Path, new: str | Path) -> str:
         """Copy the whole storage between storage locations."""
         raise NotImplementedError
+
     def move_file(
         self,
         source_target: str | Path,

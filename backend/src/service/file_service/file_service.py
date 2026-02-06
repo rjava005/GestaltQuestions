@@ -6,6 +6,7 @@ import shutil
 import zipfile
 from pathlib import Path
 from typing import List, Optional, Sequence, Union, cast
+import base64
 
 # --- Third-Party ---
 from fastapi import HTTPException, UploadFile
@@ -16,6 +17,58 @@ from src.core import logger
 from src.types import FileData, SuccessFileServiceResponse
 from src.utils import safe_dir_name
 from .config import *
+
+FILE = str | UploadFile | FileData
+
+
+class FileConverter:
+    """Class that converts between paths, files and fastapi upload files"""
+
+    def __init__(
+        self,
+        max_file_size_mb: int = MAX_FILE_SIZE_MB,
+        content_type_mapping: dict[str, str] = CONTENT_TYPE_MAPPING,
+    ):
+        self.max_file_size = max_file_size_mb * 1024 * 1024
+        self.content_type_mapping = content_type_mapping
+
+    async def convert_to_filedata(self, file: FILE) -> FileData:
+ 
+        if isinstance(file, FileData):
+            return file
+        if isinstance(file, UploadFile) or hasattr(file, "file"):
+            upload_file = cast(UploadFile, file)
+            await self._validate_upload_file(upload_file)
+            await self._validate_upload_file_size(upload_file)
+            filename = upload_file.filename or "untitled.txt"
+            mime_type, _ = mimetypes.guess_type(filename)
+            if mime_type and (
+                mime_type.startswith("text") or mime_type.startswith("application/json")
+            ):
+                content = await upload_file.read()
+            else:
+                content = base64.b64encode(await upload_file.read()).decode("utf-8")
+            return FileData(
+                filename=filename,
+                content=content,
+                mime_type=mime_type or "application/octet-stream",
+            )
+        else:
+            raise ValueError("FileConverter: Failed to convert file to filedata")
+
+    async def _validate_upload_file(self, file: UploadFile) -> UploadFile:
+        if not file.filename:
+            raise ValueError("File of type [UploadFile] does not have a filename")
+        return file
+
+    async def _validate_upload_file_size(self, file: UploadFile) -> UploadFile:
+        contents = await file.read()
+        if len(contents) > self.max_file_size:
+            raise ValueError(
+                f"{file.filename} exceeds {self.max_file_size} MB",
+            )
+        await file.seek(0)
+        return file
 
 
 class FileService:

@@ -1,2 +1,0 @@
-
-from .startup import router

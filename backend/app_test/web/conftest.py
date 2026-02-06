@@ -11,6 +11,8 @@ from app_test.shared.factories import (
     make_question_web,
     make_retrieve_question,
     make_retrieve_question_full,
+    make_question_with_files,
+    make_upload_files_to_question
 )
 from app_test.shared.mock_data import QUESTION_FULL,QUESTIONS_FULL
 

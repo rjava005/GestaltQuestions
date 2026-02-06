@@ -1,4 +1,3 @@
-
 from pathlib import Path
 from typing import IO, List, Optional
 import json
@@ -267,14 +266,11 @@ class FirebaseStorage(StorageService):
     # =========================================================================
 
     def list_file_names(self, target: str | Path) -> List[str]:
-        # list_file_paths returns cloud paths like: "questions/MyDir/file.txt"
-        paths = self.list_file_paths(target)
-
-        # Extract only filenames
-        filenames = [Path(p).name for p in paths]
-
-        # Filter out any folder markers (rare, but safe)
-        return [name for name in filenames if name and not name.endswith("/")]
+        return [
+            Path(f).name
+            for f in self.list_file_paths(target, recursive=False)
+            if not f.endswith("/") and "." in Path(f).name
+        ]
 
     def list_file_paths(self, target: str | Path, recursive: bool = False) -> List[str]:
         target = Path(self.get_storage_path(target, relative=False)).as_posix()

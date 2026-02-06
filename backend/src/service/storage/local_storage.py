@@ -297,7 +297,11 @@ class LocalStorageService(StorageService):
     # =========================================================================
 
     def list_file_names(self, target: str | Path) -> List[str]:
-        return [Path(f).name for f in self.list_file_paths(target) if Path(f).is_file()]
+        return [
+            Path(f).name
+            for f in self.list_file_paths(target, recursive=False)
+            if not f.endswith("/") and "." in Path(f).name
+        ]
 
     def list_file_paths(self, target: str | Path, recursive: bool = False) -> List[str]:
         target = Path(self.get_storage_path(target, relative=False))

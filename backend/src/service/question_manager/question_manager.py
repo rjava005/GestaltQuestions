@@ -1,10 +1,12 @@
 import json
 from pathlib import Path
 from typing import Dict, List, Optional, Tuple, Set
-
+import asyncio
 from fastapi import HTTPException
 from starlette import status
+import base64
 
+import mimetypes
 from src.core import logger
 from src.data import QuestionDB
 from src.model.question import Question
@@ -285,13 +287,12 @@ class QuestionManager:
         """
         Return a list of stored filenames for a question.
         """
-        logger.debug("Fetching file list for question_id=%s", qid)
-        logger.info("This is the storage settings %s", self.STORAGE_TYPE)
         question_path = await self.get_question_path(qid, relative=False)
         if question_path is None:
             raise ValueError("Could not get question path. Question path is None")
         files = self.storage_manager.list_file_names(question_path)
-        logger.debug("Found %d files for question_id=%s", len(files), qid)
+        image_path = Path(question_path) / self.client_path
+        files.extend(self.storage_manager.list_file_names(image_path))
         return files
 
     async def get_question_filepaths(self, qid: ID) -> List[str]:
@@ -303,6 +304,34 @@ class QuestionManager:
         filepaths = self.storage_manager.list_file_paths(question_path)
         logger.debug("Found %d files for question_id=%s", len(filepaths), qid)
         return filepaths
+
+    async def get_question_filedata(self, qid: ID) -> List[FileData]:
+        try:
+            filenames = await self.get_question_file_names(qid)
+            data = []
+            for f in filenames:
+                mime_type, _ = mimetypes.guess_type(f)
+                if mime_type and (
+                    mime_type.startswith("text")
+                    or mime_type.startswith("application/json")
+                ):
+                    content = await self.read_file(qid, f)
+                else:
+                    image_data = await self.read_file(qid, f)
+                    assert image_data
+                    content = base64.b64encode(image_data.encode("utf-8")).decode(
+                        "utf-8"
+                    )
+                data.append(
+                    FileData(
+                        filename=f,
+                        content=content,
+                        mime_type=mime_type or "application/octet-stream",
+                    )
+                )
+            return data
+        except Exception as e:
+            raise ValueError(f"Failed to get filedata for question  {e}")
 
     async def get_question_file(self, qid: ID, filename: str):
         """

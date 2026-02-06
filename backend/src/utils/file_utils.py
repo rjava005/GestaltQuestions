@@ -1,5 +1,7 @@
 import re
 from pathlib import Path
+from fastapi import UploadFile
+
 
 _filename_safe_re = re.compile(r"[^A-Za-z0-9._-]+")
 
@@ -15,3 +17,5 @@ def safe_dir_name(name: str | Path, max_length: int = 100) -> str:
     if len(name) > max_length:
         name = name[:max_length]
     return name
+
+
