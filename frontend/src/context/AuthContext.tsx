@@ -1,13 +1,15 @@
 import { onAuthStateChanged } from "firebase/auth";
 import type { User } from "firebase/auth";
-import { auth } from "../config/firebaseClient";
+import { auth } from "../../config/firebaseClient";
 import { useState, useEffect } from "react";
 import { createContext, useContext } from "react";
-import { UserAPI, type UserDB } from "../api/userAPI";
+import { UserAPI } from "../services/api/backend/userAPI";
+import { type UserRead } from "../types/userTypes";
+
 
 export function useStateAuth() {
     const [user, setUser] = useState<User | null>(null);
-    const [userData, setUserData] = useState<UserDB | null>(null)
+    const [userData, setUserData] = useState<UserRead | null>(null)
     const [loading, setLoading] = useState<boolean>(true);
 
     useEffect(() => {
@@ -23,7 +25,9 @@ export function useStateAuth() {
                         setUserData(data)
                     } catch (error) {
                         console.error("Error fetching user data:", error);
+                        setUser(null);
                     }
+
                 } else {
                     console.log("No User Logged In");
                     setUser(null);
@@ -42,7 +46,7 @@ export function useStateAuth() {
 
 type AuthContextType = {
     user: User | null;
-    userData: UserDB | null
+    userData: UserRead | null
     loading: boolean;
     logout: () => Promise<void>;
 };

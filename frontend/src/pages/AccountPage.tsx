@@ -1,16 +1,15 @@
-import SectionContainer from "../components/Base/SectionContainer";
-import profilePic from "../assets/react.svg"
-import AccountPageHeader from "../components/Account/AccountPageHeader";
-import AccountProfilePic from "../components/Account/AccountProfilePic";
-import AccountInformation from "../components/Account/AccountInformation";
-import AccountOptions from "../components/Account/AccountOptions";
+import { Section } from "../components/Section";
+import AccountPageHeader from "../features/AccountPage/AccountPageHeader";
+import AccountProfilePic from "../features/AccountPage/AccountProfilePic";
+import AccountInformation from "../features/AccountPage/AccountInformation";
+import AccountOptions from "../features/AccountPage/AccountOptions";
 import { useAuth } from "../context/AuthContext";
 
 export default function AccountPage() {
   const { user } = useAuth();
 
   return (
-    <SectionContainer
+    <Section
       id="AccountPage"
       className="flex flex-col gap-y-8 py-8 max-w-4xl mx-auto min-h-screen"
     >
@@ -23,19 +22,21 @@ export default function AccountPage() {
         </div>
       )}
 
+
+
       {/* Actual Account Page */}
       {user && (
         <>
           <AccountPageHeader />
-          <div className=" bg-white dark:bg-neutral-900 shadow-sm rounded-xl p-6 border border-gray-200 dark:border-neutral-700">
+          <div className=" bg-white dark:bg-neutral-900 p-6 ">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-baseline">
-              <AccountProfilePic src={profilePic} />
+              <AccountProfilePic src={""} />
               <AccountInformation />
             </div>
             <AccountOptions />
           </div>
         </>
       )}
-    </SectionContainer>
+    </Section>
   );
 }

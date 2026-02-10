@@ -1,1 +1,0 @@
-- models: Contains all the database model relationship

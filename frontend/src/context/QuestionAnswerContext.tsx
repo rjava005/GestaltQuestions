@@ -1,7 +1,7 @@
 import React, { createContext, useContext, useState, useCallback } from "react";
 
 // --- Types ---
-type AnswerValue = string | number;
+type AnswerValue = string | number | string[];
 type AnswersMap = Record<string, AnswerValue>;
 
 interface QuestionRuntimeContextType {
@@ -9,14 +9,6 @@ interface QuestionRuntimeContextType {
   answers: AnswersMap;
   /** Update or add a new answer */
   setAnswer: (name: string, value: AnswerValue) => void;
-
-  /** Full solution text or HTML */
-  solution: string;
-  setSolution: React.Dispatch<React.SetStateAction<string>>;
-
-  /** Whether to show the solution panel */
-  showSolution: boolean;
-  setShowSolution: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 // --- Context ---
@@ -25,8 +17,6 @@ const QuestionRuntimeContext = createContext<QuestionRuntimeContextType | null>(
 // --- Provider ---
 export const QuestionRuntimeProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [answers, setAnswers] = useState<AnswersMap>({});
-  const [solution, setSolution] = useState<string>("");
-  const [showSolution, setShowSolution] = useState<boolean>(false);
 
   const setAnswer = useCallback((name: string, value: AnswerValue) => {
     setAnswers((prev) => ({ ...prev, [name]: value }));
@@ -34,7 +24,7 @@ export const QuestionRuntimeProvider: React.FC<{ children: React.ReactNode }> = 
 
   return (
     <QuestionRuntimeContext.Provider
-      value={{ answers, setAnswer, solution, setSolution, showSolution, setShowSolution }}
+      value={{ answers, setAnswer }}
     >
       {children}
     </QuestionRuntimeContext.Provider>

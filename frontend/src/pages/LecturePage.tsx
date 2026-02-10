@@ -1,5 +1,5 @@
 import { DerivationRender } from "../components/Lecture/Derivation";
-import SectionContainer from "../components/Base/SectionContainer";
+import { Section } from "../components/Section";
 import type { Derivation } from "../components/Lecture/Derivation";
 
 const mock_data: Derivation = {
@@ -27,8 +27,8 @@ const mock_data: Derivation = {
 };
 export function LecturePage(){
     return (
-        <SectionContainer id="derivation" >
+        <Section id="derivation" >
         <DerivationRender derivation={mock_data}/>
-        </SectionContainer>
+        </Section>
     )
 }

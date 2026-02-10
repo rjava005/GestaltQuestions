@@ -1,0 +1,41 @@
+.gestalt-studio h1 {
+  font-size: 2rem;
+  margin-bottom: 1rem;
+}
+
+.gestalt-studio h2 {
+  font-size: 1.5rem;
+  margin-top: 1.2rem;
+  margin-bottom: 0.8rem;
+}
+
+.gestalt-studio p {
+  margin: 0.6rem 0;
+  line-height: 1.65;
+}
+
+.gestalt-studio ul,
+.gestalt-studio ol {
+  margin-left: 1.25rem;
+  padding-left: 1rem;
+}
+
+.gestalt-studio code {
+  background: #1f1f1f;
+  color: #e6e6e6;
+  padding: 3px 5px;
+  border-radius: 4px;
+}
+
+.gestalt-studio pre {
+  background: #1f1f1f;
+  padding: 1rem;
+  border-radius: 6px;
+  overflow-x: auto;
+}
+
+.gestalt-studio blockquote {
+  border-left: 4px solid #ccc;
+  padding-left: 1rem;
+  color: #666;
+}

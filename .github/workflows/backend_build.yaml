@@ -63,11 +63,7 @@ jobs:
       - name: Show pydantic version
         run: poetry run python -c "import pydantic; print('Pydantic =', pydantic.__version__)"
         working-directory: ./backend
-
-
-      
-
       - name: Run Test
         run: |
-          poetry run python -m pytest -s --log-cli-level=INFO
+          poetry run python -m pytest 
         working-directory: ./backend

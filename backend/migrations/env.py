@@ -6,15 +6,28 @@ from sqlmodel import SQLModel
 from pathlib import Path
 from alembic import context
 from dotenv import load_dotenv
-from src.api.models import *
-from src.api.core.config import AppSettings
+from src.model.question import (
+    Question,
+    QuestionLanguageLink,
+    QuestionTopicLink,
+    QuestionQTypeLink,
+    Topic,
+    Language,
+    QuestionType,
+)
+from src.model.institution import Institution
+from src.model.users import UserRoleLink, User, Role
+from src.model.question_ownership import QuestionOwnership, QuestionReview
+from src.model.question_attempt import QuestionAttempt
+from src.core.config import AppSettings
 import os
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
 config = context.config
 
-from src.api.database.database import DATABASE_URL
+from src.data.database import DATABASE_URL
+
 config.set_main_option("sqlalchemy.url", DATABASE_URL)
 
 
@@ -73,7 +86,9 @@ def run_migrations_online() -> None:
     )
 
     with connectable.connect() as connection:
-        context.configure(connection=connection, target_metadata=target_metadata,render_as_batch=True)
+        context.configure(
+            connection=connection, target_metadata=target_metadata, render_as_batch=True
+        )
 
         with context.begin_transaction():
             context.run_migrations()

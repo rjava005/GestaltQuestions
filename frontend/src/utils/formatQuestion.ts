@@ -1,4 +1,4 @@
-import type { QuestionParams } from "../types/questionTypes";
+import type { QuestionParams,QuestionValues } from "../features/QuestionEngine";
 import { roundToSigFigs } from "./mathHelpers";
 
 export function checkObject(obj: Object, errorMessage: string) {
@@ -9,16 +9,26 @@ export function checkObject(obj: Object, errorMessage: string) {
 }
 
 export function replaceParameters(
-  questionParams: Record<string, string | number | boolean | null>,
+  questionParams: QuestionValues,
   prefix: string,
   templateStr: string,
   rounding?: boolean,
   sigfigs?: number
 ): string {
+  // Make a copy of the original template
   let updatedTemplate = templateStr;
 
   for (const key in questionParams) {
     const value = questionParams[key];
+    const valueType = typeof value;
+
+    // Handle differeent cases
+    if (valueType === "object") {
+      if (Array.isArray(value)) {
+        // console.log("Got an array", value);
+      }
+      // console.log("Got an object", key, value);
+    }
 
     if (typeof value === "object" && value !== null && !Array.isArray(value)) {
       console.warn(
@@ -63,8 +73,10 @@ function formatTemplateWithParams(
 
   let templateCopy = template;
 
-  if (!('params' in params) || !('correct_answers' in params)) {
-    throw new TypeError("Error: The generate function did not return a valid QuestionParams object.");
+  if (!("params" in params) || !("correct_answers" in params)) {
+    throw new TypeError(
+      "Error: The generate function did not return a valid QuestionParams object."
+    );
   }
 
   for (const key of requiredKeys) {

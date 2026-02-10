@@ -19,7 +19,7 @@ RUN apt-get update && \
     apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # Install mathjs globally
-RUN npm install -g mathjs
+RUN npm install mathjs
 
 # Local install inside /app (your working directory)
 WORKDIR /app
@@ -27,6 +27,7 @@ WORKDIR /app
 COPY package.json package-lock.json ./
 # Install node modules inside this image
 RUN npm install
+RUN npm install mathjs
 # Install Poetry
 RUN pip install --no-cache-dir poetry
 

@@ -1,5 +1,5 @@
 import type { FileData } from "../types/questionTypes";
-import { toStringSafe } from "./generalUtils";
+import { toStringSafe } from "./conversionUtils";
 
 export const getLanguage = (selectedFile: string) =>
   selectedFile?.split(/[_\.]/).pop() || "";
