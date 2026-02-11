@@ -24,7 +24,7 @@ Before starting, ensure the following tools are installed:
 If you have not already cloned the repository, do so with:
 
 ```bash
-git clone https://github.com/lucib3196/Gestalt_Question_Review.git
+git clone https://github.com/lucib3196/Gestalt_Question_Review.git``
 cd Gestalt_Question_Review
 ```
 
@@ -97,5 +97,6 @@ If you encounter issues or need assistance with the setup, feel free to reach ou
 **[lberm007@ucr.edu](mailto:lberm007@ucr.edu)**
 
 ---
+
 
 
