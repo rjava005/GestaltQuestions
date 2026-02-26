@@ -139,7 +139,7 @@ export class QuestionAPI {
         formData.append("files", file);
       });
       const response = await api.post(
-        `${this.base}/${encodeURIComponent(questionId)}/upload_files`,
+        `${this.base}/files/${encodeURIComponent(questionId)}`,
         formData,
         {
           headers: {

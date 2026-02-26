@@ -309,6 +309,7 @@ class QuestionManager:
         try:
             filenames = await self.get_question_file_names(qid)
             data = []
+
             for f in filenames:
                 mime_type, _ = mimetypes.guess_type(f)
                 if mime_type and (
@@ -317,11 +318,12 @@ class QuestionManager:
                 ):
                     content = await self.read_file(qid, f)
                 else:
-                    image_data = await self.read_file(qid, f)
-                    assert image_data
-                    content = base64.b64encode(image_data.encode("utf-8")).decode(
-                        "utf-8"
-                    )
+                    logger.info("Got a binary file")
+                    file = await self.get_question_file(qid, f)
+                    raw_data = self.storage_manager.read_file(file)
+                    if raw_data is None:
+                        raise ValueError(f"Could not read file data for '{f}'")
+                    content = base64.b64encode(raw_data).decode("utf-8")
                 data.append(
                     FileData(
                         filename=f,
