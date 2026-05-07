@@ -16,7 +16,7 @@ class QuestionOwnership(SQLModel, table=True):
         default=None, foreign_key="question.id", primary_key=True
     )
     user_id: UUID | None = SQLField(
-        default=None, foreign_key="user.id", primary_key=True
+        default=None, foreign_key="developer_profile.user_id", primary_key=True
     )
     status: QuestionStatus = SQLField(default=QuestionStatus.PRIVATE)
     # Handle what others can do with the question

@@ -9,6 +9,7 @@ FIREBASE_CRED.json
 backend/node_modules
 backend/questions
 code_sandbox/node_modules
+test_questions
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
@@ -63,3 +64,26 @@ venv/
 ENV/
 env.bak/
 venv.bak/
+
+**/.venv
+
+
+emulator-data/firebase-export-metadata.json
+emulator-data
+firebase-debug.log
+firebase-export**
+.vscode
+.github
+
+backend/src/service/sandbox_execution/test_question
+
+emulator-data
+firebase-export-**
+firebase-debug.log
+.vscode/PythonImportHelper-v2-Completion.json
+**/.env.docker
+frontend/node_modules/**
+**/.env.dev.**
+frontend/.env.dev.docker
+frontend/node_modules
+/sql_scripts

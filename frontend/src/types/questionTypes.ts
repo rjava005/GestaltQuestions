@@ -1,48 +1,55 @@
-// For question types reference api/models
-import type { GeneralResponse } from "./responseTypes";
-export type QuestionType = "Numerical" | "MultipleChoice" | "Example" | "Other";
+export type QuestionStatus =
+  | "archived"
+  | "draft"
+  | "published"
+  | "ARCHIVED"
+  | "DRAFT"
+  | "PUBLISHED";
 
-export type questionRel = {
-  name: string;
-  id: number | string;
+export type QuestionRead = {
+  id: string;
+  title: string | null;
+  ai_generated: boolean;
+  isAdaptive: boolean;
+  storage_path: string | null;
+  storage_type: string;
+  status: QuestionStatus;
+  created_by_id: string | null;
+  topics: string[];
+  qTypes: string[];
 };
 
-export type QuestionBase = {
-  id?: string; // UUID
+export type QuestionAllRow = {
+  title: string;
+  question_id: string;
+  isAdaptive: boolean;
+  ai_generated: boolean;
+  status: QuestionStatus;
+  user_id: string;
+  created_by: string;
+  institution: string;
+};
+
+export type QuestionCreate = {
+  id?: string | null;
+  title: string;
+  ai_generated?: boolean;
+  isAdaptive?: boolean;
+  topics?: string[];
+  qTypes?: string[];
+};
+
+export type QuestionUpdate = {
   title?: string;
   ai_generated?: boolean;
   isAdaptive?: boolean;
-  question_path?: string;
-  storage_path?: string;
-  status?: string;
-};
-
-export type QuestionData = QuestionBase & {
   topics?: string[];
-  languages?: string[];
-  qtypes?: string[];
+  qTypes?: string[];
 };
 
-export type QuestionMeta = QuestionBase & {
-  topics?: questionRel[];
-  languages?: questionRel[];
-  qtypes?: questionRel[];
+export type QuestionFilter = {
+  title?: string;
 };
 
-export type QuestionKeys = keyof QuestionData;
-
-export type QuestionFull = GeneralResponse & {
-  question: QuestionData;
-  files: FileData[];
-};
-
-export type FileData = {
-  filename: string;
-  content: string;
-  mime_type: string;
-};
-
-export type FileName = GeneralResponse & {
-  files: FileData[];
-  file_paths: string[];
-};
+export type QuestionFileList = string[];
+export type QuestionDeleteResponse = boolean;

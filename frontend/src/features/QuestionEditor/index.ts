@@ -1,3 +1,1 @@
-export * from "./context";
-export { default as QuestionEditor } from "./QuestionEditor";
-export * from "./EditorToolBar"
+export { default as QuestionTemplateEditor } from "./QuestionTemplateEditor";

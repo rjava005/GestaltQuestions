@@ -1,16 +1,19 @@
 import clsx from "clsx";
 
-type SectionVarient = "hero" | "primary" | "questionBuilder";
+type SectionVariant = "hero" | "primary" | "questionBuilder";
 
-const SectionTheme: Record<SectionVarient, string> = {
-    hero: "min-h-screen flex items-center justify-center bg-blue-100 dark:bg-background transition-colors duration-300",
-    primary: "min-h-screen border px-5 py-20 rounded-md",
-    questionBuilder: "min-h-screen bg-slate-50 flex flex-col"
+const SectionTheme: Record<SectionVariant, string> = {
+    hero: "min-h-screen flex items-center justify-center bg-[var(--color-bg)] text-[var(--color-text)] transition-colors duration-300",
+    primary:
+        "min-h-screen px-5 py-20 rounded-md border border-[var(--color-border)] bg-[var(--color-surface)] text-[var(--color-text)] transition-colors duration-300",
+    questionBuilder:
+        "min-h-screen flex flex-col bg-[var(--color-bg)] text-[var(--color-text)] transition-colors duration-300",
 };
-type SectionProps = React.HtmlHTMLAttributes<HTMLElement> & {
+
+type SectionProps = React.HTMLAttributes<HTMLElement> & {
     children: React.ReactNode;
     className?: string;
-    variant?: SectionVarient;
+    variant?: SectionVariant;
 };
 
 export default function Section({
@@ -23,10 +26,9 @@ export default function Section({
     return (
         <section
             id={id}
-            className={clsx(variant ? SectionTheme[variant as SectionVarient] : "", className)}
+            className={clsx(variant ? SectionTheme[variant] : "", className)}
             {...rest}
         >
-            {" "}
             {children}
         </section>
     );

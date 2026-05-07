@@ -2,7 +2,7 @@ import { type DropDownBase } from "./types";
 import { type IconType } from "react-icons";
 import { useState, useRef } from "react";
 import clsx from "clsx";
-import { useOnClickOutside } from "../../hooks/useOnClickOutside";
+import { useOnClickOutside } from "../../hooks/hooks";
 
 export type DropDownAdvanceOption = {
   value: string;

@@ -2,124 +2,204 @@ import {
   Disclosure,
   DisclosureButton,
   DisclosurePanel,
+  Menu,
+  MenuButton,
+  MenuItem,
+  MenuItems,
 } from "@headlessui/react";
-
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
+import { ChevronDownIcon } from "@heroicons/react/20/solid";
+import clsx from "clsx";
+import { Link, NavLink } from "react-router-dom";
 
-import { useState } from "react";
-import { BrowserRouter as Router, Routes, Link } from "react-router-dom";
+import { ThemeToggle } from "../ThemeToggle";
+import { useAuth, type UserRole } from "../Auth"
+import { type User } from "firebase/auth";
 
-import { Navigation } from "./config";
-import AuthenticationPage from "../../pages/AuthenticationPage";
-import { useAuth } from "../../context/AuthContext";
 
-import { canAccessRoute } from "./utils";
-import DropDownNav from "./DropDownItem";
-import { HandleLink } from "./DropDownItem";
-import { handleRoutes } from "./utils";
+type Base = {
+  label: string;
+  to: string;
+  requiresAuth?: boolean
+  allowedRoles?: UserRole[]
+};
 
-function NavBar() {
-  const [showLogin, setShowLogin] = useState(false);
+export type BaseRoute = Base & {
+  type: "route";
+  items?: Base[];
+};
+
+export type DropDownNavRoute = Base & {
+  type: "dropdown";
+  items: Base[];
+};
+
+export type NavigationItem = BaseRoute | DropDownNavRoute;
+
+interface NavBarProps {
+  items: NavigationItem[];
+}
+
+/* Shared view-switcher styles (topbar-actions / view-switcher / view-pill) */
+const styles = {
+  topbarActions: "flex items-center gap-4",
+  viewSwitcher: clsx(
+    "flex items-center gap-2.5 p-2 rounded-full border",
+    "border-border bg-surface backdrop-blur-[18px]"
+  ),
+  viewPillBase: clsx(
+    "px-4 py-2.5 rounded-full",
+    "transition-colors duration-200",
+    "text-text-muted hover:text-text"
+  ),
+  viewPillActive: "bg-surface-strong text-text",
+  viewPillInactive: "bg-transparent",
+  menuPanel: clsx(
+    "absolute left-0 mt-2 w-44 rounded-2xl border p-1 shadow-soft",
+    "border-border bg-surface text-text backdrop-blur-md focus:outline-none"
+  ),
+  rightAction: clsx(
+    "rounded-md px-3 py-2 text-sm font-medium",
+    "text-text-muted transition hover:bg-surface-muted hover:text-text"
+  ),
+};
+
+export function canAccessRoute(
+  nav: NavigationItem,
+  user: User | null,
+  userRole: UserRole[] // Actual role of the user
+): boolean {
+
+  if (nav.requiresAuth && !user) return false;
+
+
+  // Route has role restrictions
+  if (nav.allowedRoles && nav.allowedRoles.length > 0) {
+    if (!userRole) return false;
+    return nav.allowedRoles.some((role) => userRole.includes(role));
+  }
+
+  // Public OR only requires login
+  return true;
+}
+
+
+
+function routePillClassName(isActive: boolean) {
+  return clsx(
+    styles.viewPillBase,
+    isActive ? styles.viewPillActive : styles.viewPillInactive
+  );
+}
+
+function RoutePill({ to, label }: Base) {
+  return (
+    <NavLink to={to} className={({ isActive }) => routePillClassName(isActive)}>
+      {label}
+    </NavLink>
+  );
+}
+
+function DropDownNav({ nav }: { nav: DropDownNavRoute }) {
+  return (
+    <Menu as="div" className="relative">
+      <MenuButton className={clsx(styles.viewPillBase, styles.viewPillInactive, "inline-flex items-center gap-1.5")}>
+        <span>{nav.label}</span>
+        <ChevronDownIcon className="h-4 w-4" />
+      </MenuButton>
+
+      <MenuItems className={styles.menuPanel}>
+        {nav.items.map((child) => (
+          <MenuItem key={child.to}>
+            {({ focus }) => (
+              <Link
+                to={child.to}
+                className={clsx(
+                  "block rounded-xl px-3 py-2 text-sm transition-colors",
+                  focus ? "bg-surface-strong text-text" : "text-text-muted"
+                )}
+              >
+                {child.label}
+              </Link>
+            )}
+          </MenuItem>
+        ))}
+      </MenuItems>
+    </Menu>
+  );
+}
+
+function NavBar({ items }: NavBarProps) {
   const { user, logout, userData } = useAuth();
+  const role = userData?.roles ?? [];
 
-  const accountNav = Navigation.find((v) => v.displayName === "My Account");
+  const visibleItems = items.filter((item) => canAccessRoute(item, user, role));
 
   return (
-    <Router>
-      <Disclosure as="nav" className="bg-gray-800">
-        <div className="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
-          <div className="relative flex h-16 items-center justify-between">
-            {/* Mobile Hamburger */}
-            <div className="absolute inset-y-0 left-0 flex items-center sm:hidden">
-              <DisclosureButton className="group inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:bg-gray-700 hover:text-white">
-                <Bars3Icon className="block h-6 w-6 group-data-open:hidden" />
-                <XMarkIcon className="hidden h-6 w-6 group-data-open:block" />
-              </DisclosureButton>
-            </div>
-
-            {/* Desktop Navigation */}
-            <div className="flex flex-1 items-center justify-center sm:items-stretch sm:justify-start">
-              <div className="hidden sm:block sm:ml-6">
-                <div className="flex items-center space-x-4">
-                  {/* Start the mapping of the navigation items */}
-
-                  {Navigation.map(
-                    (nav) =>
-                      nav.includeNavBar &&
-                      canAccessRoute(nav, user, userData?.role ?? "student") &&
-                      (nav.type === "dropdown" ? (
-                        <DropDownNav key={nav.displayName} nav={nav} />
-                      ) : (
-                        <HandleLink nav={nav} />
-                      ))
-                  )}
-                </div>
-              </div>
-
-              {/* Right-side buttons */}
-              <div className="ml-auto flex items-center text-white space-x-4">
-                {user ? (
-                  <>
-                    <button
-                      onClick={logout}
-                      className="px-4 py-2 font-semibold transition transform hover:scale-105 active:scale-95"
-                    >
-                      Logout
-                    </button>
-
-                    {accountNav && (
-                      <Link
-                        to={accountNav.type === "route" ? accountNav.path : ""}
-                        className="px-3 py-2 rounded-md text-base font-medium text-gray-300 hover:bg-gray-700 hover:text-white"
-                      >
-                        {accountNav.displayName}
-                      </Link>
-                    )}
-                  </>
-                ) : (
-                  <button
-                    onClick={() => setShowLogin((prev) => !prev)}
-                    className="px-4 py-2 font-semibold transition transform hover:scale-105 active:scale-95"
-                  >
-                    Sign Up / Log In
-                  </button>
-                )}
-
-                {showLogin && (
-                  <AuthenticationPage
-                    show={showLogin}
-                    setShow={() => setShowLogin((prev) => !prev)}
-                  />
-                )}
-              </div>
-            </div>
-          </div>
+    <Disclosure as="nav" className="border-b border-border bg-surface text-text backdrop-blur-md">
+      <div className="mx-auto flex h-16 max-w-7xl items-center px-3 sm:px-6 lg:px-8">
+        <div className="sm:hidden">
+          <DisclosureButton
+            className="group inline-flex items-center justify-center rounded-md p-2 text-text-muted transition hover:bg-surface-muted hover:text-text"
+            aria-label="Toggle navigation menu"
+          >
+            <Bars3Icon className="block h-6 w-6 group-data-open:hidden" />
+            <XMarkIcon className="hidden h-6 w-6 group-data-open:block" />
+          </DisclosureButton>
         </div>
 
-        {/* Mobile Menu */}
-        <DisclosurePanel className="sm:hidden">
-          <div className="space-y-1 px-2 pt-2 pb-3">
-            {Navigation.map(
-              (item) =>
-                item.type === "route" &&
-                item.includeNavBar && (
-                  <DisclosureButton
-                    key={item.displayName}
-                    as={Link}
-                    to={item.path}
-                    className="block rounded-md px-3 py-2 text-base font-medium text-gray-300 hover:bg-gray-700 hover:text-white"
-                  >
-                    {item.displayName}
-                  </DisclosureButton>
+        <div className="hidden sm:block">
+          <div className={styles.topbarActions}>
+            <nav className={styles.viewSwitcher} aria-label="Primary views">
+              {visibleItems.map((item) =>
+                item.type === "dropdown" ? (
+                  <DropDownNav key={item.label} nav={item} />
+                ) : (
+                  <RoutePill key={item.to} to={item.to} label={item.label} />
                 )
-            )}
+              )}
+            </nav>
           </div>
-        </DisclosurePanel>
-      </Disclosure>
+        </div>
+        {/* Container for login and signup */}
+        <div className="ml-auto flex items-center gap-2">
+          {user ? (
+            <>
+              <Link to="/account">
+                My Account
+              </Link>
+              <button type="button" onClick={logout} className={styles.rightAction}>
+                Logout
+              </button>
+            </>
+          ) : (
+            <Link to="/login" className={styles.rightAction}>
+              Sign Up / Log In
+            </Link>
+          )}
+          <ThemeToggle />
+        </div>
+      </div>
 
-      {/* Render Routes */}
-      <Routes>{handleRoutes(Navigation)}</Routes>
-    </Router>
+      <DisclosurePanel className="border-t border-border bg-surface sm:hidden">
+        <div className="space-y-1 px-3 py-3">
+          {visibleItems.map((item) => {
+            if (item.type !== "route") return null;
+
+            return (
+              <DisclosureButton
+                key={item.to}
+                as={Link}
+                to={item.to}
+                className="block rounded-md px-3 py-2 text-sm font-medium text-text-muted transition hover:bg-surface-muted hover:text-text"
+              >
+                {item.label}
+              </DisclosureButton>
+            );
+          })}
+        </div>
+      </DisclosurePanel>
+    </Disclosure>
   );
 }
 

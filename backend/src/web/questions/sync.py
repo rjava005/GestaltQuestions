@@ -3,41 +3,47 @@ from typing import List, Sequence
 from fastapi import HTTPException
 from fastapi.routing import APIRouter
 
-from src.web.dependencies import QuestionManagerDependency
+from src.web.dependencies import QuestionDBDependency
 from src.web.dependencies import StorageDependency
-from src.types import UnsyncedQuestion, SyncResponse, FolderCheckMetrics
-from src.service.question_sync.sync import QuestionSync
-
+from src.service.question_sync.sync import (
+    QuestionSyncNew,
+    UnsyncedQuestion,
+    FolderCheckMetrics,
+    SyncResponse,
+)
 
 router = APIRouter(prefix="/questions", tags=["questions", "sync", "dev", "local"])
 
 
 @router.post("/check_unsync", response_model=List[UnsyncedQuestion])
 async def check_sync_status(
-    qr: QuestionManagerDependency, storage: StorageDependency
+    qdb: QuestionDBDependency, storage: StorageDependency
 ) -> Sequence[UnsyncedQuestion]:
     try:
-        return await QuestionSync(storage, qr).check_all_unsync()
+        return await QuestionSyncNew(storage, qdb=qdb).check_unsync("questions/")
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Failed to check sync {e}")
 
 
 @router.post("/sync_questions")
 async def sync_questions(
-    qr: QuestionManagerDependency, storage: StorageDependency
+    qdb: QuestionDBDependency, storage: StorageDependency
 ) -> SyncResponse:
     try:
-        result = await QuestionSync(storage, qr).sync_all_questions()
-        return SyncResponse(sync_metrics=result[0], sync_raw=result[1])
+        return await QuestionSyncNew(storage, qdb=qdb).sync_all_questions(
+            "questions/", storage_type="cloud"
+        )
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Failed to  sync {e}")
 
 
 @router.post("/prune_missing_questions")
 async def prune_missing_questions(
-    qr: QuestionManagerDependency, storage: StorageDependency
+    qdb: QuestionDBDependency, storage: StorageDependency
 ) -> FolderCheckMetrics:
     try:
-        return await QuestionSync(storage, qr).prune_all()
+        return await QuestionSyncNew(storage, qdb=qdb).prune_all(
+            target="/questions", storage_mode="cloud"
+        )
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Failed to prune {e}")

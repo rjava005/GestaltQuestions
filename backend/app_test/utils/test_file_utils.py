@@ -1,5 +1,5 @@
 import re
-from src.utils.file_utils import safe_dir_name
+from src.service.file_service.utils import safe_dir_name
 
 
 def test_safe_name_removes_special_characters():

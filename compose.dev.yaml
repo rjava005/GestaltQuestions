@@ -1,0 +1,49 @@
+
+
+services:
+  gestalt_backend_server:
+    build: 
+      context: ./backend
+      dockerfile: Dockerfile.dev
+    depends_on:
+      - db
+    environment:
+      POSTGRES_URL: postgresql://postgres:password@db:5432/gestalt_db
+    env_file:
+      - ./backend/.env.dev
+    ports:
+      - 8000:8000
+    volumes:
+      - ./backend:/app        # mount project allows for reloading
+  code_sandbox:
+    build: 
+      context: ./code_sandbox
+      dockerfile: Dockerfile
+    ports:
+      - 8080:8080
+  frontend:
+    build: 
+      context: ./frontend
+      dockerfile: Dockerfile.dev
+    env_file:
+      - ./frontend/.env.dev.docker
+    ports:
+      - 5173:5173
+    volumes:
+      - ./frontend:/app        # mount project allows for reloading
+      - /app/node_modules  
+  db:
+    image: postgres:18
+    container_name: postgres_db
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: gestalt_db
+    ports: 
+      - "5432:5432"
+    volumes: 
+      - postgres_data:/var/lib/postgresql
+
+volumes:
+  postgres_data:

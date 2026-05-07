@@ -13,6 +13,8 @@ export type ButtonColor =
   | "success"
   | "warning"
   | "neutral"
+  | "paneActive"
+  | "paneMuted"
   | "submitQuestion"
   | "generateVariant"
   | "showSolution"
@@ -42,6 +44,12 @@ const colorClasses: Record<ButtonColor, string> = {
 
   neutral:
     "bg-transparent border border-gray-400 text-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:text-gray-200 dark:hover:bg-gray-800",
+
+  paneActive:
+    "bg-surface-strong text-text border border-border-strong hover:bg-surface-strong",
+
+  paneMuted:
+    "bg-transparent border border-border text-text-muted hover:text-text hover:bg-surface-muted",
 
   transparent: "",
   submitQuestion:

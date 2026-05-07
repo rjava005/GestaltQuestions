@@ -16,7 +16,7 @@ export const acceptMap: Record<UploadAccept, string> = {
 export const uploadFilesBase =
     "w-full mx-auto cursor-pointer transition-colors p-8 flex flex-col items-center justify-center text-center focus-within:outline-none focus-within:ring-2";
 
-export type UploadFilesStyle = "outline" | "solid" | "ghost";
+export type UploadFilesStyle = "outline" | "solid" | "ghost" | "editor";
 export const UploadFilesStyles: Record<UploadFilesStyle, string> = {
     outline:
         "rounded-lg border-2 border-dashed border-blue-400 bg-blue-50 " +
@@ -27,6 +27,9 @@ export const UploadFilesStyles: Record<UploadFilesStyle, string> = {
         "rounded-lg bg-blue-600 text-white hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600",
 
     ghost: "rounded-lg opacity-50 hover:opacity-75 dark:opacity-60",
+
+    editor:
+        "rounded-lg border border-border-strong bg-code text-text hover:border-accent focus-within:ring-accent",
 };
 
 export type UploadFileSize = "sm" | "md" | "lg" | "full";

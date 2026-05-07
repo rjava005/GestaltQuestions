@@ -1,6 +1,6 @@
 import json
 from typing import List
-from src.types import FileData
+from src.model.files import FileData
 
 
 def prepare_file_uploads(file_data: List[FileData]):

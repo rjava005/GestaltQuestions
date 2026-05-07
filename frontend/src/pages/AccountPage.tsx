@@ -1,42 +1,40 @@
-import { Section } from "../components/Section";
-import AccountPageHeader from "../features/AccountPage/AccountPageHeader";
-import AccountProfilePic from "../features/AccountPage/AccountProfilePic";
-import AccountInformation from "../features/AccountPage/AccountInformation";
-import AccountOptions from "../features/AccountPage/AccountOptions";
-import { useAuth } from "../context/AuthContext";
+import { Navigate } from "react-router-dom";
+
+import { useAuth } from "../features/Auth";
+import {
+  AccountActions,
+  AccountHeader,
+  AccountProfile,
+} from "../features/Auth/components/account";
 
 export default function AccountPage() {
-  const { user } = useAuth();
+  const { user, userData, loading } = useAuth();
+
+  if (loading) {
+    return (
+      <main className="mx-auto w-full max-w-5xl px-4 py-8 sm:px-6 lg:px-8">
+        <p className="text-sm text-text-muted">Loading account...</p>
+      </main>
+    );
+  }
+
+  if (!user) {
+    return <Navigate to="/login" replace />;
+  }
 
   return (
-    <Section
-      id="AccountPage"
-      className="flex flex-col gap-y-8 py-8 max-w-4xl mx-auto min-h-screen"
-    >
-      {/* If user is not logged in */}
-      {!user && (
-        <div className="w-full p-6 bg-red-50 dark:bg-red-900/20 border border-red-300 dark:border-red-700 rounded-lg text-center">
-          <p className="text-red-600 dark:text-red-400 font-medium text-lg">
-            You need to be logged in to view this page.
-          </p>
+    <main className="mx-auto flex w-full max-w-5xl flex-col gap-6 px-4 py-8 sm:px-6 lg:px-8">
+      <AccountHeader />
+      {!userData ? (
+        <section className="rounded-2xl border border-border bg-surface p-5 text-text-muted">
+          Could not load account information.
+        </section>
+      ) : (
+        <div className="grid grid-cols-1 gap-6 lg:grid-cols-[1fr_280px]">
+          <AccountProfile />
+          <AccountActions />
         </div>
       )}
-
-
-
-      {/* Actual Account Page */}
-      {user && (
-        <>
-          <AccountPageHeader />
-          <div className=" bg-white dark:bg-neutral-900 p-6 ">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-baseline">
-              <AccountProfilePic src={""} />
-              <AccountInformation />
-            </div>
-            <AccountOptions />
-          </div>
-        </>
-      )}
-    </Section>
+    </main>
   );
 }

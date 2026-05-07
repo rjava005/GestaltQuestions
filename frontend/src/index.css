@@ -1,38 +1,84 @@
 @import "tailwindcss";
+@import url("https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500&display=swap");
+@custom-variant dark (&:where([data-theme=dark], [data-theme=dark] *));
 
 @theme {
-  /* Typography */
-  --font-display: "Roboto", sans-serif;
+  --font-sans: "Manrope", sans-serif;
+  --font-mono: "IBM Plex Mono", monospace;
 
-  /* Brand / Accent Colors (Dark as default) */
-  --color-primary-blue: #002973;   /* Deepened Lapis */
-  --color-accent-sky: #002250;     /* Matches brand in dark */
-  --color-indigo: #3b0165;         /* Deep Indigo */
-  --color-accent-teal: #1bc7c7;    /* Brighter teal */
-  --color-accent-coral: #bf616a;   /* Muted coral */
-  --color-primary-yellow: #b59410; /* Darker gold */
-  --color-primary-indigo: #3B0165;
+  --radius-xl: 28px;
+  --radius-lg: 20px;
+  --radius-md: 14px;
 
-  /* Neutral / Surfaces (Dark as default) */
-  --color-white: #ffffff;          /* Light text/icons */
-  --color-background-light:#e4e6eb;
-  --color-background: #10121a;     /* App background */
-  --color-white-primary: #a0a0a0;
+  --shadow-soft: 0 24px 70px rgba(7, 10, 18, 0.18);
+  --ease-base: ease;
+  --duration-base: 180ms;
 
-
-  --color-surface: #1e1e1e;        /* Cards / panels */
-  --color-text-primary: #f5f5f5;   /* Main readable text */
-  --color-text-secondary: #a0a0a0; /* Muted secondary text */
-  --color-text-third: #2a2d38;     /* Tertiary/muted */
-
-
+  --color-bg: #0d1117;
+  --color-surface: rgba(15, 20, 30, 0.82);
+  --color-surface-strong: rgba(21, 28, 40, 0.96);
+  --color-surface-muted: rgba(255, 255, 255, 0.04);
+  --color-border: rgba(255, 255, 255, 0.08);
+  --color-border-strong: rgba(255, 255, 255, 0.14);
+  --color-text: #edf2fb;
+  --color-text-muted: #a7b3c9;
+  --color-text-soft: #8892a6;
+  --color-accent: #82aaff;
+  --color-accent-strong: #5fd0a5;
+  --color-button-secondary: rgba(255, 255, 255, 0.05);
+  --color-code: #0b0f15;
 }
-@custom-variant dark (&:where(.dark, .dark *));
 
+/* Keep non-Tailwind theme vars + runtime mode switching in base layer */
+@layer base {
+  :root {
+    color-scheme: dark;
 
-/* ===== PrairieLearn forms ===== */
+    --bg-accent:
+      radial-gradient(
+        circle at top left,
+        rgba(93, 120, 255, 0.16),
+        transparent 28%
+      ),
+      radial-gradient(
+        circle at bottom right,
+        rgba(76, 214, 175, 0.12),
+        transparent 24%
+      ),
+      #0d1117;
+  }
 
+  [data-theme="light"] {
+    color-scheme: light;
 
+    --color-bg: #eff2f7;
+    --color-surface: rgba(255, 255, 255, 0.78);
+    --color-surface-strong: rgba(255, 255, 255, 0.96);
+    --color-surface-muted: rgba(20, 25, 36, 0.04);
+    --color-border: rgba(20, 25, 36, 0.08);
+    --color-border-strong: rgba(20, 25, 36, 0.12);
+    --color-text: #0f1724;
+    --color-text-muted: #4c566a;
+    --color-text-soft: #6d7789;
+    --color-accent: #395bff;
+    --color-accent-strong: #12856b;
+    --color-button-secondary: rgba(20, 25, 36, 0.04);
+    --color-code: #f7f9fc;
+
+    --bg-accent:
+      radial-gradient(
+        circle at top left,
+        rgba(95, 112, 255, 0.12),
+        transparent 24%
+      ),
+      radial-gradient(
+        circle at bottom right,
+        rgba(16, 167, 127, 0.12),
+        transparent 24%
+      ),
+      #eff2f7;
+  }
+}
 
 /* Widget-specific form variants */
 .pl-form--number,
@@ -43,8 +89,6 @@
   /* reserved for per-widget tweaks */
 }
 
-
-
 .pl-legend {
   font-weight: 700;
   margin-bottom: 0.75rem;
@@ -53,8 +97,6 @@
   border-bottom: 1px solid var(--c-border);
   padding-bottom: 0.25rem;
 }
-
-
 
 .pl-label {
   font-weight: 600;
@@ -90,7 +132,9 @@
   padding: 0.45rem 0.6rem;
   border-radius: 8px;
   border: 1px solid transparent;
-  transition: background 0.15s ease, border-color 0.15s ease;
+  transition:
+    background 0.15s ease,
+    border-color 0.15s ease;
 }
 .pl-option:hover {
   background: var(--c-panel);
@@ -170,7 +214,6 @@ pl-mca-adaptive {
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
 }
 
-
 /* ===============================
    Static text
 =================================*/
@@ -242,7 +285,7 @@ pl-matrix-latex {
   padding: 0.5rem 0.75rem;
   border: 1px solid var(--c-border, currentColor);
   border-radius: 0.5rem; /* ~8px, softer */
-  
+
   background: inherit;
   color: inherit;
   font: inherit;
@@ -253,4 +296,153 @@ pl-matrix-latex {
 
 .pl-input:focus {
   border-color: var(--c-accent, currentColor);
+}
+
+/* ===============================
+   Question Render Module
+=================================*/
+.qr-shell {
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  background: var(--color-surface);
+  padding: 1rem;
+}
+
+.qr-header {
+  border-bottom: 1px solid var(--color-border);
+  margin-bottom: 1rem;
+  padding-bottom: 0.75rem;
+}
+
+.qr-title {
+  margin: 0;
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: var(--color-text);
+}
+
+.qr-subtitle {
+  margin-top: 0.25rem;
+  font-size: 0.85rem;
+  color: var(--color-text-muted);
+}
+
+.qr-form {
+  display: grid;
+  gap: 1rem;
+}
+
+.qr-content {
+  position: relative;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: var(--color-surface-strong);
+  padding: 1rem;
+  min-height: 140px;
+  transition: opacity 180ms var(--ease-base), filter 180ms var(--ease-base);
+}
+
+.qr-content--loading {
+  opacity: 0.9;
+  filter: saturate(0.92);
+}
+
+.qr-loading-placeholder {
+  min-height: 110px;
+  display: grid;
+  place-items: center;
+  color: var(--color-text-muted);
+  font-weight: 600;
+}
+
+.qr-loading-overlay {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  border-radius: var(--radius-md);
+  background: color-mix(in oklab, var(--color-surface-strong) 78%, transparent);
+  color: var(--color-text);
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  backdrop-filter: blur(2px);
+}
+
+.qr-actions {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 0.75rem;
+  align-items: center;
+}
+
+.qr-results {
+  margin-top: 1rem;
+}
+
+.qr-status {
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+  color: var(--color-text);
+  padding: 0.75rem 1rem;
+}
+
+.qr-status--error {
+  border-color: rgba(239, 68, 68, 0.35);
+  color: #fca5a5;
+  background: rgba(127, 29, 29, 0.2);
+}
+
+.qr-answer-card {
+  width: 100%;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  background: var(--color-surface-strong);
+}
+
+.qr-answer-card--compact {
+  font-size: 0.85rem;
+}
+
+.qr-answer-card--emphasis {
+  border-color: var(--color-accent);
+  box-shadow: 0 10px 24px rgba(130, 170, 255, 0.2);
+}
+
+.qr-answer-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.qr-answer-table th {
+  text-align: left;
+  font-size: 0.75rem;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+  background: var(--color-surface-muted);
+  padding: 0.6rem 0.75rem;
+}
+
+.qr-answer-table td {
+  padding: 0.65rem 0.75rem;
+  color: var(--color-text);
+  border-top: 1px solid var(--color-border);
+}
+
+.qr-answer-row--mismatch td {
+  color: #fcd34d;
+}
+
+.qr-answer-pill {
+  display: inline-flex;
+  align-items: center;
+  border: 1px solid rgba(95, 208, 165, 0.35);
+  background: rgba(95, 208, 165, 0.14);
+  color: var(--color-accent-strong);
+  border-radius: 999px;
+  padding: 0.18rem 0.55rem;
+  font-size: 0.75rem;
+  font-weight: 600;
 }

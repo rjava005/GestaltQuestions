@@ -49,4 +49,4 @@ COPY . .
 
 EXPOSE 8080
 
-CMD ["uvicorn", "code_sandbox.api.main:app","--reload", "--host", "0.0.0.0", "--port", "8080","--forwarded-allow-ips", "*"]
+CMD ["uvicorn", "src.main:app","--reload", "--host", "0.0.0.0", "--port", "8080","--forwarded-allow-ips", "*"]

@@ -1,34 +1,13 @@
-from typing import Annotated, Dict, Union, overload
+from typing import Dict, Union, overload
 
-from fastapi import Depends
 from sqlalchemy.exc import SQLAlchemyError
 from sqlmodel import select
 
+from src.app_types.general import ID
 from src.core import SessionDep, logger
 from src.utils import convert_uuid
 
-
-from src.model.institution import Institution
-from src.types import STORAGE_TYPE, ID, ValidInstitutions
-
-institutions: Dict[ValidInstitutions, str] = {
-    ValidInstitutions.UCR: (
-        "University of California, Riverside. A public research university "
-        "focused on undergraduate and graduate education, research, and innovation."
-    ),
-    ValidInstitutions.CPP: (
-        "California State Polytechnic University, Pomona. A hands-on, "
-        "learn-by-doing institution with a strong emphasis on engineering, "
-        "applied sciences, and professional practice."
-    ),
-    ValidInstitutions.NORCO: (
-        "Norco College. A community college offering associate degrees, "
-        "certificates, and transfer pathways, with a focus on accessible, "
-        "career-oriented, and foundational education."
-    ),
-}
-
-
+from src.model.institution import Institution, ValidInstitutions
 class InstitutionDB:
     def __init__(self, session: SessionDep):
         self.session = session
@@ -86,13 +65,25 @@ class InstitutionDB:
             raise
 
     async def seed_institution(self):
+        institutions: Dict[ValidInstitutions, str] = {
+            ValidInstitutions.UCR: (
+                "University of California, Riverside. A public research university "
+                "focused on undergraduate and graduate education, research, and innovation."
+            ),
+            ValidInstitutions.CPP: (
+                "California State Polytechnic University, Pomona. A hands-on, "
+                "learn-by-doing institution with a strong emphasis on engineering, "
+                "applied sciences, and professional practice."
+            ),
+            ValidInstitutions.NORCO: (
+                "Norco College. A community college offering associate degrees, "
+                "certificates, and transfer pathways, with a focus on accessible, "
+                "career-oriented, and foundational education."
+            ),
+        }
         for institution, desc in institutions.items():
             if not await self.get_institution(institution):
                 await self.create_institution(institution, desc)
 
-
-def get_institution_database(session: SessionDep) -> InstitutionDB:
-    return InstitutionDB(session)
-
-
-InstitutionDependency = Annotated[InstitutionDB, Depends(get_institution_database)]
+    async def get_all_institutions(self):
+        return self.session.exec(select(Institution)).all()

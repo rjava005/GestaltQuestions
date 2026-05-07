@@ -1,0 +1,385 @@
+{
+  "version": "1.0.0",
+  "feature": "QuestionRender",
+  "components": [
+    {
+      "tag": "pl-question-panel",
+      "componentName": "PLQuestionPanel",
+      "summary": "Layout wrapper for question content with panel sizing and visual variants.",
+      "children": "Any renderable question content.",
+      "attributes": [
+        {
+          "htmlAttribute": "class|classname",
+          "prop": "className",
+          "type": "string",
+          "required": false,
+          "description": "Additional container classes."
+        }, 
+        {
+          "htmlAttribute": "size",
+          "prop": "size",
+          "type": "string",
+          "required": false,
+          "default": "md",
+          "allowedValues": ["sm", "md", "lg"],
+          "description": "Controls panel size style."
+        },
+        {
+          "htmlAttribute": "variant",
+          "prop": "variant",
+          "type": "string",
+          "required": false,
+          "default": "default",
+          "description": "Controls panel visual treatment."
+        }
+      ]
+    },
+    {
+      "tag": "pl-number-input",
+      "componentName": "PLNumberInput",
+      "summary": "Numeric answer input that stores learner input in runtime answers.",
+      "children": "None.",
+      "attributes": [
+        {
+          "htmlAttribute": "answers-name",
+          "prop": "answerName",
+          "type": "string",
+          "required": true,
+          "description": "Answer key used for runtime state binding."
+        },
+        {
+          "htmlAttribute": "comparison",
+          "prop": "comparison",
+          "type": "string",
+          "required": false,
+          "default": "exact",
+          "description": "Answer comparison strategy metadata."
+        },
+        {
+          "htmlAttribute": "digits",
+          "prop": "digits",
+          "type": "number",
+          "required": false,
+          "default": 3,
+          "description": "Decimal precision used to derive input step value."
+        },
+        {
+          "htmlAttribute": "label",
+          "prop": "label",
+          "type": "string|number",
+          "required": false,
+          "default": "",
+          "description": "Visible label above numeric input."
+        },
+        {
+          "htmlAttribute": "class|classname",
+          "prop": "className",
+          "type": "string",
+          "required": false,
+          "description": "Additional wrapper classes."
+        },
+        {
+          "htmlAttribute": "variant",
+          "prop": "variant",
+          "type": "string",
+          "required": false,
+          "default": "default",
+          "description": "Input panel visual style."
+        }
+      ]
+    },
+    {
+      "tag": "pl-figure",
+      "componentName": "PLFigure",
+      "summary": "Displays an image from URL or question client files with size and style variants.",
+      "children": "None.",
+      "attributes": [
+        {
+          "htmlAttribute": "src",
+          "prop": "src",
+          "type": "string",
+          "required": false,
+          "description": "Image source URL or relative question file path."
+        },
+        {
+          "htmlAttribute": "filename",
+          "prop": "filename",
+          "type": "string",
+          "required": false,
+          "description": "Preferred question file name resolved from question path."
+        },
+        {
+          "htmlAttribute": "class|classname",
+          "prop": "className",
+          "type": "string",
+          "required": false,
+          "description": "Custom wrapper classes."
+        },
+        {
+          "htmlAttribute": "size",
+          "prop": "size",
+          "type": "string",
+          "required": false,
+          "default": "md",
+          "allowedValues": ["sm", "md", "lg"],
+          "description": "Maximum image display size."
+        },
+        {
+          "htmlAttribute": "variant",
+          "prop": "variant",
+          "type": "string",
+          "required": false,
+          "default": "default",
+          "allowedValues": ["default", "minimal"],
+          "description": "Figure container style."
+        }
+      ]
+    },
+    {
+      "tag": "pl-solution-panel",
+      "componentName": "PLSolutionPanel",
+      "summary": "Step-by-step solution container with optional progressive reveal controls.",
+      "children": "Solution steps/content.",
+      "attributes": [
+        {
+          "htmlAttribute": "title",
+          "prop": "title",
+          "type": "string",
+          "required": false,
+          "default": "Solution",
+          "description": "Panel heading."
+        },
+        {
+          "htmlAttribute": "subtitle",
+          "prop": "subtitle",
+          "type": "string",
+          "required": false,
+          "description": "Secondary heading text."
+        },
+        {
+          "htmlAttribute": "show-all",
+          "prop": "autoShowAll",
+          "type": "boolean",
+          "required": false,
+          "default": false,
+          "description": "Show all steps immediately when present."
+        },
+        {
+          "htmlAttribute": "class|classname",
+          "prop": "className",
+          "type": "string",
+          "required": false,
+          "description": "Additional panel classes."
+        },
+        {
+          "htmlAttribute": "size",
+          "prop": "size",
+          "type": "string",
+          "required": false,
+          "default": "md",
+          "description": "Panel size style."
+        },
+        {
+          "htmlAttribute": "variant",
+          "prop": "variant",
+          "type": "string",
+          "required": false,
+          "default": "default",
+          "description": "Panel visual variant."
+        }
+      ]
+    },
+    {
+      "tag": "pl-hint",
+      "componentName": "PLHint",
+      "summary": "Hint block with a level badge and styled content container.",
+      "children": "Hint text/markup.",
+      "attributes": [
+        {
+          "htmlAttribute": "level",
+          "prop": "level",
+          "type": "number|string",
+          "required": true,
+          "description": "Hint level shown in badge."
+        },
+        {
+          "htmlAttribute": "variant",
+          "prop": "variant",
+          "type": "string",
+          "required": false,
+          "default": "default",
+          "allowedValues": ["default", "highlighted"],
+          "description": "Hint appearance style."
+        },
+        {
+          "htmlAttribute": "class|classname",
+          "prop": "className",
+          "type": "string",
+          "required": false,
+          "description": "Additional hint classes."
+        }
+      ]
+    },
+    {
+      "tag": "pl-derivation-container",
+      "componentName": "PLDerivation",
+      "summary": "Container for derivation steps with optional title/subtitle/reference and reveal flow.",
+      "children": "Typically one or more `pl-derivation-step` children.",
+      "attributes": [
+        {
+          "htmlAttribute": "title",
+          "prop": "title",
+          "type": "string",
+          "required": false,
+          "description": "Derivation title."
+        },
+        {
+          "htmlAttribute": "subtitle",
+          "prop": "subtitle",
+          "type": "string",
+          "required": false,
+          "description": "Derivation subtitle."
+        },
+        {
+          "htmlAttribute": "reference",
+          "prop": "reference",
+          "type": "string",
+          "required": false,
+          "description": "Reference label for source/material."
+        },
+        {
+          "htmlAttribute": "class|classname",
+          "prop": "className",
+          "type": "string",
+          "required": false,
+          "description": "Custom container classes."
+        },
+        {
+          "htmlAttribute": "size",
+          "prop": "size",
+          "type": "string",
+          "required": false,
+          "description": "Panel sizing."
+        },
+        {
+          "htmlAttribute": "variant",
+          "prop": "variant",
+          "type": "string",
+          "required": false,
+          "description": "Panel variant styling."
+        }
+      ]
+    },
+    {
+      "tag": "pl-derivation-step",
+      "componentName": "PLDerivationStep",
+      "summary": "Single styled derivation step block rendered inside a derivation container.",
+      "children": "Step text/math content.",
+      "attributes": [
+        {
+          "htmlAttribute": "class|classname",
+          "prop": "className",
+          "type": "string",
+          "required": false,
+          "description": "Additional step classes."
+        }
+      ]
+    },
+    {
+      "tag": "pl-multiple-choice",
+      "componentName": "PLMultipleChoice",
+      "summary": "Multiple-choice/checkbox answer group that records selected values in runtime state.",
+      "children": "Typically one or more `pl-answer` children.",
+      "attributes": [
+        {
+          "htmlAttribute": "answers-name",
+          "prop": "answersName",
+          "type": "string",
+          "required": true,
+          "description": "Answer key for runtime state."
+        },
+        {
+          "htmlAttribute": "inline",
+          "prop": "inline",
+          "type": "boolean",
+          "required": false,
+          "default": false,
+          "description": "Render options inline when true."
+        },
+        {
+          "htmlAttribute": "multiple",
+          "prop": "multiple",
+          "type": "boolean",
+          "required": false,
+          "default": false,
+          "description": "Allow multiple selected options."
+        },
+        {
+          "htmlAttribute": "style",
+          "prop": "style",
+          "type": "string",
+          "required": false,
+          "default": "default",
+          "allowedValues": ["default", "minimal"],
+          "description": "Container style preset."
+        }
+      ]
+    },
+    {
+      "tag": "pl-checkbox",
+      "componentName": "PLMultipleChoice",
+      "summary": "Alias tag for `pl-multiple-choice` with identical behavior and attributes.",
+      "children": "Typically one or more `pl-answer` children.",
+      "attributes": [
+        {
+          "htmlAttribute": "answers-name",
+          "prop": "answersName",
+          "type": "string",
+          "required": true,
+          "description": "Answer key for runtime state."
+        },
+        {
+          "htmlAttribute": "inline",
+          "prop": "inline",
+          "type": "boolean",
+          "required": false,
+          "default": false,
+          "description": "Render options inline when true."
+        },
+        {
+          "htmlAttribute": "multiple",
+          "prop": "multiple",
+          "type": "boolean",
+          "required": false,
+          "default": false,
+          "description": "Allow multiple selected options."
+        },
+        {
+          "htmlAttribute": "style",
+          "prop": "style",
+          "type": "string",
+          "required": false,
+          "default": "default",
+          "allowedValues": ["default", "minimal"],
+          "description": "Container style preset."
+        }
+      ]
+    },
+    {
+      "tag": "pl-answer",
+      "componentName": "PLAnswer",
+      "summary": "Child option node for choice components; supplies answer text and correctness metadata.",
+      "children": "Answer display text/content.",
+      "attributes": [
+        {
+          "htmlAttribute": "correct",
+          "prop": "correct",
+          "type": "\"true\"|\"false\"",
+          "required": false,
+          "default": "false",
+          "description": "Marks option as correct for optional correctness display."
+        }
+      ]
+    }
+  ]
+}

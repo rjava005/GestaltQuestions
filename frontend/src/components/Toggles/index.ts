@@ -1,3 +1,2 @@
-export * from "./LockToggle";
-export { default as ToggleField } from "./ToggleField";
-export * from "./ServerSettingsToggle";
+export { default as Toggle } from "./Toggle";
+export { type ToggleProps } from "./Toggle";

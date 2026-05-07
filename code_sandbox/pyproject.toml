@@ -1,15 +1,15 @@
 [project]
-name = "code_sandbox"
+name = "src"
 packages = [
     { include = "code_sandbox", from = "src" }
 ]
 version = "0.1.0"
 description = ""
 authors = [
-    {name = "Luciano Bermudez",email = "lucianobmecheng69@gmail.com"}
+    {name = "Luciano Bermudez",email = ";lberm007@ucr.edu"}
 ]
 readme = "README.md"
-requires-python = ">=3.13"
+requires-python = ">=3.11,<4.0"
 dependencies = [
     "fastapi (>=0.121.2,<0.122.0)",
     "uvicorn (>=0.38.0,<0.39.0)",

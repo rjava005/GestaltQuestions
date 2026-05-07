@@ -1,1 +1,1 @@
-export { useRetrievedQuestions } from "./useQuestionCollection";
+export {useOnClickOutside} from "./hooks"

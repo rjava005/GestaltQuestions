@@ -1,4 +1,4 @@
-import { questionAPIURL } from "../config";
+import { questionAPIURL } from "../config/apiConfig";
 
 export const imageUrl = (path: string) => {
   try {

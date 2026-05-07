@@ -1,5 +1,5 @@
 # Stdlib
-from typing import TypeVar
+from typing import TypeVar, Union
 from uuid import UUID
 
 # Third-party
@@ -10,14 +10,17 @@ from sqlmodel import SQLModel
 from datetime import datetime
 
 
-def convert_uuid(uuid: str | UUID | None) -> UUID:
+def convert_uuid(value: Union[str, UUID,None]) -> UUID:
+    if isinstance(value, UUID):
+        return value
+
+    if value is None:
+        raise ValueError("UUID value cannot be None")
+
     try:
-        if isinstance(uuid, UUID):
-            return uuid
-        else:
-            return UUID(uuid)
-    except Exception as e:
-        raise ValueError(f"Could not convert {type(uuid)} into UUID")
+        return UUID(str(value).strip())  # 🔥 FIX HERE
+    except (ValueError, TypeError):
+        raise ValueError(f"Invalid UUID: {value!r}")
 
 
 def pick_related_label_col(target_cls):

@@ -4,11 +4,10 @@ from sqlalchemy.exc import SQLAlchemyError
 from sqlmodel import select
 
 from src.core import logger, SessionDep
-from src.model.users import Role
-from src.types import UserRoles
+from src.model.users import Role, UserRoles
 
 
-class RoleManager:
+class RoleDB:
     def __init__(self, session: SessionDep):
         self.session = session
 
@@ -28,6 +27,16 @@ class RoleManager:
         except SQLAlchemyError as e:
             self.session.rollback()
             logger.error(f"[DB] Failed to create role: {e}")
+            return None
+
+    async def get_role(self, role: UserRoles):
+        try:
+            return self.session.exec(
+                select(Role).where(Role.name == role.value)
+            ).first()
+        except SQLAlchemyError as e:
+            self.session.rollback()
+            logger.error(f"[DB] Failed to get role: {e}")
             return None
 
     async def get_role_data(
@@ -59,7 +68,7 @@ class RoleManager:
         }
         try:
             for r, des in roles.items():
-                if self.does_role_exist(r):
+                if await self.does_role_exist(r):
                     continue
                 await self.create_role(r, description=des)
         except Exception:

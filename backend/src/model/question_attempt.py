@@ -2,7 +2,6 @@ from datetime import datetime, timezone
 from typing import Any, Dict, List, Optional
 from uuid import UUID, uuid4
 from pydantic import BaseModel, Field
-from pydantic import BaseModel
 from sqlalchemy import Column, DateTime, func
 from sqlmodel import SQLModel, Field as SQLField
 from sqlalchemy.types import JSON
@@ -11,8 +10,6 @@ from sqlalchemy.types import JSON
 class QuizData(BaseModel):
     params: Dict[str, Any]
     correct_answers: Dict[str, Any]
-    intermediate: Optional[Dict[str, Any]] = None
-    test_results: Optional[Dict[str, Any]] = None
     logs: List[Any] = Field(default_factory=list)
     nDigits: Optional[int] = 3
     sigfigs: Optional[int] = 3

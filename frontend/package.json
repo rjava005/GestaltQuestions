@@ -39,7 +39,7 @@
     "katex": "^0.16.25",
     "lodash": "^4.17.21",
     "lucide-react": "^0.562.0",
-    "mathjs": "^14.9.1",
+    "mathjs": "^15.2.0",
     "postcss": "^8.5.6",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
@@ -61,9 +61,11 @@
     "remark-gfm": "^4.0.1",
     "remark-math": "^6.0.0",
     "remark-parse": "^11.0.0",
+    "tailwind-merge": "^3.5.0",
     "tailwindcss": "^4.1.11",
     "unified": "^11.0.5",
-    "unist-util-visit": "^5.0.0"
+    "unist-util-visit": "^5.0.0",
+    "zustand": "^5.0.12"
   },
   "devDependencies": {
     "@eslint/js": "^9.29.0",

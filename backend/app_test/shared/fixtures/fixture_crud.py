@@ -4,9 +4,7 @@ import pytest
 
 from src.core import logger
 from src.utils import *
-from src.types import (
-    SuccessDataResponse,
-)
+
 
 
 
@@ -25,8 +23,8 @@ def retrieve_single_file(client, qid, filename):
     resp = client.get(f"/questions/{qid}/files/{filename}")
     assert resp.status_code == 200, resp.text
     response_data = resp.json()
-    validated = SuccessDataResponse.model_validate(response_data)
-    return normalize_content(validated.data)
+    
+    return normalize_content(response_data)
 
 
 def retrieve_files(client, qid, route_arg: Literal["files", "files_data"]):

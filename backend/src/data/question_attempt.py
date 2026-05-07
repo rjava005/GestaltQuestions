@@ -4,11 +4,10 @@ from sqlalchemy import desc
 from sqlalchemy.exc import SQLAlchemyError
 from sqlmodel import select
 
+from src.app_types.general import ID
 from src.core import SessionDep, logger
 from src.model.question_attempt import QuestionAttempt
 from src.utils import convert_uuid
-
-from src.types import STORAGE_TYPE, ID
 
 
 class QuestionAttemptDB:

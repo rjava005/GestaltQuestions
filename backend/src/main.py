@@ -7,16 +7,16 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.routing import APIRouter
-from fastapi.staticfiles import StaticFiles
-from pathlib import Path
 from src.core import logger
 from sqlmodel import Session
 
 # Local application imports
-from src.data import RoleManager, InstitutionDB
+import src.data
 from src.web import ALL_ROUTES
 from src.core import get_settings, create_db_and_tables
-
+from src.service.user.user_manager import RoleDB
+from src.data.institution import InstitutionDB
+from src.core.firebase import initialize_firebase_app
 
 settings = get_settings()
 
@@ -24,17 +24,20 @@ settings = get_settings()
 ## Intializes the database
 @asynccontextmanager
 async def on_startup(app: FastAPI):
-    engine = create_db_and_tables()
-    # Ensures that the roles are present at startup
-    with Session(engine) as session:
-        await RoleManager(session).seed_roles()
-        logger.info("[Initialization] Roles Created/verified Successfully")
-        session.commit()
-        await InstitutionDB(session).seed_institution()
-
-        logger.info("[Initialization]: Institution Created/Verified Succesfully")
-    yield
-
+    try:
+        # Attempt to initialize firebase application
+        initialize_firebase_app()
+        engine = create_db_and_tables()
+        # Ensures that the roles are present at startup
+        with Session(engine) as session:
+            await RoleDB(session).seed_roles()
+            logger.info("[Initialization] Roles Created/verified Successfully")
+            session.commit()
+            await InstitutionDB(session).seed_institution()
+            logger.info("[Initialization]: Institution Created/Verified Succesfully")
+        yield
+    except Exception as e:
+        raise ValueError(f"Failed to initialize app {e}")
 
 def add_routes(app: FastAPI, routes: list[APIRouter] = ALL_ROUTES):
     for r in routes:
@@ -42,7 +45,7 @@ def add_routes(app: FastAPI, routes: list[APIRouter] = ALL_ROUTES):
 
 
 def get_application(test_mode: bool = False):
-    app = FastAPI(title=settings.PROJECT_NAME, lifespan=on_startup)
+    app = FastAPI(title=settings.PROJECT_NAME or "", lifespan=on_startup)
     add_routes(app)
 
     app.add_middleware(
@@ -55,22 +58,6 @@ def get_application(test_mode: bool = False):
         allow_headers=["*"],  # allow all headers (including Authorization)
         expose_headers=["Content-Disposition"],
     )
-
-    question_dir = Path(settings.PROJECT_ROOT) / settings.QUESTIONS_DIRNAME
-    if not question_dir:
-        raise ValueError("Cannot Find Local Path")
-
-    logger.info(f"Setting Question Dir to {question_dir}")
-
-    if not question_dir.exists():
-        question_dir.mkdir(parents=True, exist_ok=True)
-
-    app.mount(
-        f"/{question_dir.name}",  # -> "/questions"
-        StaticFiles(directory=question_dir, html=False),
-        name="questions",
-    )
-    logger.info("Serving static files from: %s", question_dir)
 
     return app
 

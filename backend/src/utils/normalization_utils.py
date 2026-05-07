@@ -2,6 +2,7 @@ import json
 from datetime import date, datetime, time
 from typing import Any, List, Iterable
 from uuid import UUID
+from enum import Enum
 
 # --- Third-Party ---
 from pydantic import BaseModel
@@ -63,30 +64,30 @@ def to_serializable(obj: Any) -> Any:
         return obj.isoformat()
     if isinstance(obj, UUID):
         return str(obj)
+    if isinstance(obj, Enum):
+        return obj.value
 
     return obj
 
 
-def normalize_content(content):
-    """Ensure content is a dict for reliable comparison."""
+def normalize_content(content: Any) -> str:
+    """Ensure content is a string for reliable comparison."""
     if isinstance(content, str):
-        try:
-            return json.loads(content)
-        except json.JSONDecodeError:
-            return content
+        return content
     if isinstance(content, bytes):
         return content.decode("utf-8")
-    return content
+    if isinstance(content, (bytearray, memoryview)):
+        return bytes(content).decode("utf-8")
+    if content is None:
+        return ""
+    try:
+        return json.dumps(to_serializable(content), default=str, separators=(",", ":"))
+    except (TypeError, ValueError):
+        return str(content)
 
 
-def normalize(content):
-    if isinstance(content, dict):
-        return json.dumps(content, indent=2).encode("utf-8")
-    if isinstance(content, str):
-        return content.encode("utf-8")
-    if isinstance(content, (bytes, bytearray)):
-        return content
-    raise TypeError
+
+
 
 def normalize_newlines(b: bytes) -> bytes:
     return b.replace(b"\r\n", b"\n")

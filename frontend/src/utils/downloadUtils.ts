@@ -1,5 +1,4 @@
 function base64ToBytes(base64: string): Blob {
-  console.log("This is the base64", base64);
   const binaryString = atob(base64);
   const len = binaryString.length;
   const bytes = new Uint8Array(len);
@@ -30,7 +29,6 @@ export function downloadZip(data: string | Blob, header: string | undefined) {
 
 function extractFilename(header: string | undefined) {
   if (!header) return "download.zip";
-
   const match = header.match(/filename="?([^"]+)"?/);
   return match ? match[1] : "download.zip";
 }

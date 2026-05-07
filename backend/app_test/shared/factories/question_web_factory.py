@@ -1,5 +1,5 @@
 import pytest
-from src.types import QuestionData
+from src.model.question import QuestionData
 from uuid import UUID
 from pathlib import Path
 import mimetypes

@@ -1,46 +1,71 @@
 import asyncio
-from pathlib import Path
-from typing import Any, Dict, Literal, Sequence
-from pydantic import ValidationError
-from sqlalchemy import or_
-from sqlalchemy.exc import SQLAlchemyError
-from sqlmodel import delete, select
+from pathlib import Path, PurePosixPath
+from typing import Any, Dict, Literal, Sequence, Optional
+from uuid import UUID
 
+from pydantic import ValidationError
+from sqlalchemy.exc import SQLAlchemyError
+from sqlmodel import Session, delete, select
+from sqlalchemy import func
+from src.app_types.general import ID
 from src.core import logger
-from sqlmodel import Session
+from src.data.exceptions.question_exceptions import (
+    QuestionCreateError,
+    QuestionDeleteError,
+    QuestionNotFoundError,
+    QuestionPathError,
+    QuestionReadError,
+    QuestionUpdateError,
+    QuestionValidationError,
+)
 from src.data import generic as gdb
 from src.model.question import (
-    Language,
     Question,
+    QuestionCreate,
+    QuestionRead,
+    QuestionRelationships,
     QuestionType,
+    QuestionUpdate,
     Topic,
 )
-from src.types import QuestionData
 from src.utils import convert_uuid
-
-from src.types import STORAGE_TYPE, ID
+from sqlalchemy.sql.elements import ColumnElement
 
 
 class QuestionDB:
     def __init__(self, session: Session):
-        self.session = session
-        self.metadata_rel = ["topics", "languages", "qtypes"]
-        self.excluded_fields = self.metadata_rel
-        self.relationship_map = {
-            "topics": (Topic, "name"),
-            "languages": (Language, "name"),
-            "qtypes": (QuestionType, "name"),
-        }
+        """
+        Initialize the question data access layer.
 
-    async def create_question(self, question: QuestionData | dict) -> Question:
+        Args:
+            session: Active SQLModel session used for database operations.
+        """
+        self.session = session
+        self.metadata_rel = ["topics", "qTypes"]
+        self.excluded_fields = self.metadata_rel
+
+    async def create_question(
+        self,
+        question: QuestionCreate | dict,
+    ) -> Question:
+        """
+        Create a question record and attach its relationships.
+
+        Args:
+            question: Question payload as a validated model or raw dict.
+            created_by: Optional developer profile ID to store as the creator.
+
+        Returns:
+            The created Question ORM instance.
+        """
         question = self.validate_data(question)
-        logger.info("This is the question %s", question)
+
         question_orm = Question(
-            **question.model_dump(exclude=set(self.excluded_fields))
+            **question.model_dump(exclude=set(self.excluded_fields)),
         )
 
         self.session.add(question_orm)
-        question_orm = await self.attach_question_relationships(question_orm, question)
+        question_orm = await self._attach_question_relationships(question_orm, question)
         self.session.add(question_orm)
         # persist to database
         try:
@@ -49,70 +74,133 @@ class QuestionDB:
             return question_orm
         except SQLAlchemyError as e:
             self.session.rollback()
-            error_msg = f"[DB] could not create question {e}"
-            logger.error(error_msg)
-            raise Exception(f"[DB] failed to create question an error occured {e}")
+            logger.exception("[QuestionDB] Failed to create question")
+            raise QuestionCreateError(f"Failed to create question: {e}") from e
+
+    async def get_questions_by_creator(
+        self, created_by_id: UUID | str
+    ) -> Sequence[Question]:
+        """
+        Retrieve all questions created by a specific developer profile.
+
+        Args:
+            created_by_id: Developer profile identifier.
+
+        Returns:
+            A sequence of Question ORM instances owned by the creator.
+        """
+        try:
+            questions = self.session.exec(
+                select(Question).where(
+                    Question.created_by_id == convert_uuid(created_by_id)
+                )
+            ).all()
+            return questions
+        except SQLAlchemyError as e:
+            self.session.rollback()
+            logger.exception("[QuestionDB] Failed to retrieve questions by creator")
+            raise QuestionReadError(
+                f"Failed to retrieve questions for creator '{created_by_id}': {e}"
+            ) from e
 
     async def get_question(self, qid: ID) -> Question | None:
+        """
+        Retrieve a question by its identifier.
+
+        Args:
+            qid: Question identifier.
+
+        Returns:
+            The matching Question ORM instance, or None if not found.
+        """
+        if qid is None:
+            raise QuestionValidationError("Question id cannot be None.")
+
         try:
-            if qid is None:
-                raise ValueError("[DB] Question ID cannot be None")
             question_id = convert_uuid(qid)
             return self.session.exec(
                 select(Question).where(Question.id == question_id)
             ).first()
         except SQLAlchemyError as e:
             self.session.rollback()
-            error_msg = f"[DB] could not get question {e}"
-            logger.error(error_msg)
-            raise ValueError(error_msg)
+            logger.exception("[QuestionDB] Failed to retrieve question")
+            raise QuestionReadError(f"Failed to retrieve question '{qid}': {e}") from e
 
     async def get_all_questions(
         self,
         offset: int = 0,
         limit: int = 100,
         method: Literal["default", "full"] = "default",
-    ) -> Sequence[Question | QuestionData]:
-        all_questions = self.session.exec(
-            select(Question).offset(offset).limit(limit)
-        ).all()
+    ) -> Sequence[Question | QuestionRead]:
+        """
+        Retrieve a paginated list of questions.
+
+        Args:
+            offset: Number of rows to skip.
+            limit: Maximum number of rows to return.
+            method: Return raw ORM models with ``default`` or expanded data with ``full``.
+
+        Returns:
+            A sequence of Question models or QuestionData models depending on ``method``.
+        """
         try:
+            all_questions = self.session.exec(
+                select(Question).offset(offset).limit(limit)
+            ).all()
+
             if method == "default":
                 return all_questions
-            elif method == "full":
+            if method == "full":
                 return await asyncio.gather(
                     *[self.get_question_data(q.id) for q in all_questions]
                 )
+            raise QuestionValidationError(
+                f"Unsupported get_all_questions method '{method}'."
+            )
         except SQLAlchemyError as e:
             self.session.rollback()
-            error_message = f"[DB] failed to retrieve all questions {e}"
-            logger.error(error_message)
-            raise ValueError(error_message)
+            logger.exception("[QuestionDB] Failed to retrieve questions")
+            raise QuestionReadError(f"Failed to retrieve questions: {e}") from e
 
-    async def get_question_data(self, qid: ID) -> QuestionData:
+    async def get_question_data(self, qid: ID) -> QuestionRead:
+        """
+        Retrieve a question and expand its relationship fields into QuestionData.
+
+        Args:
+            qid: Question identifier.
+
+        Returns:
+            A QuestionData representation of the stored question.
+        """
         q = await self.get_question(qid)
         if not q:
-            logger.info(" [DB] Question is None")
-            raise ValueError(
-                "Failed to retrieve question, question does not exist in DB"
-            )
+            raise QuestionNotFoundError(f"Question '{qid}' was not found.")
         question_data = q.model_dump(exclude=set(self.metadata_rel))
         relationship_data = await self.get_question_relationship_data(q)
-        q = QuestionData(**question_data, **relationship_data)
+        q = QuestionRead(**question_data, **relationship_data)
         return q
 
     async def update_question(
         self,
         qid: ID,
-        update: QuestionData | dict,
-    ) -> QuestionData:
+        update: QuestionUpdate,
+    ) -> QuestionRead:
+        """
+        Update a question and its relationship metadata.
+
+        Args:
+            qid: Question identifier.
+            update: Partial or full question payload to apply.
+
+        Returns:
+            The updated question as QuestionData.
+        """
 
         q = await self.get_question(qid)
         if not q:
-            raise ValueError("[DB] Question does not exist")
-
-        update_data = self.validate_data(update)
-        q = await self.attach_question_relationships(q, update_data)
+            raise QuestionNotFoundError(f"Question '{qid}' was not found.")
+        update_data = self._validate_update_data(update)
+        q = await self._attach_question_relationships(q, update_data)
 
         try:
             for k, v in update_data.model_dump(
@@ -128,57 +216,25 @@ class QuestionDB:
 
         except SQLAlchemyError as e:
             self.session.rollback()
-            logger.exception("[DB] Failed to update question")
-            raise
-
-    async def filter_questions(self, data: QuestionData) -> Sequence[QuestionData]:
-        filters = []
-        stmt = select(Question)
-        # Exclude the relationship fields first form the other conditions
-        for key, values in data.model_dump(exclude=set(self.metadata_rel)).items():
-            if not values:
-                continue
-            conds = []
-            if key in self.metadata_rel:
-                rel_model, lookup_name = self.relationship_map[key]
-                if isinstance(values, list):
-                    rel_conds = [
-                        gdb.filter_conditional(rel_model, lookup_name, v)
-                        for v in values
-                    ]
-                    conds.append(or_(*rel_conds))
-                else:
-                    conds.append(
-                        gdb.filter_conditional(
-                            rel_model,
-                            lookup_name,
-                            values,
-                        )
-                    )
-
-            if isinstance(values, list):
-                conds.append(
-                    or_(*[gdb.filter_conditional(Question, key, v) for v in values])
-                )
-            else:
-                conds.append(gdb.filter_conditional(Question, key, values))
-
-            if conds:
-                filters.append(or_(*conds))
-
-        if filters:
-            stmt = stmt.where(*filters)
-        stmt = stmt.distinct()
-        results = self.session.exec(stmt).all()
-        return await asyncio.gather(*[self.get_question_data(r.id) for r in results])
+            logger.exception("[QuestionDB] Failed to update question")
+            raise QuestionUpdateError(f"Failed to update question '{qid}': {e}") from e
 
     async def delete_question(
         self,
         qid: ID,
     ) -> bool:
+        """
+        Delete a single question by identifier.
+
+        Args:
+            qid: Question identifier.
+
+        Returns:
+            True when the question was deleted, otherwise False if it was not found.
+        """
         q = await self.get_question(qid)
         if q is None:
-            logger.warning("[DB] cannot delete question, question is not found")
+            logger.warning("[QuestionDB] Cannot delete question '%s'; not found.", qid)
             return False
         try:
             self.session.delete(q)
@@ -187,11 +243,16 @@ class QuestionDB:
             return True
         except SQLAlchemyError as e:
             self.session.rollback()
-            error_msg = f"[DB] failed to delete question {e}"
-            logger.error(error_msg)
-            raise ValueError(error_msg)
+            logger.exception("[QuestionDB] Failed to delete question")
+            raise QuestionDeleteError(f"Failed to delete question '{qid}': {e}") from e
 
     async def delete_all_questions(self) -> bool:
+        """
+        Delete all stored questions.
+
+        Returns:
+            True when the delete operation completes successfully.
+        """
         try:
             statement = delete(Question)
             self.session.exec(statement)
@@ -199,37 +260,55 @@ class QuestionDB:
             return True
         except SQLAlchemyError as e:
             self.session.rollback()
-            logger.error(f"[DB] failed to delete all questions {e}")
-            raise ValueError(f"[DB] failed todelete all questions an error occured {e}")
+            logger.exception("[QuestionDB] Failed to delete all questions")
+            raise QuestionDeleteError(f"Failed to delete all questions: {e}") from e
+
+    async def filter_questions(
+        self,
+        title: str,
+        *,
+        additional_filters: Optional[Sequence[ColumnElement[bool] | bool]] = None,
+    ) -> Sequence[QuestionRead]:
+        try:
+            stmt = select(Question).where(
+                func.lower(Question.title).like(f"%{title.lower()}%"),
+                *(additional_filters or []),
+            )
+            logger.debug("The stmt %s", stmt)
+            questions = self.session.exec(stmt).all()
+            return await asyncio.gather(
+                *[self.get_question_data(q.id) for q in questions]
+            )
+
+        except SQLAlchemyError as e:
+            self.session.rollback()
+            logger.exception("[QuestionDB] Failed to filter all questions")
+            raise ValueError(f"Failed to filter  questions: {e}") from e
 
     # Setter and Getters
-    async def get_question_path(self, id: ID, STORAGE_TYPE: STORAGE_TYPE) -> str | None:
+    async def get_question_path(self, id: ID) -> str | None:
         question = await self.get_question(id)
         if not question:
-            raise ValueError("Question not found")
-        if STORAGE_TYPE == "cloud":
-            path = question.blob_path
-        elif STORAGE_TYPE == "local":
-            path = question.local_path
-        else:
-            raise ValueError(f"Invalid storage type: {STORAGE_TYPE}")
-        return path
+            raise QuestionNotFoundError(f"Question with {id} does not exist")
+        return question.storage_path
 
-    async def set_question_path(
-        self, id: ID, STORAGE_TYPE: STORAGE_TYPE, path: Path | str
-    ):
+    async def set_question_path(self, id: ID, path: Path | str):
+        """
+        Persist a question path for the requested storage backend.
+
+        Args:
+            id: Question identifier.
+            storage_type: Storage backend selector, such as ``local`` or ``cloud``.
+            path: Filesystem or storage path to persist.
+
+        Returns:
+            The updated Question ORM instance.
+        """
         question = await self.get_question(id)
         if not question:
-            raise ValueError("Question not found")
-        path_str = Path(path).as_posix()
+            raise QuestionNotFoundError(f"Question '{id}' was not found.")
         try:
-            if STORAGE_TYPE == "cloud":
-                question.blob_path = path_str
-            elif STORAGE_TYPE == "local":
-                question.local_path = path_str
-            else:
-                raise ValueError(f"Invalid storage type: {STORAGE_TYPE}")
-
+            question.storage_path = PurePosixPath(path).as_posix().rstrip("/") + "/"
             self.session.add(question)
             self.session.commit()
             self.session.refresh(question)
@@ -237,48 +316,92 @@ class QuestionDB:
 
         except SQLAlchemyError as e:
             self.session.rollback()
-            raise Exception(f"Failed to update question path: {e}")
+            logger.exception("[QuestionDB] Failed to update question path")
+            raise QuestionPathError(
+                f"Failed to update question path for '{id}': {e}"
+            ) from e
 
     # Utils
-    async def attach_question_relationships(
-        self, question: Question, data: dict | QuestionData
+    async def _attach_question_relationships(
+        self, question: Question, data: QuestionRelationships | QuestionUpdate
     ) -> Question:
-        data = self.validate_data(data)
-        # Extract relationship meta
-        topic_names = data.topics
-        language_names = data.languages
-        qtype_names = data.qtypes
+        """
+        Attach topic, language, and question-type relationships to a question.
 
+        Args:
+            question: Question ORM instance being created or updated.
+            data: Question payload containing relationship names.
+
+        Returns:
+            The same Question instance with relationships attached.
+        """
+        # Extract relationship meta
+        topic_names = data.topics or []
+        qtype_names = data.qTypes or []
         question.topics = await gdb.get_or_create_many(self.session, Topic, topic_names)
-        question.languages = await gdb.get_or_create_many(
-            self.session, Language, language_names
-        )
-        question.qtypes = await gdb.get_or_create_many(
+        question.qTypes = await gdb.get_or_create_many(
             self.session, QuestionType, qtype_names
         )
         return question
 
     async def get_question_relationship_data(self, q: Question) -> Dict[str, Any]:
+        """
+        Read relationship names from a stored question.
+
+        Args:
+            q: Question ORM instance.
+
+        Returns:
+            A mapping containing topic, language, and question-type name lists.
+        """
         # Get the topics,languages and qtypes
         topics = await gdb.get_relationship_data(q, "topics", mode="list")
-        languages = await gdb.get_relationship_data(q, "languages", mode="list")
-        qtypes = await gdb.get_relationship_data(q, "qtypes", mode="list")
-        relationship_data = {"topics": topics, "languages": languages, "qtypes": qtypes}
+        qtypes = await gdb.get_relationship_data(q, "qTypes", mode="list")
+        relationship_data = {"topics": topics, "qtypes": qtypes}
         return relationship_data
 
-    def validate_data(self, question: QuestionData | dict) -> QuestionData:
+    def validate_data(self, question: QuestionCreate | Dict) -> QuestionCreate:
+        """
+        Validate and normalize raw question input.
+
+        Args:
+            question: Question payload as a QuestionData model or raw dict.
+
+        Returns:
+            A validated QuestionData instance.
+        """
         try:
             data = (
-                question.model_dump(exclude={"question_path"}, exclude_none=True)
-                if isinstance(question, QuestionData)
+                question.model_dump(exclude_none=True)
+                if isinstance(question, QuestionCreate)
                 else question
             )
-            question = QuestionData.model_validate(data)
+            question = QuestionCreate.model_validate(data)
             if question.id:
                 logger.info("[QDB] Question ID is in data converting")
                 question.id = convert_uuid(question.id)
             return question
         except ValidationError as e:
-            raise ValueError(
-                f"Question is not type QuestionData. Validation error: {e}"
-            ) from e
+            raise QuestionValidationError(f"Question payload is invalid: {e}") from e
+
+    def _validate_update_data(self, update: QuestionUpdate | dict) -> QuestionUpdate:
+        """
+        Validate and normalize raw question input.
+
+        Args:
+            question: Question payload as a QuestionData model or raw dict.
+
+        Returns:
+            A validated QuestionData instance.
+        """
+        try:
+            data = (
+                update.model_dump(exclude_none=True)
+                if isinstance(update, QuestionUpdate)
+                else update
+            )
+            update = QuestionUpdate.model_validate(data)
+
+            return update
+        except ValidationError as e:
+            raise QuestionValidationError(f"Question payload is invalid: {e}") from e

@@ -10,25 +10,27 @@ type HeaderStyleConfig = {
 
 const styles: Record<HeaderStyle, HeaderStyleConfig> = {
   Generic: {
-    wrapper: "",
-    title: "truncate text-2xl font-bold text-slate-900 dark:text-slate-100",
+    wrapper: "w-full",
+    title: "truncate text-2xl font-bold tracking-tight text-text",
   },
   Authentication: {
-    wrapper: "flex flex-col text-black items-center text-center space-y-1",
-    title: "text-xl font-semibold tracking-tight",
+    wrapper: "flex flex-col items-center text-center space-y-1 text-text",
+    title: "text-xl font-semibold tracking-tight text-text",
   },
 
   QuestionBuilder: {
-    wrapper: "w-full bg-slate-50 flex flex-col px-6 py-4",
-    title: "truncate text-3xl font-semibold text-slate-800 tracking-tight mb-4",
+    wrapper: "w-full flex flex-col rounded-lg border border-border bg-surface px-6 py-4",
+    title: "truncate mb-4 text-3xl font-semibold tracking-tight text-text",
   },
 };
+
 type HeaderProps = React.HTMLAttributes<HTMLDivElement> & {
   title: string;
   children?: React.ReactNode;
   variant?: HeaderStyle;
   className?: string;
 };
+
 export default function Header({
   title,
   children,

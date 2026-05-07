@@ -1,3 +1,9 @@
-from .base import StorageService
-from .local_storage import LocalStorageService
-from .firebase_storage import FirebaseStorage
+from src.app_types.general import STORAGE_TYPE
+
+
+from .base import Storage
+
+__all__ = [
+    "STORAGE_TYPE",
+    "Storage",
+]
