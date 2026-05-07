@@ -29,3 +29,18 @@ async def get_developer_profile(dev_access: DeveloperAccess, current_user: Curre
         return await dev_access.set_developer_data(current_user)
     except Exception as e:
         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail=str(e))
+
+
+@router.post("/{user_id}")
+async def set_developer_profile(dev_access: DeveloperAccess, user_id: str):
+    try: 
+        profile = await dev_access.get_developer_data(user_id)
+        if not profile:
+            return await dev_access.set_developer_data(user_id)
+    except DeveloperProfileNotSet:
+        logger.info(
+            f"Current user {user_id} does not have profile set attempting to resolve"
+        )
+        return await dev_access.set_developer_data(user_id)
+    except Exception as e:
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail=str(e))
