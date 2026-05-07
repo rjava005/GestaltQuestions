@@ -33,7 +33,7 @@ async def create_user(
     try:
         logger.debug("Attempting to create user")
         created_user = await user_manager.create_user(
-            data=payload.user, role=payload.role, institution=payload.institution
+            data=payload.user, institution=payload.institution
         )
         return UserRead(
             first_name=created_user.first_name,
