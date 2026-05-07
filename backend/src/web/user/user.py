@@ -29,13 +29,18 @@ class LoginRequest(BaseModel):
 async def create_user(
     user_manager: UserManagerDependeny,
     payload: CreateUserFullPayload,
-):
+) -> UserRead:
     try:
         logger.debug("Attempting to create user")
         created_user = await user_manager.create_user(
             data=payload.user, role=payload.role, institution=payload.institution
         )
-        return created_user
+        return UserRead(
+            first_name=created_user.first_name,
+            last_name=created_user.last_name,
+            username=created_user.username,
+            email=created_user.email,
+        )
     except HTTPException:
         raise
     except Exception as e:
@@ -135,6 +140,7 @@ async def delete_user_by_id(user_manager: UserManagerDependeny, id: ID):
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"Failed to delete user '{id}': {e}",
         )
+
 
 @router.get("/{id}/roles")
 async def get_user_roles_by_id(
