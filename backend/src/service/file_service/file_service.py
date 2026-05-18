@@ -45,17 +45,20 @@ class FileConverter:
         if isinstance(file, FileData):
             return file
         if isinstance(file, UploadFile) or hasattr(file, "file"):
+            logger.info("Received file %s", file)
             upload_file = cast(UploadFile, file)
             await self._validate_upload_file(upload_file)
             await self._validate_upload_file_size(upload_file)
             filename = upload_file.filename or "untitled.txt"
             mime_type, _ = mimetypes.guess_type(filename)
+            raw = await upload_file.read()
+            logger.info(f"Receieved raw {raw}")
             if mime_type and (
                 mime_type.startswith("text") or mime_type.startswith("application/json")
             ):
-                content = await upload_file.read()
+                content = raw.decode("utf-8")
             else:
-                content = base64.b64encode(await upload_file.read()).decode("utf-8")
+                content = base64.b64encode(raw).decode("utf-8")
             return FileData(
                 filename=filename,
                 content=content,
@@ -222,7 +225,6 @@ class FileService:
                     logger.warning(f"[WARN] Skipping invalid path: {path}")
         buffer.seek(0)
         return buffer.getvalue()  # type: bytes
-
 
     async def is_image(self, filename: str) -> bool:
         mime_type, _ = mimetypes.guess_type(filename)

@@ -1,4 +1,4 @@
-from typing import Any, List, Optional, Sequence
+from typing import Any, List, Optional, Sequence, Literal, overload
 
 from src.app_types.general import ID
 from src.core.logging import logger
@@ -77,6 +77,33 @@ class QuestionManager:
                 )
                 await self._rollback_created_question(question, saved_files)
             raise QuestionCreationError("database or storage error", str(e))
+
+    @overload
+    async def get_question(
+        self,
+        qid: ID,
+        method: Literal["default"] = "default",
+    ) -> Question: ...
+
+    @overload
+    async def get_question(
+        self,
+        qid: ID,
+        method: Literal["full"],
+    ) -> QuestionRead: ...
+    
+    async def get_question(
+        self, qid: ID, method: Literal["default", "full"] = "default"
+    ) -> Question | QuestionRead:
+        if method == "default":
+            q = await self.qdb.get_question(qid)
+        elif method == "full":
+            q = await self.qdb.get_question_data(qid)
+        else:
+            raise ValueError("Method {method} is not allowed for method get_question")
+        if not q:
+            raise QuestionNotFoundError(str(qid))
+        return q
 
     async def copy_question(self, qid: ID, storage_base_path: str) -> Question:
         try:

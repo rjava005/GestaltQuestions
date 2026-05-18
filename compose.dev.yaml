@@ -1,28 +1,27 @@
-
-
+name: gestalt_questions_dev
 services:
   gestalt_backend_server:
-    build: 
+    build:
       context: ./backend
       dockerfile: Dockerfile.dev
     depends_on:
       - db
     environment:
-      POSTGRES_URL: postgresql://postgres:password@db:5432/gestalt_db
+      DATABASE_URL: postgresql://postgres:password@db:5432/gestalt_db
     env_file:
-      - ./backend/.env.dev
+      - ./backend/.env.dev.docker
     ports:
       - 8000:8000
     volumes:
-      - ./backend:/app        # mount project allows for reloading
+      - ./backend:/app # mount project allows for reloading
   code_sandbox:
-    build: 
+    build:
       context: ./code_sandbox
       dockerfile: Dockerfile
     ports:
       - 8080:8080
   frontend:
-    build: 
+    build:
       context: ./frontend
       dockerfile: Dockerfile.dev
     env_file:
@@ -30,8 +29,8 @@ services:
     ports:
       - 5173:5173
     volumes:
-      - ./frontend:/app        # mount project allows for reloading
-      - /app/node_modules  
+      - ./frontend:/app # mount project allows for reloading
+      - /app/node_modules
   db:
     image: postgres:18
     container_name: postgres_db
@@ -40,9 +39,9 @@ services:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: password
       POSTGRES_DB: gestalt_db
-    ports: 
+    ports:
       - "5432:5432"
-    volumes: 
+    volumes:
       - postgres_data:/var/lib/postgresql
 
 volumes:

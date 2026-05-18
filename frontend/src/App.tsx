@@ -5,6 +5,7 @@ import { Home, QuestionBuilder, Questions, LoginPage, AccountPage, EditQuestionP
 import { RequireRole } from "./features/Auth";
 import { QuestionsListPage, CreateNewQuestion, QuestionBuilderPlaygroundPage } from "./pages/QuestionBuilder";
 import { GeneralQuestionRender } from "./pages/Questions";
+import StreamChat from "./features/Chat/Chat";
 
 function App() {
   return (
@@ -17,6 +18,7 @@ function App() {
             <Route path="/account" element={<AccountPage />} />
 
             <Route path="/questions" element={<Questions />} />
+
             <Route path="*" element={<Navigate to="/" replace />} />
 
             {/* Non User Specific */}
@@ -31,6 +33,7 @@ function App() {
                 <Route path="questions/new" element={<CreateNewQuestion />} />
                 <Route path="questions/:qid/edit" element={<EditQuestionPage />} />
                 <Route path="playground" element={<QuestionBuilderPlaygroundPage />} />
+                <Route path="chat" element={<StreamChat />} />
               </Route>
             </Route>
           </Route>

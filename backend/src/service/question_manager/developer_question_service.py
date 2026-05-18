@@ -96,7 +96,8 @@ class DeveloperQuestionService:
     ) -> Question:
         """Create a question under the developer profile and assign ownership."""
         profile = await self.developer_access.get_developer_data(user_id)
-        if profile is None:
+        # TODO check this logic
+        if profile is None or profile.storage_path is None:
             logger.info("Creating developer profile for user %s", user_id)
             profile = await self.developer_access.set_developer_data(user_id)
 

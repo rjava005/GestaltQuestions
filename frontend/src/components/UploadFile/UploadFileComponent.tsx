@@ -1,16 +1,7 @@
 import { MdDriveFolderUpload } from "react-icons/md";
 import clsx from "clsx";
-
-// Allowed things to upload
-export type UploadAccept = "images" | "pdf" | "images_pdf" | "any" | "zip";
-
-export const acceptMap: Record<UploadAccept, string> = {
-    images: "image/*",
-    pdf: "application/pdf",
-    images_pdf: "image/*,application/pdf",
-    zip: ".zip,application/zip",
-    any: "*",
-};
+import { type UploadAccept } from "./types";
+import { CiCirclePlus } from "react-icons/ci";
 
 // Some styles
 export const uploadFilesBase =
@@ -49,8 +40,11 @@ type UploadFilesProp = {
     message?: string;
     // Wether we accept multiple files at once
     multiple?: boolean;
+    // Whhat to accept
     accept?: UploadAccept;
 };
+
+
 
 export default function UploadFiles({
     onFilesSelected,
@@ -97,4 +91,38 @@ export default function UploadFiles({
             />
         </div>
     );
+}
+
+
+export function UploadImagesChat({
+    onFilesSelected,
+    multiple = true,
+    accept = "images",
+}: UploadFilesProp) {
+    const handleClick = () => {
+        document.getElementById("file-input")?.click();
+    };
+    return (
+        <>
+            <input
+                type="file"
+                accept={accept}
+                id="file-input"
+                className="sr-only"
+                multiple={multiple}
+                onChange={(e) => {
+                    const files = e.target.files ? Array.from(e.target.files) : [];
+                    onFilesSelected(files);
+                }}
+            />
+
+            <label
+                aria-label="Upload image"
+                className="inline-flex h-9 w-9 cursor-pointer items-center justify-center rounded-md border border-border text-text-muted transition-colors hover:bg-surface-muted hover:text-text"
+            >
+                <CiCirclePlus size={24} onClick={handleClick} />
+            </label>
+        </>
+    );
+
 }

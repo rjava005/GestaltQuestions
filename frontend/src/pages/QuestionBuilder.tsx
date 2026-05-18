@@ -49,7 +49,19 @@ export default function QuestionBuilderPage() {
                     >
                         Component Playground
                     </NavLink>
+                    <NavLink
+                        to="/question_builder/chat"
+                        end
+                        className={({ isActive }) =>
+                            isActive
+                                ? "rounded-md border border-border-strong bg-surface-strong px-3 py-1.5 text-sm"
+                                : "rounded-md border border-border px-3 py-1.5 text-sm text-text-muted hover:text-text"
+                        }
+                    >
+                        Chat
+                    </NavLink>
                 </nav>
+
             </header>
 
             <main className="rounded-lg border border-border bg-surface p-4">

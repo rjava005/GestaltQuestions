@@ -39,7 +39,7 @@ class RuntimePackageConfig(BaseModel):
 
 class QuestionFiles(BaseModel):
     question_html: str
-    solution_html: str
+    solution_html: str | None = None
     files: Dict[str, str]
 
     @classmethod
@@ -50,7 +50,7 @@ class QuestionFiles(BaseModel):
             raise MissingQuestionFileError("Question must include question.html")
         return cls(
             question_html=files["question.html"],
-            solution_html=files.get("solution.html", ""),
+            solution_html=files.get("solution.html", None),
             files=files,
         )
 

@@ -25,5 +25,6 @@ class RuntimeResolutionError(RuntimePrepareError):
 
     pass
 
+
 class MissingQuestionFileError(Exception):
     pass

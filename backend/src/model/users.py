@@ -7,6 +7,7 @@ from .institution import Institution, ValidInstitutions
 
 if TYPE_CHECKING:
     from .question import Question
+    from .thread import Thread
 
 
 class UserRoles(str, Enum):
@@ -98,6 +99,7 @@ class User(SQLModel, table=True):
     developer_profile: Optional["DeveloperProfile"] = Relationship(
         back_populates="user"
     )
+    threads: List["Thread"] = Relationship(back_populates="user")
 
 
 class DeveloperProfile(SQLModel, table=True):

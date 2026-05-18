@@ -139,7 +139,7 @@ export default function QuestionComponentPlayground() {
 
                 <div className="h-[70vh] overflow-hidden rounded-lg border border-border bg-surface">
                     <PanelGroup direction="horizontal">
-                        <Panel defaultSize={30} minSize={20} className="min-w-[250px]">
+                        <Panel defaultSize={30} minSize={20} className="min-w-62.5">
                             <div className="h-full overflow-auto border-r border-border p-4">
                                 <h3 className="text-base font-semibold text-text">{selectedComponent.componentName}</h3>
                                 <p className="mt-1 text-xs font-mono text-text-soft">{selectedComponent.tag}</p>

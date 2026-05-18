@@ -8,6 +8,7 @@ import type {
 export function toQuestionInstanceState(
   res: QuestionRunTimeResponse,
 ): Partial<QuestionInstanceState> {
+  console.log("Raw res", res.files)
   return {
     runInstanceId: String(res.instance),
     questionMeta: res.question_meta ?? null,
@@ -15,6 +16,7 @@ export function toQuestionInstanceState(
     solutionHtml: res.solution_html ?? null,
     logs: res.logs ?? [],
     quizData: res.quiz_data ?? null,
+    files: res.files ?? [],
   };
 }
 
@@ -25,6 +27,7 @@ const initialState: QuestionInstanceState = {
   solutionHtml: null,
   logs: [],
   quizData: null,
+  files: [],
 
   answers: {},
   hasSubmitted: false,

@@ -1,6 +1,6 @@
 // Question Metadata
 import { type QuestionRead } from "../../../types/questionTypes";
-
+import type { FileData } from "../../../types/fileTypes";
 // General Types for the values
 
 export type QuestionValue = string | number | string[] | boolean | null;
@@ -13,6 +13,7 @@ export type QuestionRunTimeResponse = {
   question_html: string;
   solution_html?: string;
   logs?: string[];
+  files?: FileData[];
   quiz_data?: QuizData | null;
 };
 
@@ -24,6 +25,7 @@ export type QuestionInstanceState = {
   solutionHtml: string | null;
   logs: string[];
   quizData: QuizData | null;
+  files?: FileData[];
 
   answers: QuestionAnswerMap;
   hasSubmitted: boolean;

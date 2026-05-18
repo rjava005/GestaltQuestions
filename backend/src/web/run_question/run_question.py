@@ -4,20 +4,29 @@ from fastapi import APIRouter, HTTPException, Query
 from starlette import status
 from typing import List
 from uuid import uuid4, UUID
-from typing import Dict, Union, Optional
+from typing import Dict, Union, Optional, Dict, Any
 from src.model.question_attempt import QuizData
 from src.core.logging import logger
-from src.service.question_packaging.exceptions import MissingQuestionFileError
-from src.service.question_packaging.models import PreparedQuestion
-from src.service.question_packaging.question_package_builder import (
-    QuestionPackageBuilder,
+from src.service.question_runtime.exceptions import MissingQuestionFileError
+from src.service.question_runtime.models import PreparedQuestion
+from src.service.question_runtime.question_runtime import (
+    QuestionRunTime,
 )
+from fastapi import Depends
+from typing import Annotated
 from src.model.question import QuestionRead
 from src.web.dependencies import SettingDependency
 from src.web.question_manager.dependencies import QuestionManagerDependency
 from typing import Literal
 from src.model.question_attempt import QuizData
-from .sandbox_client import execute_sandbox_runtime
+from src.model.files import FileData
+
+
+def get_runtime(app_settings: SettingDependency) -> QuestionRunTime:
+    return QuestionRunTime(base_url=app_settings.SANDBOX_URL)
+
+
+QuestionRuntimeDependency = Annotated[QuestionRunTime, Depends(get_runtime)]
 
 router = APIRouter(
     prefix="/runtime/questions",
@@ -30,6 +39,7 @@ class RenderedQuestionBundle(BaseModel):
     question_meta: QuestionRead
     question_html: str
     solution_html: str | None = None
+    files: List[FileData]
     logs: List[str] | None = None
     quiz_data: Optional[Union[QuizData, Dict]] = None
 
@@ -37,6 +47,7 @@ class RenderedQuestionBundle(BaseModel):
 @router.get("/{qid}", response_model=PreparedQuestion)
 async def get_question_configuration(
     qm: QuestionManagerDependency,
+    qrun: QuestionRuntimeDependency,
     qid: str | UUID,
     language: Literal["javascript", "python"] | None = Query(default=None),
 ) -> PreparedQuestion:
@@ -53,9 +64,7 @@ async def get_question_configuration(
         # Get the question files and prepare
         question_files = await qm.get_question_filedata(qid)
 
-        return QuestionPackageBuilder().build(
-            question_files, question.isAdaptive, language=language
-        )
+        return qrun.build(question_files, question.isAdaptive, language=language)
     except MissingQuestionFileError:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
@@ -69,29 +78,18 @@ async def get_question_configuration(
 async def run_question(
     qm: QuestionManagerDependency,
     qid: str | UUID,
-    app_settings: SettingDependency,
+    qrun: QuestionRuntimeDependency,
     language: Literal["javascript", "python"] | None = Query(default=None),
 ) -> RenderedQuestionBundle:
-    sandbox_url = app_settings.SANDBOX_URL
-    if not sandbox_url:
-        raise HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail="Sandbox URL is not configured.",
-        )
-    # First Check gets question and prepares bundle
-    try:
-        question = await qm.qdb.get_question(qid)
-        if not question:
-            raise HTTPException(
-                status_code=status.HTTP_400_BAD_REQUEST,
-                detail=f"Question {qid} does not exist",
-            )
 
+    # Attempt to resolve the bundle for the question
+    try:
+        # Get the qmeta and the files
+        question_metadata = await qm.get_question(qid, method="full")
         question_files = await qm.get_question_filedata(qid)
-        bundle = QuestionPackageBuilder().build(
-            question_files, question.isAdaptive, language=language
+        bundle = qrun.build(
+            question_files, question_metadata.isAdaptive, language=language
         )
-        question_metadata = await qm.qdb.get_question_data(qid)
     except MissingQuestionFileError:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
@@ -111,10 +109,11 @@ async def run_question(
             question_meta=question_metadata,
             question_html=bundle.question_files.question_html,
             solution_html=bundle.question_files.solution_html,
+            files=question_files,
         )
     else:
         payload = bundle.runtime.model_dump(mode="json")  # type: ignore
-        raw_output = await execute_sandbox_runtime(sandbox_url, payload)
+        raw_output = await qrun.execute(payload)
         output = raw_output.get("output", None)
         logs = raw_output.get("logs", None)
 
@@ -122,12 +121,13 @@ async def run_question(
             bundle.question_files.question_html, output or {}
         )
         formatted_solution = TemplateParser().render(
-            bundle.question_files.solution_html, output or {}
+            bundle.question_files.solution_html or "", output or {}
         )
         return RenderedQuestionBundle(
             question_meta=question_metadata,
             question_html=formatted_question,
             solution_html=formatted_solution,
+            files=question_files,
             logs=logs,
             quiz_data=output,
         )

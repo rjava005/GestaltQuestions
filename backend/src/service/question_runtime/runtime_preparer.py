@@ -11,8 +11,6 @@ from .exceptions import (
     RuntimeResolutionError,
 )
 
-CONFIG_KEY = "config.json"
-
 
 class RuntimePreparer:
     """Resolve a validated runtime execution payload from uploaded files."""
@@ -20,6 +18,7 @@ class RuntimePreparer:
     # ============================================================
     # Public API
     # ============================================================
+    _CONFIG_KEY = "config.json"
 
     def prepare_runtime(
         self, files: Dict[str, str], *, language: Language | None = None
@@ -33,11 +32,11 @@ class RuntimePreparer:
 
         self._validate_files(files)
 
-        raw_config = files.get(CONFIG_KEY)
+        raw_config = files.get(self._CONFIG_KEY)
         if raw_config is None:
             logger.info(
                 "No %s found. Falling back to runtime resolution from files.",
-                CONFIG_KEY,
+                self._CONFIG_KEY,
             )
             return self._build_runtime_without_config(files, language=language)
 
@@ -217,7 +216,7 @@ class RuntimePreparer:
 
     def _parse_package_config(self, raw_config: str | dict) -> RuntimePackageConfig:
         """Parse and validate the runtime package config from config.json."""
-        logger.debug("Parsing runtime package config from %s", CONFIG_KEY)
+        logger.debug("Parsing runtime package config from %s", self._CONFIG_KEY)
 
         try:
             parsed = (
@@ -225,14 +224,14 @@ class RuntimePreparer:
             )
         except json.JSONDecodeError as e:
             raise ConfigurationError(
-                f"Failed to parse '{CONFIG_KEY}' as JSON: {e.msg}"
+                f"Failed to parse '{self._CONFIG_KEY}' as JSON: {e.msg}"
             ) from e
         try:
             package_config = RuntimePackageConfig.model_validate(parsed)
 
         except ValidationError as e:
             raise ConfigurationError(
-                f"'{CONFIG_KEY}' is not a valid runtime package config: {e}"
+                f"'{self._CONFIG_KEY}' is not a valid runtime package config: {e}"
             ) from e
 
         logger.debug("Runtime package config parsed successfully.")

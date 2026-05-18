@@ -1,7 +1,7 @@
 from enum import Enum
 from typing import List, Optional, Sequence, TYPE_CHECKING
 from uuid import UUID, uuid4
-
+from datetime import datetime
 from pydantic import BaseModel, ConfigDict, Field
 from sqlmodel import Field as SQLField, Relationship, SQLModel
 
@@ -134,6 +134,9 @@ class Question(SQLModel, table=True):
     created_by: Optional["DeveloperProfile"] = Relationship(
         back_populates="created_questions"
     )
+
+    created_at: datetime = Field(default_factory=datetime.now)
+    updated_at: datetime = Field(default_factory=datetime.now)
 
 
 class Topic(SQLModel, table=True):
