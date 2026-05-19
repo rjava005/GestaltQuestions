@@ -2,7 +2,7 @@ from typing import List
 
 from src.model.institution import Institution
 from src.model.users import DeveloperProfile, User
-from src.model.question import Question, QuestionTableRow
+from src.model.question import Question, QuestionTableRow, Status
 from sqlmodel import select, join, Session
 from sqlalchemy import func
 
@@ -22,7 +22,7 @@ class QuestionQueryService:
                 DeveloperProfile.user_id,
                 User.email,
                 Institution.name,
-            )  # type: ignore
+            )  # type: ignore  # type: ignore
             .join(DeveloperProfile, DeveloperProfile.id == Question.created_by_id)
             .join(User, User.id == DeveloperProfile.user_id)
             .join(Institution, Institution.id == User.institution_id)
@@ -31,7 +31,10 @@ class QuestionQueryService:
 
         return self._parse_results(results)
 
-    async def filter_questions(self, title: str) -> List[QuestionTableRow]:
+    async def filter_questions(
+        self,
+        title: str,
+    ) -> List[QuestionTableRow]:
         stmt = (
             select(
                 Question.title,
@@ -43,6 +46,7 @@ class QuestionQueryService:
                 User.email,
                 Institution.name,
             )  # type: ignore
+            .where(Question.status == "published")
             .join(DeveloperProfile, DeveloperProfile.id == Question.created_by_id)
             .join(User, User.id == DeveloperProfile.user_id)
             .join(Institution, Institution.id == User.institution_id)

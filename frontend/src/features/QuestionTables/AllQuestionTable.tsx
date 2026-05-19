@@ -53,6 +53,7 @@ export default function AllQuestionTable({
             render: (q) => {
                 const question = q as QuestionAllRow;
                 const isSelected = question.question_id === selectedQuestionId;
+
                 return (
                     <button
                         type="button"
