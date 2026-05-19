@@ -23,7 +23,11 @@ ENV VITE_FIREBASE_MESSAGING_SENDER_ID=$VITE_FIREBASE_MESSAGING_SENDER_ID
 ENV VITE_FIREBASE_APP_ID=$VITE_FIREBASE_APP_ID
 ENV VITE_FIREBASE_MEASUREMENT_ID=$VITE_FIREBASE_MEASUREMENT_ID
 ENV VITE_API_URL=$VITE_API_URL
+<<<<<<< HEAD
 ENV VITE_AI_URL=$ARG VITE_AI_URL
+=======
+ENV VITE_AI_URL=$VITE_AI_URL
+>>>>>>> 0ce290a (fix frontend deploy)
 
 RUN rm -rf /app/*
 COPY ./package*.json ./
@@ -33,11 +37,10 @@ RUN echo "Building frontend with API URL: ${VITE_API_URL}"
 RUN npm run build
 FROM nginx:alpine
 
-# Copy build output from previous stage to Nginx’s static directory
 COPY --from=front-end-build /app/dist /usr/share/nginx/html
 
-# Expose port 80 so you can access it in the browser
+COPY nginx.conf /etc/nginx/conf.d/default.conf
+
 EXPOSE 80
 
-# Nginx runs automatically when container starts
 CMD ["nginx", "-g", "daemon off;"]
