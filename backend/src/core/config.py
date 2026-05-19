@@ -55,6 +55,8 @@ class AppSettings(BaseSettings):
     STORAGE_EMULATOR_HOST: str | None = None
 
     SANDBOX_URL: str | None = None
+    LANGGRAPH_STREAM_URL: str | None = None
+    LANGSMITH_API_KEY: str | None = None
     PROJECT_ROOT: str | Path
 
     @field_validator("BACKEND_CORS_ORIGINS", mode="before")
@@ -103,7 +105,9 @@ class AppSettings(BaseSettings):
                 "FIREBASE_CRED contains invalid JSON payload"
             ) from e
         except Exception as e:
-            raise CredentialConfigError(f"Failed to load firebase credentials: {e}") from e
+            raise CredentialConfigError(
+                f"Failed to load firebase credentials: {e}"
+            ) from e
 
     @model_validator(mode="after")
     def validate_emulators(self):
@@ -112,6 +116,14 @@ class AppSettings(BaseSettings):
 
         if not (self.FIREBASE_AUTH_EMULATOR_HOST or self.STORAGE_EMULATOR_HOST):
             raise EmulatorConfigError(f"Missing emulator config for ENV={self.ENV}")
+
+        return self
+
+    @model_validator(mode="after")
+    def validate_langchain_deployment(self):
+
+        if not (self.LANGGRAPH_STREAM_URL or self.LANGSMITH_API_KEY):
+            raise EmulatorConfigError(f"Missing langchain config ")
 
         return self
 

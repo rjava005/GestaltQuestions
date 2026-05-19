@@ -7,9 +7,17 @@ from starlette import status
 from src.web.user.dependencies import CurrentUser
 from typing import List, Any
 from langgraph_sdk import get_client
+from src.core.config import get_settings
+from dotenv import load_dotenv
+
+load_dotenv()
 router = APIRouter(prefix="/threads", tags=["threads"])
-LANGGRAPH_STREAM_URL = "http://host.docker.internal:2024"
-client = get_client(url=LANGGRAPH_STREAM_URL)
+
+settings = get_settings()
+client = get_client(
+    url=settings.LANGGRAPH_STREAM_URL, api_key=settings.LANGSMITH_API_KEY
+)
+
 
 @router.post("/{thread_id}", response_model=Thread)
 async def create_thread(
@@ -69,7 +77,7 @@ async def get_user_thread_details(
     try:
         data = await client.threads.get(str(thread_id))
         values = data.get("values", {}) if isinstance(data, dict) else {}
-        messages = values.get("messages", []) # type: ignore
+        messages = values.get("messages", [])  # type: ignore
         if isinstance(messages, list):
             langgraph_messages = messages
     except Exception:
