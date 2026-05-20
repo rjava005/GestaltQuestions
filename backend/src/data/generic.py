@@ -124,7 +124,7 @@ def is_relationship(model: Type[SQLModel], attr_name: str) -> bool:
     try:
         prop = inspect(model).get_property(attr_name)
         return isinstance(prop, RelationshipProperty)
-    except Exception as e:
+    except Exception:
         return False
 
 

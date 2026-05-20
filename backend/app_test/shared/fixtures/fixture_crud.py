@@ -1,11 +1,7 @@
 from typing import Literal
 import pytest
-
-
-from src.core import logger
-from src.utils import *
-
-
+import json
+from src.utils.normalization_utils import to_serializable, normalize_content
 
 
 @pytest.fixture
@@ -23,14 +19,13 @@ def retrieve_single_file(client, qid, filename):
     resp = client.get(f"/questions/{qid}/files/{filename}")
     assert resp.status_code == 200, resp.text
     response_data = resp.json()
-    
+
     return normalize_content(response_data)
 
 
 def retrieve_files(client, qid, route_arg: Literal["files", "files_data"]):
     resp = client.get(f"/questions/{qid}/{route_arg}")
     assert resp.status_code == 200, resp.text
-    body = resp.json()
 
 
 # ----------------------------------------------------------------------

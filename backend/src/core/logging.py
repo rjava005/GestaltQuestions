@@ -1,7 +1,6 @@
 import logging
 import os
 import contextvars
-from dotenv import load_dotenv
 
 in_test_ctx = contextvars.ContextVar("in_test", default=False)
 

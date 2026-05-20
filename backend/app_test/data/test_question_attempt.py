@@ -1,4 +1,3 @@
-from app_test.shared.factories import make_submission_attempt, make_question, make_user
 from src.core import logger
 import pytest
 from app_test.shared.mock_data.question_submission import SCENARIOS, ATTEMPTS
@@ -64,7 +63,9 @@ async def test_multiple_attempts(make_submission_attempt, attempt_case):
     ATTEMPTS,
     ids=lambda x: f"quiz={x['quiz_data']}-n={len(x['submissions'])}",
 )
-async def test_get_attempts_by_user(make_submission_attempt, attempt_case, qa_attempt_db):
+async def test_get_attempts_by_user(
+    make_submission_attempt, attempt_case, qa_attempt_db
+):
     quiz_data = attempt_case["quiz_data"]
     submissions = attempt_case["submissions"]
     user = None
@@ -116,7 +117,7 @@ async def test_get_attempts_by_question(
 async def test_student_question_scenarios(
     scenario, make_user, make_question, make_submission_attempt, qa_attempt_db
 ):
-    logger.debug(f"\n{'*'*25}\n")
+    logger.debug(f"\n{'*' * 25}\n")
     logger.debug("This is the scenario\n %s", scenario)
 
     # Unpack the data

@@ -11,21 +11,17 @@ import base64
 # --- Third-Party ---
 from fastapi import HTTPException, UploadFile
 from starlette import status
+from src.core.logging import logger
+from src.model.files import SuccessFileServiceResponse
 
-# --- Internal ---
-from src.core import logger
-
-from .utils import safe_dir_name
 from . import (
     MAX_FILE_SIZE_MB,
     ALLOWED_EXTENSIONS,
     ALLOWED_MIME_TYPES,
     ALLOWED_IMAGE_EXTENSIONS,
     CONTENT_TYPE_MAPPING,
-    logger,
     FileData,
     FILE,
-    SuccessFileServiceResponse,
 )
 
 

@@ -11,7 +11,6 @@ from .base import Storage
 
 
 class FbStorage(Storage):
-
     def __init__(
         self,
         bucket,
@@ -113,7 +112,7 @@ class FbStorage(Storage):
         return results
 
     def download(self, target) -> bytes:
-        raise NotImplemented("Download for firebase not implemented")
+        raise NotImplementedError("Download for firebase not implemented")
         key = self._to_blob_key(target)
         blob = self.bucket.blob(key)
         if not blob.exists():
@@ -167,9 +166,7 @@ class FbStorage(Storage):
 
                 # Use native GCS copy (faster, server-side)
                 # new_blob = self.bucket.cop(blob, self.bucket, new_name)
-                new_blob = self.bucket.blob(new_name).upload_from_string(
-                    blob.download_as_bytes()
-                )
+                self.bucket.blob(new_name).upload_from_string(blob.download_as_bytes())
                 # Delete original
                 blob.delete()
 

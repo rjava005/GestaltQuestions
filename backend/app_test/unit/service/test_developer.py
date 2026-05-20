@@ -1,7 +1,6 @@
 from types import SimpleNamespace
 from unittest.mock import AsyncMock, MagicMock
 import pytest
-from src.core.logging import logger
 from src.model.users import DeveloperProfile, UserRoles
 from src.service.question_manager.developer_question_service import (
     AccessDecision,

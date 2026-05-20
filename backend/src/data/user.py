@@ -64,7 +64,7 @@ class UserDB:
         try:
             stmt = select(User).offset(offset).limit(limit)
             return self.session.exec(stmt).all()
-        except Exception as e:
+        except Exception:
             self.session.rollback()
             error_message = "[DB] failed to get all users"
             raise Exception(error_message)
@@ -72,7 +72,7 @@ class UserDB:
     async def delete_user(self, id: ID) -> bool:
         user = await self.get_user(id)
         if not user:
-            logger.warning(f"DB User not found cannot delete")
+            logger.warning("DB User not found cannot delete")
             return False
         try:
             self.session.delete(user)

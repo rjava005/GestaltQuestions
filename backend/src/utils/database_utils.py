@@ -1,16 +1,15 @@
 # Stdlib
-from typing import TypeVar, Union
+from typing import Union
 from uuid import UUID
 
 # Third-party
 from sqlalchemy import String, cast, func
-from sqlmodel import SQLModel
 
 # Local
 from datetime import datetime
 
 
-def convert_uuid(value: Union[str, UUID,None]) -> UUID:
+def convert_uuid(value: Union[str, UUID, None]) -> UUID:
     if isinstance(value, UUID):
         return value
 

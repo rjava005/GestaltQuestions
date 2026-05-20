@@ -1,6 +1,5 @@
 import asyncio
-import src.data
-from typing import Any, Sequence, List
+from typing import Sequence, List
 from pydantic import BaseModel
 from fastapi.responses import Response
 from fastapi import APIRouter, HTTPException, UploadFile

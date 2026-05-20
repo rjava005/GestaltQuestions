@@ -4,15 +4,10 @@ from typing import List
 import firebase_admin
 import pytest
 from app_test import FbStorage, LocalStorage, QuestionManager, initialize_firebase_app
-from app_test.shared.mock_data import (
-    QUESTIONS,
-)
 from src.model.files import FileData
 from src.core import get_settings
 
 # Keep these imports for the factory
-from app_test.shared.factories.storage_factory import create_dir_factory
-from app_test.shared.factories.question_manager_factory import make_question_qm
 
 
 settings = get_settings()
@@ -20,9 +15,9 @@ settings = get_settings()
 
 @pytest.fixture(scope="session")
 def firebase_app_for_tests():
-    assert os.environ.get(
-        "FIREBASE_AUTH_EMULATOR_HOST"
-    ), "Missing FIREBASE_AUTH_EMULATOR_HOST"
+    assert os.environ.get("FIREBASE_AUTH_EMULATOR_HOST"), (
+        "Missing FIREBASE_AUTH_EMULATOR_HOST"
+    )
     assert os.environ.get("STORAGE_EMULATOR_HOST"), "Missing STORAGE_EMULATOR_HOST"
 
     app = initialize_firebase_app()

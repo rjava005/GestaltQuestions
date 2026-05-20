@@ -1,6 +1,5 @@
 import base64
 from pathlib import Path
-from typing import Optional, Any
 
 
 def encode_image(image_path: str | Path):
@@ -14,7 +13,7 @@ def handle_image_data(data) -> bytes:
             image_data = data[0]
             return base64.b64decode(image_data)
         else:
-            raise NotImplemented
+            raise NotImplementedError
     except Exception as e:
         raise e
 
@@ -33,5 +32,3 @@ def write_image_data(image_bytes: bytes, folder_path: str | Path, filename: str)
         return save_path.as_posix()
     except Exception as e:
         raise ValueError(f"Could not save image {str(e)}")
-
-

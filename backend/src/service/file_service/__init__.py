@@ -1,6 +1,5 @@
-from src.model.files import FileData,SuccessFileServiceResponse
+from src.model.files import FileData
 from fastapi import UploadFile
-from src.core.logging import logger
 
 FILE = str | UploadFile | FileData
 

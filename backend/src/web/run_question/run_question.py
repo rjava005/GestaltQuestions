@@ -4,7 +4,7 @@ from fastapi import APIRouter, HTTPException, Query
 from starlette import status
 from typing import List
 from uuid import uuid4, UUID
-from typing import Dict, Union, Optional, Dict, Any
+from typing import Union, Optional, Dict
 from src.model.question_attempt import QuizData
 from src.core.logging import logger
 from src.service.question_runtime.exceptions import MissingQuestionFileError
@@ -18,7 +18,6 @@ from src.model.question import QuestionRead
 from src.web.dependencies import SettingDependency
 from src.web.question_manager.dependencies import QuestionManagerDependency
 from typing import Literal
-from src.model.question_attempt import QuizData
 from src.model.files import FileData
 
 
@@ -52,7 +51,6 @@ async def get_question_configuration(
     language: Literal["javascript", "python"] | None = Query(default=None),
 ) -> PreparedQuestion:
     try:
-
         # Ensure question exist
         question = await qm.qdb.get_question(qid)
         if not question:

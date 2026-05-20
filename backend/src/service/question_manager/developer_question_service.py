@@ -20,8 +20,6 @@ from src.service.user.developer_access import (
     DeveloperAccessService,
 )
 import json
-from sqlmodel import select
-from src.model.question import Question
 
 
 @dataclass
@@ -209,7 +207,9 @@ class DeveloperQuestionService:
         return await self.qmng.delete_question(qid)
 
     # Filtering
-    async def filter_questions(self, user_id: ID, filter: QuestionFilter) -> Sequence[QuestionRead]:
+    async def filter_questions(
+        self, user_id: ID, filter: QuestionFilter
+    ) -> Sequence[QuestionRead]:
         try:
             profile = await self.developer_access.get_developer_data(user_id)
             assert profile
@@ -224,7 +224,6 @@ class DeveloperQuestionService:
         self, user_id: ID, qid: ID
     ) -> Dict[str, bytes | bytearray]:
         try:
-            q = await self.get_question(user_id, qid)
             qfiles = await self.get_question_filedata(user_id, qid)
             file_payload: Dict[str, bytes | bytearray] = dict()
             for f in qfiles:

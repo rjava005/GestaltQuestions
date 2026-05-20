@@ -9,8 +9,8 @@ from src.core.logging import logger
 
 from .base import Storage
 
-class LocalStorage(Storage):
 
+class LocalStorage(Storage):
     def __init__(self):
         self.set_storage_type()
 
@@ -59,7 +59,7 @@ class LocalStorage(Storage):
         return storage_path
 
     def download(self, target: str) -> bytes:
-        raise NotImplemented("Cannot download question not implemented")
+        raise NotImplementedError("Cannot download question not implemented")
 
     def delete(self, target: str | Path | Blob) -> None:
         storage_path = self._to_storage_path(target)

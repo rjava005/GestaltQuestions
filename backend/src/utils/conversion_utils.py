@@ -1,6 +1,6 @@
 # --- Standard Library ---
 import json
-from typing import Any, Iterable, List, Optional, Sequence, Type
+from typing import Any, Iterable, Optional, Type
 
 # --- Third-Party ---
 from pydantic import BaseModel
@@ -75,8 +75,3 @@ def serialized_to_dict(data: Any, obj: Type[BaseModel]) -> dict:
     if isinstance(data, dict):
         return data
     raise ValueError(f"Could not normalize data received {data} of type {type(data)}")
-
-
-
-
-    

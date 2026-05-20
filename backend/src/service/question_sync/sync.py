@@ -8,10 +8,9 @@ from typing import Literal, Sequence, Tuple, Optional, List
 from pydantic import ValidationError
 
 
-from src.core import logger
 from src.core.logging import logger
-from src.data.question import QuestionDB, QuestionData
-from src.model.question import Question
+from src.data.question import QuestionDB
+from src.model.question import Question, QuestionRead
 from src.service.question_sync.models import (
     SyncMetrics,
     SyncSetup,
@@ -129,7 +128,7 @@ class QuestionSyncNew(SyncBase):
         # Try to validate the data with the question data
         try:
             metadata = json.loads(uq.metadata)
-            validated = QuestionData.model_validate(metadata)
+            validated = QuestionRead.model_validate(metadata)
         except json.JSONDecodeError as e:
             detail = f"Invalid metadata JSON for `{uq.question_name or 'unknown question'}`: {e}"
             logger.error(detail)
@@ -293,7 +292,10 @@ class QuestionSyncNew(SyncBase):
             )
 
         prune_status = await asyncio.gather(
-            *[self.prune_single(q, storage_mode=storage_mode, target=target) for q in all_questions]  # type: ignore[arg-type]
+            *[
+                self.prune_single(q, storage_mode=storage_mode, target=target)
+                for q in all_questions
+            ]  # type: ignore[arg-type]
         )
 
         categorized = defaultdict(list)

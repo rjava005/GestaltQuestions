@@ -2,11 +2,11 @@ from fastapi import APIRouter, HTTPException
 from starlette import status
 from typing import Sequence
 from src.model.question import Question, QuestionFilter
-from fastapi import APIRouter, HTTPException
 from src.web.dependencies import QuestionDBDependency, QuestionQueryDependency
 from src.app_types.general import ID
-from src.model.question import QuestionRead, QuestionTableRow, QuestionFilter
+from src.model.question import QuestionRead, QuestionTableRow
 from src.core.logging import logger
+
 router = APIRouter(
     prefix="/questions",
     tags=[

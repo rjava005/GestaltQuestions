@@ -3,7 +3,7 @@ from typing import List
 from src.model.institution import Institution
 from src.model.users import DeveloperProfile, User
 from src.model.question import Question, QuestionTableRow
-from sqlmodel import select, join, Session
+from sqlmodel import select, Session
 from sqlalchemy import func
 
 

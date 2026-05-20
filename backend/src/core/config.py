@@ -123,7 +123,7 @@ class AppSettings(BaseSettings):
     def validate_langchain_deployment(self):
 
         if not (self.LANGGRAPH_STREAM_URL or self.LANGSMITH_API_KEY):
-            raise EmulatorConfigError(f"Missing langchain config ")
+            raise EmulatorConfigError("Missing langchain config ")
 
         return self
 
@@ -172,7 +172,7 @@ def get_settings_pretty_print(mode: Literal["str", "json"] = "json") -> str:
     if mode == "str":
         message = ""
         for key, value in safe_settings.items():
-            message += f"{key.upper()}\n{value}\n{'*'*50}\n"
+            message += f"{key.upper()}\n{value}\n{'*' * 50}\n"
     elif mode == "json":
         message = json.dumps(safe_settings, indent=2)
 

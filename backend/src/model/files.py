@@ -6,7 +6,7 @@ from uuid import UUID, uuid4
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
-    from .users import User
+    pass
 
 
 class FileData(BaseModel):

@@ -1,5 +1,5 @@
 import asyncio
-from typing import Any, Sequence
+from typing import Sequence
 
 from sqlalchemy import or_
 from sqlmodel import Session, select

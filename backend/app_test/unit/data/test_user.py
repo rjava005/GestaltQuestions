@@ -15,7 +15,6 @@ def make_user(user_db: UserDB):
             "last_name": "Bermudez",
             "username": "luci123",
             "email": "luci123@email.com",
-            "username": None,
             "password": "1234",
         }
 

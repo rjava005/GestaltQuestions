@@ -11,7 +11,6 @@ from src.core import logger
 from sqlmodel import Session
 
 # Local application imports
-import src.data
 from src.web import ALL_ROUTES
 from src.core import get_settings, create_db_and_tables
 from src.service.user.user_manager import RoleDB
@@ -38,6 +37,7 @@ async def on_startup(app: FastAPI):
         yield
     except Exception as e:
         raise ValueError(f"Failed to initialize app {e}")
+
 
 def add_routes(app: FastAPI, routes: list[APIRouter] = ALL_ROUTES):
     for r in routes:

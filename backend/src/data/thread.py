@@ -3,10 +3,7 @@ from uuid import UUID
 
 from sqlmodel import Session, select
 from sqlalchemy.exc import SQLAlchemyError
-from uuid import UUID
 
-from sqlmodel import Session, select
-from sqlalchemy.exc import SQLAlchemyError
 from src.model.thread import Thread, Message
 from src.core.logging import logger
 from src.utils import convert_uuid
@@ -51,7 +48,9 @@ class ThreadDB:
             logger.error(message)
             raise ValueError(message)
 
-    async def get_thread_for_user(self, user_id: UUID | str, thread_id: UUID | str) -> Thread:
+    async def get_thread_for_user(
+        self, user_id: UUID | str, thread_id: UUID | str
+    ) -> Thread:
         try:
             stmt = select(Thread).where(
                 Thread.id == convert_uuid(thread_id),
@@ -114,7 +113,6 @@ class MessageDB:
         content: List[Dict[str, Any]],
     ) -> Message:
         try:
-
             msg_orm = Message(
                 thread_id=convert_uuid(thread_id),
                 role=role,

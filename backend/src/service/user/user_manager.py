@@ -127,7 +127,7 @@ class UserManager:
                 roles=[r.name for r in user_roles],
                 institution=institution.name if institution else None,
             )
-        except Exception as e:
+        except Exception:
             raise ValueError("Failed to get user data")
 
     async def get_user_role(self, id: ID) -> List[Role]:

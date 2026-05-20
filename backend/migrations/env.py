@@ -4,9 +4,18 @@ from sqlalchemy import pool
 from sqlmodel import SQLModel
 from alembic import context
 
-from src.model import * # Import all the models directly
+from src.model.institution import Institution
+from src.model.question import (
+    Question,
+    Topic,
+    QuestionType,
+    QuestionTopicLink,
+    QuestionQTypeLink,
+)
+from src.model.question_attempt import QuestionAttempt
+from src.model.thread import Thread, Message
+from src.model.users import User, DeveloperProfile, UserRoleLink
 from src.core.config import get_settings
-
 
 
 # this is the Alembic Config object, which provides

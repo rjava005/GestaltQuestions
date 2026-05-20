@@ -8,10 +8,8 @@ from src.core.config import AppSettings, get_settings
 from src.data.question import QuestionDB
 from src.service.storage.firebase_storage import FbStorage
 from src.service.storage.local_storage import LocalStorage
-from src.service.question_manager.question_manager import QuestionManager
 from src.service.storage.local_storage import Storage
 from src.app_types.general import STORAGE_TYPE
-from src.data.institution import InstitutionDB
 from src.service.question_query_service.question_query_service import (
     QuestionQueryService,
 )

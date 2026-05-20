@@ -8,15 +8,6 @@ from app_test import FbStorage, LocalStorage, QuestionManager, initialize_fireba
 from fastapi import FastAPI
 from fastapi.testclient import TestClient
 
-from app_test.shared.factories import (
-    make_bad_question_web,
-    make_delete_question,
-    make_question_web,
-    make_retrieve_question,
-    make_retrieve_question_full,
-    make_question_with_files,
-    make_upload_files_to_question,
-)
 from app_test.shared.mock_data import QUESTIONS
 
 from src.core import get_session, get_settings
@@ -26,7 +17,7 @@ from src.web.dependencies import (
     get_question_manager,
     get_storage_manager,
     get_storage_type,
-    get_local_base_path
+    get_local_base_path,
 )
 
 
@@ -35,9 +26,9 @@ settings = get_settings()
 
 @pytest.fixture(scope="session")
 def firebase_app_for_tests():
-    assert os.environ.get(
-        "FIREBASE_AUTH_EMULATOR_HOST"
-    ), "Missing FIREBASE_AUTH_EMULATOR_HOST"
+    assert os.environ.get("FIREBASE_AUTH_EMULATOR_HOST"), (
+        "Missing FIREBASE_AUTH_EMULATOR_HOST"
+    )
     assert os.environ.get("STORAGE_EMULATOR_HOST"), "Missing STORAGE_EMULATOR_HOST"
 
     app = initialize_firebase_app()
@@ -92,12 +83,7 @@ async def on_startup_test(app: FastAPI):
 
 
 @pytest.fixture(scope="function")
-def api_client(
-    db_session,
-    question_manager,
-    storage,
-    tmp_path
-):
+def api_client(db_session, question_manager, storage, tmp_path):
     """
     Provides a FastAPI TestClient with dependency overrides for DB, storage,
     question manager, and resource service.
@@ -117,9 +103,9 @@ def api_client(
 
     async def override_storage_mode():
         yield storage.get_storage_type()
-        
+
     async def override_local_base_path():
-        yield (tmp_path/"test_questions").as_posix()
+        yield (tmp_path / "test_questions").as_posix()
 
     app.dependency_overrides[get_session] = override_get_db
     app.dependency_overrides[get_question_manager] = override_get_question_manager

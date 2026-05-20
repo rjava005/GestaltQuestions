@@ -4,14 +4,10 @@ from typing import Dict
 from pathlib import PurePosixPath, Path
 from typing import Optional
 from .utils import safe_dir_name
-import io
-import zipfile
-from pathlib import Path, PurePosixPath
 
 from fastapi import UploadFile
 
 from src.service.storage.base import Storage
-from src.service.file_service.utils import safe_dir_name
 
 
 def extract_zip_files(content: bytes) -> Dict[str, bytes]:

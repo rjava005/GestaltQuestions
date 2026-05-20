@@ -1,14 +1,11 @@
 import re
-from dataclasses import dataclass, field
-from typing import Any, Callable, Mapping, Pattern, Dict, Any, Tuple, Optional
-from typing import List
+from dataclasses import dataclass
+from typing import Callable, Dict, Any, Tuple, Optional
 
 
 @dataclass
 class TemplateParserConfig:
-    pattern: str = (
-        r"\{\{\s*((?:params|correct_answers)\.[a-zA-Z_]\w*(?:\.[a-zA-Z_]\w*)*)\s*\}\}"  ## Finds any {{params.value}} or {{correct_answers.value}} and even nested {{params.value.nested}}
-    )
+    pattern: str = r"\{\{\s*((?:params|correct_answers)\.[a-zA-Z_]\w*(?:\.[a-zA-Z_]\w*)*)\s*\}\}"  ## Finds any {{params.value}} or {{correct_answers.value}} and even nested {{params.value.nested}}
     strict: bool = False  # raise on missing key
     keep_unknown: bool = True  # keep token if missing (if not strict)
     stringify: Callable[[Any], str] = str  # custom value formatter
