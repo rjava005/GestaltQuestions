@@ -10,8 +10,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.routing import APIRouter
 from sqlmodel import Session
 
-from src.core import create_db_and_tables, get_settings, logger
-from src.core.firebase import initialize_firebase_app
+from src.core import create_db_and_tables, get_settings, logger, initialize_firebase_app
 from src.data.institution import InstitutionDB
 from src.service.user.user_manager import RoleDB
 

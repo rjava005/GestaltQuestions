@@ -8,6 +8,7 @@ from src.core import get_settings, logger
 from src.core.exceptions import FirebaseInitializationError, MissingConfigError
 
 app_settings = get_settings()
+
 if app_settings.FIREBASE_AUTH_EMULATOR_HOST:
     os.environ["FIREBASE_AUTH_EMULATOR_HOST"] = app_settings.FIREBASE_AUTH_EMULATOR_HOST
 if app_settings.STORAGE_EMULATOR_HOST:

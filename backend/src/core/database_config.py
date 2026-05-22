@@ -9,7 +9,8 @@ from src.core.exceptions import (
     DatabaseInitializationError,
     MissingConfigError,
 )
-from src.core.logging import get_settings, logger
+from .logging import logger
+from .config import get_settings
 
 app_settings = get_settings()
 

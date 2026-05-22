@@ -14,9 +14,9 @@ settings = get_settings()
 
 @pytest.fixture(scope="session")
 def firebase_app_for_tests():
-    assert os.environ.get("FIREBASE_AUTH_EMULATOR_HOST"), (
-        "Missing FIREBASE_AUTH_EMULATOR_HOST"
-    )
+    assert os.environ.get(
+        "FIREBASE_AUTH_EMULATOR_HOST"
+    ), "Missing FIREBASE_AUTH_EMULATOR_HOST"
     assert os.environ.get("STORAGE_EMULATOR_HOST"), "Missing STORAGE_EMULATOR_HOST"
 
     app = initialize_firebase_app()

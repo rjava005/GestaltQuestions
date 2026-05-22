@@ -6,6 +6,9 @@ from pydantic import BaseModel
 from sqlalchemy import Column
 from sqlalchemy.dialects.postgresql import JSONB
 from sqlmodel import Field, Relationship, SQLModel
+from sqlalchemy import JSON
+
+JSONType = JSON().with_variant(JSONB, "postgresql")
 
 if TYPE_CHECKING:
     from .users import User
@@ -36,7 +39,7 @@ class Message(SQLModel, table=True):
 
     thread_id: UUID = Field(foreign_key="thread.id")
     role: str
-    content: list[dict[str, Any]] = Field(sa_column=Column(JSONB))
+    content: list[dict[str, Any]] = Field(sa_column=Column(JSONType))
     created_at: datetime = Field(default_factory=datetime.now)
 
     thread: "Thread" = Relationship(back_populates="messages")

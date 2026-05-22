@@ -54,3 +54,16 @@ class FirebaseInitializationError(FirebaseError):
 
 class FirebaseCredentialError(FirebaseError):
     """Raised when Firebase credentials cannot be loaded/validated."""
+
+
+# Langchain Erroors
+class LangchainError(GestaltCoreError):
+    """Base exception for LangchainError-related failures."""
+
+
+class MissingLangchainAPIKey(LangchainError):
+    """raise when api key is missing"""
+
+
+class MissingStreamURl(LangchainError):
+    """raise when stream url is none"""
