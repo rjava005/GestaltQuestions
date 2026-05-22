@@ -1,14 +1,10 @@
 import pytest
-from sqlmodel import Session
 
 from app_test.unit.shared import USERS
 from src.model.institution import ValidInstitutions
-from src.model.users import Role, User, UserCreate, UserRoles
+from src.model.users import User, UserCreate, UserRoles
 from src.service.user import user_manager as user_manager_module
 from src.service.user.user_manager import UserManager
-
-
-
 
 
 @pytest.fixture

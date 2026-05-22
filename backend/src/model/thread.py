@@ -3,10 +3,9 @@ from typing import TYPE_CHECKING, Any
 from uuid import UUID, uuid4
 
 from pydantic import BaseModel
-from sqlalchemy import Column
+from sqlalchemy import JSON, Column
 from sqlalchemy.dialects.postgresql import JSONB
 from sqlmodel import Field, Relationship, SQLModel
-from sqlalchemy import JSON
 
 JSONType = JSON().with_variant(JSONB, "postgresql")
 

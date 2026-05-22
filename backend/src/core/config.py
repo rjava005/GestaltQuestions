@@ -4,7 +4,7 @@ from collections.abc import Sequence
 from enum import StrEnum
 from functools import lru_cache
 from pathlib import Path
-from typing import Literal, Dict
+from typing import Literal
 
 from dotenv import load_dotenv
 from pydantic import AliasChoices, Field, field_validator, model_validator
@@ -31,7 +31,7 @@ class Environment(StrEnum):
 
 
 APP_ENV = os.getenv("APP_ENV", "dev").lower()
-ENV_FILES: Dict[str, str] = {
+ENV_FILES: dict[str, str] = {
     "dev": ".env.dev",
     "testing": ".env.test",
     "production": ".env.production",
@@ -131,11 +131,10 @@ class AppSettings(BaseSettings):
     @model_validator(mode="after")
     def validate_langchain_deployment(self):
         # Checks based on production
-        if self.ENV == "production":
-            if not self.LANGSMITH_API_KEY:
-                raise MissingLangchainAPIKey(
-                    "LANGSMITH_API_KEY is required when ENV=production."
-                )
+        if self.ENV == "production" and not self.LANGSMITH_API_KEY:
+            raise MissingLangchainAPIKey(
+                "LANGSMITH_API_KEY is required when ENV=production."
+            )
         if not self.LANGGRAPH_STREAM_URL:
             raise MissingStreamURl(
                 f"LANGGRAPH_STREAM_URL is required but missing (ENV={self.ENV})."

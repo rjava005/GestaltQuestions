@@ -8,6 +8,10 @@ from fastapi import UploadFile
 
 from src.core.logging import logger
 
+from . import (
+    ALLOWED_IMAGE_EXTENSIONS,
+    FileData,
+)
 from .exceptions import (
     FileContentDecodeError,
     FileConverterError,
@@ -15,10 +19,6 @@ from .exceptions import (
     FileTooLargeError,
     InvalidUploadFileError,
     UnsupportedFileInputError,
-)
-from . import (
-    ALLOWED_IMAGE_EXTENSIONS,
-    FileData,
 )
 
 FILE = str | UploadFile | FileData

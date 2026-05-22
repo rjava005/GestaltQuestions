@@ -6,13 +6,12 @@ import firebase_admin
 import pytest
 from fastapi import FastAPI
 from fastapi.testclient import TestClient
-from src.service.storage import FbStorage, LocalStorage
-from src.service.question_manager import QuestionManager
-from src.core import initialize_firebase_app, get_session
 
-from src.core import get_session, get_settings
+from src.core import get_session, get_settings, initialize_firebase_app
 from src.main import get_application
 from src.model.files import FileData
+from src.service.question_manager import QuestionManager
+from src.service.storage import FbStorage, LocalStorage
 from src.web.dependencies import (
     get_local_base_path,
     get_storage_manager,
