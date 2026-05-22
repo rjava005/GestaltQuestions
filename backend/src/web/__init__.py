@@ -11,4 +11,14 @@ from src.web.user.developer import router as user_dev_router
 from src.web.user.health import router as user_health_route
 from src.web.user.user import router as user_router
 
-ALL_ROUTES = [user_router, user_health_route, user_dev_router, developer_question_router, qrunner_router, agent_router, qcrud_router, chat_router, *general_routes]
+ALL_ROUTES = [
+    user_router,
+    user_health_route,
+    user_dev_router,
+    developer_question_router,
+    qrunner_router,
+    agent_router,
+    qcrud_router,
+    chat_router,
+    *general_routes,
+]

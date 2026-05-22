@@ -11,6 +11,7 @@ from src.service.user.user_manager import UserManager
 def seed_institution(institution_db):
     async def _seed(institution: ValidInstitutions = ValidInstitutions.CPP):
         return await institution_db.create_institution(institution)
+
     return _seed
 
 

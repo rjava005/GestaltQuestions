@@ -136,7 +136,9 @@ class QuestionManager:
         except QuestionManagerException:
             raise
         except Exception as e:
-            raise QuestionCopyFailure(reason="Failed to copy question ", details=str(e)) from e
+            raise QuestionCopyFailure(
+                reason="Failed to copy question ", details=str(e)
+            ) from e
 
     async def update_question_meta(
         self, id: ID, update: QuestionUpdate

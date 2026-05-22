@@ -61,7 +61,9 @@ def test_get_question_data_all_not_found(api_client) -> None:
 
 
 @pytest.mark.parametrize("payload", list(QUESTIONS))
-def test_get_question_all_data(make_question_web, payload, make_retrieve_question_full) -> None:
+def test_get_question_all_data(
+    make_question_web, payload, make_retrieve_question_full
+) -> None:
     resp = make_question_web(**payload)
     qid = Question.model_validate(resp.json()).id
     retrieved = make_retrieve_question_full(qid)
@@ -70,7 +72,9 @@ def test_get_question_all_data(make_question_web, payload, make_retrieve_questio
     assert qretrieved
 
 
-def test_qet_all_questions(api_client, make_question_web, multiple_question_payloads) -> None:
+def test_qet_all_questions(
+    api_client, make_question_web, multiple_question_payloads
+) -> None:
     for q in multiple_question_payloads:
         make_question_web(**q)
     offset, limit = 0, 100

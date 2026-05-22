@@ -9,5 +9,5 @@ __all__ = [
     "get_session",
     "get_settings",
     "initialize_firebase_app",
-    "logger"
+    "logger",
 ]

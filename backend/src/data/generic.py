@@ -108,7 +108,9 @@ def get_all_model_relationships(model: type[SQLModel]) -> dict[str, type[SQLMode
 
 
 def get_all_model_relationship_data(
-    model: SQLModel, base_model: type[SQLModel], excluded_relationship: list[str] | None = None
+    model: SQLModel,
+    base_model: type[SQLModel],
+    excluded_relationship: list[str] | None = None,
 ) -> dict[str, Any]:
     if excluded_relationship is None:
         excluded_relationship = []

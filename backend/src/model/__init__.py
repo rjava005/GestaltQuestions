@@ -1,4 +1,3 @@
-
 from .institution import Institution, ValidInstitutions
 from .question import (
     Question,

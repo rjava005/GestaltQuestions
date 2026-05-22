@@ -37,7 +37,9 @@ async def test_user_create(make_user, user_data: dict[str, str]) -> None:
 
 @pytest.mark.asyncio
 @pytest.mark.parametrize("user_data", INVALID_USERS)
-async def test_user_create_invalid_data_raises(make_user, user_data: dict[str, str]) -> None:
+async def test_user_create_invalid_data_raises(
+    make_user, user_data: dict[str, str]
+) -> None:
     with pytest.raises(ValidationError):
         await make_user(**user_data)
 

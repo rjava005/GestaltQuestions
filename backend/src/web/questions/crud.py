@@ -40,7 +40,9 @@ async def get_question(qid: ID, qdb: QuestionDBDependency) -> Question:
             )
         return question
     except Exception as e:
-        raise HTTPException(status_code=404, detail=f"Failed to get question {e}") from e
+        raise HTTPException(
+            status_code=404, detail=f"Failed to get question {e}"
+        ) from e
 
 
 @router.get("/{offset:int}/{limit:int}")

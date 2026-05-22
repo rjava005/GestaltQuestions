@@ -53,4 +53,3 @@ ALLOWED_IMAGE_EXTENSIONS = {
     "image/jpeg",
     "image/jpg",
 }
-

@@ -25,7 +25,9 @@ class AccessDecision:
 
 
 class DeveloperAccessService:
-    def __init__(self, user_manager: UserManager, storage: Storage, session: Session) -> None:
+    def __init__(
+        self, user_manager: UserManager, storage: Storage, session: Session
+    ) -> None:
         self.user_mng = user_manager
         self.session = session
 

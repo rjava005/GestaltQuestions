@@ -4,7 +4,8 @@ from functools import lru_cache
 import firebase_admin
 from firebase_admin import credentials
 
-from src.core import get_settings, logger
+from .config import get_settings
+from .logging import logger
 from src.core.exceptions import FirebaseInitializationError, MissingConfigError
 
 app_settings = get_settings()

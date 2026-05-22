@@ -263,7 +263,7 @@ async def add_user_inst(
             "Failed to set institution '%s' for user id='%s'",
             payload.institution,
             id,
-        ) 
+        )
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"Failed to set institution for user '{id}': {e}",

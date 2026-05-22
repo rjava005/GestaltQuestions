@@ -34,7 +34,9 @@ async def test_get_institution_by_id(institution_db) -> None:
 
 
 @pytest.mark.asyncio
-async def test_get_institution_with_none_identifier_raises_value_error(institution_db) -> None:
+async def test_get_institution_with_none_identifier_raises_value_error(
+    institution_db,
+) -> None:
     with pytest.raises(ValueError, match="Identifier cannot be None"):
         await institution_db.get_institution(None)
 
