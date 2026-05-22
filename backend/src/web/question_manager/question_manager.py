@@ -15,7 +15,7 @@ from src.model.question import (
     QuestionRead,
     QuestionUpdate,
 )
-from src.service import FileConverter
+from src.service.file_service.file_service import UploadFileDataConverter
 from src.service.file_service.zip_files import download_zip
 from src.web.user.dependencies import CurrentUser
 
@@ -221,7 +221,7 @@ async def upload_files(
     files: list[UploadFile],
 ) -> list[str]:
     try:
-        converter = FileConverter()
+        converter = UploadFileDataConverter()
         file_data = await asyncio.gather(
             *[converter.convert_to_filedata(file) for file in files]
         )

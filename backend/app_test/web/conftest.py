@@ -6,27 +6,28 @@ import firebase_admin
 import pytest
 from fastapi import FastAPI
 from fastapi.testclient import TestClient
+from src.service.storage import FbStorage, LocalStorage
+from src.service.question_manager import QuestionManager
+from src.core import initialize_firebase_app, get_session
 
-from app_test import FbStorage, LocalStorage, QuestionManager, initialize_firebase_app
-from app_test.shared.mock_data import QUESTIONS
 from src.core import get_session, get_settings
 from src.main import get_application
 from src.model.files import FileData
 from src.web.dependencies import (
     get_local_base_path,
-    get_question_manager,
     get_storage_manager,
     get_storage_type,
 )
+from src.web.question_manager.dependencies import get_question_manager
 
 settings = get_settings()
 
 
 @pytest.fixture(scope="session")
 def firebase_app_for_tests():
-    assert os.environ.get("FIREBASE_AUTH_EMULATOR_HOST"), (
-        "Missing FIREBASE_AUTH_EMULATOR_HOST"
-    )
+    assert os.environ.get(
+        "FIREBASE_AUTH_EMULATOR_HOST"
+    ), "Missing FIREBASE_AUTH_EMULATOR_HOST"
     assert os.environ.get("STORAGE_EMULATOR_HOST"), "Missing STORAGE_EMULATOR_HOST"
 
     app = initialize_firebase_app()
@@ -60,16 +61,6 @@ def clean_cloud(storage) -> None:
 @pytest.fixture
 def question_manager(storage, question_db):
     return QuestionManager(question_db, storage)
-
-
-@pytest.fixture
-def question_payload():
-    return QUESTIONS
-
-
-@pytest.fixture
-def multiple_question_payloads():
-    return QUESTIONS
 
 
 @asynccontextmanager

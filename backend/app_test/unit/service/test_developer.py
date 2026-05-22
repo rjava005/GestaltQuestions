@@ -44,7 +44,8 @@ async def test_has_developer_role_returns_false_when_user_missing(
 ) -> None:
     mocked_user_manager.get_user.return_value = None
     result = await developer_service.has_developer_role("user-123")
-    assert result == AccessDecision(False, "User 'user-123' not found")
+    assert result.allowed is False
+    assert result.reason == "User 'user-123' not found"
 
 
 @pytest.mark.asyncio

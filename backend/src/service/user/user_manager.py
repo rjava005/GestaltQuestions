@@ -17,7 +17,9 @@ class UserNotFound(Exception):
 
 
 class UserManager:
-    def __init__(self, udb: UserDB, rm: RoleDB, inst: InstitutionDB, session: Session) -> None:
+    def __init__(
+        self, udb: UserDB, rm: RoleDB, inst: InstitutionDB, session: Session
+    ) -> None:
         """Initialize user and role repositories for the provided session."""
         self.udb = udb
         self.rm = rm
@@ -27,7 +29,7 @@ class UserManager:
     async def create_user(
         self,
         data: UserCreate,
-        role: UserRoles | None = UserRoles.DEVELOPER,
+        role: UserRoles | None = UserRoles.STUDENT,
         institution: ValidInstitutions | None = None,
     ) -> User:
         """Create a user and optionally attach a role."""

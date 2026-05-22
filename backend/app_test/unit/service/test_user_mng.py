@@ -8,22 +8,13 @@ from src.service.user import user_manager as user_manager_module
 from src.service.user.user_manager import UserManager
 
 
-@pytest.fixture
-def seed_roles(db_session: Session):
-    roles = [
-        Role(name=UserRoles.STUDENT.value),
-        Role(name=UserRoles.ADMIN.value),
-    ]
-    db_session.add_all(roles)
-    db_session.commit()
-    return roles
+
 
 
 @pytest.fixture
 def seed_institution(institution_db):
     async def _seed(institution: ValidInstitutions = ValidInstitutions.CPP):
         return await institution_db.create_institution(institution)
-
     return _seed
 
 

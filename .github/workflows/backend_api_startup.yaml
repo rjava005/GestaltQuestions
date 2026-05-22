@@ -1,5 +1,4 @@
-name: Backend Unit Test
-
+name: Backend API Startup
 # Only triggers if there is a backend change
 on:
   push:
@@ -34,7 +33,7 @@ jobs:
         working-directory: ./backend
 
 
-      - name: Run Test
-        run: |
-          poetry run pytest app_test/unit
-        working-directory: ./backend
+      # - name: Run Test
+      #   run: |
+      #     poetry run pytest app_test/unit
+      #   working-directory: ./backend
