@@ -35,16 +35,9 @@ jobs:
         run: |
           rm -rf node_modules package-lock.json
           npm install
-
-      - name: List repo contents
-        run: ls -R
-
       - name: Install dependencies
         run: npm ci
 
       - name: Build app
         run: npm run build --if-present
 
-      # Optional test step
-      # - name: Run tests
-      #   run: npm test
