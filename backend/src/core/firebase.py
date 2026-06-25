@@ -10,31 +10,55 @@ from src.core.exceptions import FirebaseInitializationError, MissingConfigError
 
 app_settings = get_settings()
 
-if app_settings.FIREBASE_AUTH_EMULATOR_HOST:
-    os.environ["FIREBASE_AUTH_EMULATOR_HOST"] = app_settings.FIREBASE_AUTH_EMULATOR_HOST
-if app_settings.STORAGE_EMULATOR_HOST:
-    os.environ["STORAGE_EMULATOR_HOST"] = app_settings.STORAGE_EMULATOR_HOST
-
 
 @lru_cache
 def initialize_firebase_app():
+
     try:
-        try:
+
+        if firebase_admin._apps:
             return firebase_admin.get_app()
-        except ValueError:
-            pass
 
         if not app_settings.FIREBASE_CRED:
             raise MissingConfigError(
                 "FIREBASE_CRED must be configured before Firebase initialization"
             )
 
+        # -----------------------------
+        # Handle Emulator Mode
+        # -----------------------------
+        if app_settings.ENV == "production":
+            os.environ.pop("FIREBASE_AUTH_EMULATOR_HOST", None)
+            os.environ.pop("STORAGE_EMULATOR_HOST", None)
+
+        else:
+            # ensure dev env vars exist
+            if not app_settings.FIREBASE_AUTH_EMULATOR_HOST:
+                raise FirebaseInitializationError(
+                    "FIREBASE_AUTH_EMULATOR_HOST must be set in dev"
+                )
+
+            if not app_settings.STORAGE_EMULATOR_HOST:
+                raise FirebaseInitializationError(
+                    "STORAGE_EMULATOR_HOST must be set in dev"
+                )
+
+        # -----------------------------
+        # Load credentials
+        # -----------------------------
         cred = credentials.Certificate(app_settings.FIREBASE_CRED)
 
-        return firebase_admin.initialize_app(
-            cred, {"storageBucket": app_settings.STORAGE_BUCKET}
-        )
+        # -----------------------------
+        # Initialize Firebase
+        # -----------------------------
+        bucket_name = app_settings.STORAGE_BUCKET
 
+        if not bucket_name:
+            raise MissingConfigError("STORAGE_BUCKET must be defined")
+
+        firebase_admin.initialize_app(cred, {"storageBucket": bucket_name})
+
+        return firebase_admin.get_app()
     except MissingConfigError:
         raise
     except Exception as e:
@@ -49,9 +73,5 @@ def initialize_firebase_app():
 
 
 if __name__ == "__main__":
-    print("🔥 Firebase Mode:")
-    print(app_settings.FIREBASE_AUTH_EMULATOR_HOST)
-    print("Auth Emulator:", os.getenv("FIREBASE_AUTH_EMULATOR_HOST"))
-    print("Storage Emulator:", os.getenv("STORAGE_EMULATOR_HOST"))
     fb = initialize_firebase_app()
     print(fb)
