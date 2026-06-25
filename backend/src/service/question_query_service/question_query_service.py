@@ -2,10 +2,8 @@ from sqlalchemy import func
 from sqlmodel import Session, select
 
 from src.model.institution import Institution
-from src.model.users import DeveloperProfile, User
 from src.model.question import Question, QuestionTableRow, Status
-from sqlmodel import select, join, Session
-from sqlalchemy import func
+from src.model.users import DeveloperProfile, User
 
 
 class QuestionQueryService:
@@ -35,7 +33,7 @@ class QuestionQueryService:
     async def filter_questions(
         self,
         title: str,
-    ) -> List[QuestionTableRow]:
+    ) -> list[QuestionTableRow]:
         stmt = (
             select(
                 Question.title,

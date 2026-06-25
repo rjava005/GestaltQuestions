@@ -1,17 +1,18 @@
-name: Backend Unit Test
+name: GestaltQuestions BACKEND DEV CI
+
 # Only triggers if there is a backend change
 on:
-  # Run on all changes to backend or this file
   push:
     paths:
       - "backend/**"
-      - ".github/workflows/backend_unit_test.yml"
-    branches: ["main", "dev"]
+      - ".github/workflows/backend**"
+    # branches: ["main", "dev"]
+
   pull_request:
     paths:
       - "backend/**"
-      - ".github/workflows/backend_unit_test.yml"
-    branches: ["main", "dev"]
+      - ".github/workflows/backend**"
+    # branches: ["dev", "main"]
 
 jobs:
   test:
@@ -22,28 +23,35 @@ jobs:
         python-version: [3.11, 3.12, 3.13]
 
     env:
-      ENV: testing
+      MODE: "testing"
       STORAGE_BUCKET: ${{secrets.STORAGE_BUCKET}}
       FIREBASE_CRED: ${{vars.FIREBASE_JSON_PATH}}
       FIREBASE_AUTH_EMULATOR_HOST: 127.0.0.1:9099
       STORAGE_EMULATOR_HOST: http://localhost:9199
-    steps:
-      - uses: actions/checkout@v4
 
-      # Uses custom action to install uv and install dependencies
+    steps:
+      - uses: actions/checkout@v5
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{matrix.python-version}}
+
       - uses: ./.github/actions/setup-python-project
+        name: Install python dependncies
         with:
           python-version: ${{ matrix.python-version }}
           working-dir: "./backend"
-
-      # Decore the firebase credentials and saves to file
-      # Probably not needed for this test. It just throws an error in our pydantic settings
+       # Decore the firebase credentials and saves to file
       - uses: ./.github/actions/firebase-credentials
+        name: Decode Firebase
         with:
           firebase-json: ${{ secrets.FIREBASE_JSON }}
           credentials-path: ${{ vars.FIREBASE_JSON_PATH }}
-      # Actually run the test
+      # Start the emulator
+      - uses: ./.github/actions/firebase-emulator-start
+        name: Start firebase emulator
+
       - name: Run Test
         run: |
-          uv run pytest app_test/unit
+          uv run python -m pytest
         working-directory: ./backend
