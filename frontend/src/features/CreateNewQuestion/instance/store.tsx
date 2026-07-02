@@ -1,6 +1,7 @@
 import { createStore } from "zustand";
-import type { QuestionCreationState, QuestionCreationStore } from "./types";
+
 import type { QuestionCreate } from "../../../types/questionTypes";
+import type { QuestionCreationState, QuestionCreationStore } from "./types";
 
 const initialState: QuestionCreationState = {
   defaultFiles: [],
@@ -16,7 +17,9 @@ const initialState: QuestionCreationState = {
   fileDrafts: {},
 };
 
-export function createQuestionStore(preloaded?: Partial<QuestionCreationState>) {
+export function createQuestionStore(
+  preloaded?: Partial<QuestionCreationState>,
+) {
   return createStore<QuestionCreationStore>()((set) => ({
     ...initialState,
     ...preloaded,
@@ -32,7 +35,9 @@ export function createQuestionStore(preloaded?: Partial<QuestionCreationState>) 
         defaultFiles: state.defaultFiles.filter((v) => v !== file),
       })),
     setUploadedFiles: (files) =>
-      set((state) => ({ uploadedFiles: [...(state.uploadedFiles ?? []), ...files] })),
+      set((state) => ({
+        uploadedFiles: [...(state.uploadedFiles ?? []), ...files],
+      })),
     removeUploadedFile: (file) =>
       set((state) => ({
         uploadedFiles: state.uploadedFiles?.filter((v) => v !== file),

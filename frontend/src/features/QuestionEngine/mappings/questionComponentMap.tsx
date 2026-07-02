@@ -1,22 +1,23 @@
 import type { FC } from "react";
+
 import {
   PLAnswer,
-  PLDerivation,
-  PLDerivationStep,
-  PLFigure,
-  PLHint,
-  PLMultipleChoice,
-  PLNumberInput,
-  PLQuestionPanel,
-  PLSolutionPanel,
   type PLAnswerProps,
+  PLDerivation,
   type PLDerivationProps,
+  PLDerivationStep,
   type PLDerivationStepProps,
+  PLFigure,
   type PLFigureProps,
+  PLHint,
   type PLHintProps,
+  PLMultipleChoice,
   type PLMultipleChoiceProps,
+  PLNumberInput,
   type PLNumberInputProps,
+  PLQuestionPanel,
   type PLQuestionPanelProps,
+  PLSolutionPanel,
   type PLSolutionPanelProps,
 } from "../render/components";
 
@@ -47,7 +48,10 @@ export type TagRegistry = {
   "pl-answer": PLAnswerProps;
 };
 
-export const ComponentMap: Record<ValidComponents | string, FC<any> | undefined> = {
+export const ComponentMap: Record<
+  ValidComponents | string,
+  FC<any> | undefined
+> = {
   "pl-question-panel": PLQuestionPanel,
   "pl-number-input": PLNumberInput,
   "pl-figure": PLFigure,
@@ -96,7 +100,7 @@ export const TagAttributeMapping: {
     className: attrs["classname"] || attrs["class"],
     size: attrs["size"],
     variant: attrs["variant"],
-    useClientFilesDir: attrs["legacy"] ? true : false
+    useClientFilesDir: attrs["legacy"] ? true : false,
   }),
   "pl-hint": (attrs) => ({
     level: attrs["level"],

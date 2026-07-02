@@ -18,7 +18,6 @@
 // // Styles
 // import "./gestalt_studio.css";
 
-
 // export function rehypeCustomBlocks() {
 //     return (tree: any) => {
 //         visit(tree, "element", (node: any) => {

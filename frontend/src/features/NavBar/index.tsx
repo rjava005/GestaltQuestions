@@ -1,3 +1,3 @@
-export { default as NavBar } from "./NavBar"
-export type { NavigationItem } from "./NavBar"
-export { default } from "./constant"
+export { default } from "./constant";
+export type { NavigationItem } from "./NavBar";
+export { default as NavBar } from "./NavBar";

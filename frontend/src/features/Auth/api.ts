@@ -1,13 +1,13 @@
-import api from "../../services/client";
 import type { User } from "firebase/auth";
 import { getIdToken } from "firebase/auth";
 
+import api from "../../services/client";
 import type {
-  ValidInstitutions,
   AllowedRoles,
   UserBase,
-  UserRead,
   UserCreate,
+  UserRead,
+  ValidInstitutions,
 } from "./types";
 
 export class UserAPI {

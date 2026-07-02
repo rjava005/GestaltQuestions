@@ -19,7 +19,8 @@ const styles: Record<HeaderStyle, HeaderStyleConfig> = {
   },
 
   QuestionBuilder: {
-    wrapper: "w-full flex flex-col rounded-lg border border-border bg-surface px-6 py-4",
+    wrapper:
+      "w-full flex flex-col rounded-lg border border-border bg-surface px-6 py-4",
     title: "truncate mb-4 text-3xl font-semibold tracking-tight text-text",
   },
 };

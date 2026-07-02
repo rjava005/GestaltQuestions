@@ -1,4 +1,4 @@
-import { InputTextForm, BooleanField } from "../../../components/FormInputs";
+import { BooleanField, InputTextForm } from "../../../components/FormInputs";
 import type { QuestionCreate } from "../../../types/questionTypes";
 import { handleCommaSeperatedValues } from "../../../utils";
 
@@ -26,9 +26,7 @@ export default function QuestionForm({
     <section className="w-full h-full flex flex-col overflow-hidden rounded-2xl border border-border bg-surface-strong/90 p-5 shadow-[0_10px_30px_rgba(0,0,0,0.12)]">
       <div className=" flex flex-col self-start border-b border-border pb-3">
         <h2 className="text-base font-semibold text-text">Question Metadata</h2>
-        <p className="mt-1 text-sm text-text-muted">
-          Define the question
-        </p>
+        <p className="mt-1 text-sm text-text-muted">Define the question</p>
       </div>
 
       <div className="flex flex-col my-5 gap-5">
@@ -74,8 +72,6 @@ export default function QuestionForm({
         </div>
 
         <div className="rounded-xl border border-border bg-surface p-4">
-
-
           <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:gap-8">
             <BooleanField
               label="Adaptive Question"

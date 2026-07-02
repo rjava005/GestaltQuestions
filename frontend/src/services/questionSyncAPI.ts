@@ -1,9 +1,9 @@
-import api from "./client";
 import type {
-  UnsyncedQuestion,
   FolderCheckMetrics,
   SyncResponse,
+  UnsyncedQuestion,
 } from "../types/syncTypes";
+import api from "./client";
 
 export class QuestionSyncAPI {
   private static readonly base = "/questions";

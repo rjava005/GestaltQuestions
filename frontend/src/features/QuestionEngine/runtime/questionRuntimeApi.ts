@@ -1,5 +1,5 @@
-import { type QuestionRunTimeResponse } from "../instance/types";
 import api from "../../../services/client";
+import { type QuestionRunTimeResponse } from "../instance/types";
 
 export class QuestionRunnerApi {
   private static readonly base = "/runtime/questions";

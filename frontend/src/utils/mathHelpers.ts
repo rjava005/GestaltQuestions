@@ -12,7 +12,7 @@ export function isCloseEnoug(
   correct: number,
   submitted: number,
   absTol = 1e-6,
-  relTol = 1e-3
+  relTol = 1e-3,
 ): boolean {
   const absError = Math.abs(submitted - correct);
   const relError = absError / Math.max(Math.abs(correct), 1e-12);

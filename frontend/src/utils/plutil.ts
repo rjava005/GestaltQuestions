@@ -1,8 +1,9 @@
 // plutil.runtime.ts
-import * as math from "mathjs";
 import _ from "lodash";
-import * as mathhelper from "./mathHelpers";
+import * as math from "mathjs";
+
 import { imageUrl } from "./imageHandling";
+import * as mathhelper from "./mathHelpers";
 /**
  * Safer / clearer param replacement:
  *  - Supports {{ params.foo.bar }}, {{ param_labels.x }}, {{ correct_answers.y }}
@@ -67,15 +68,15 @@ export const pl_symbolic_input = ($: any, _: any, el: any): string => {
 
   return `
 <form class="pl-form pl-form--symbolic answers" action="" method="" name="${escAttr(
-    name
+    name,
   )}">
   <fieldset class="pl-fieldset">
     <legend class="pl-legend">Answer</legend>
     <div class="pl-field">
       <label class="pl-label" for="${escAttr(name)}">${escText(label)}</label>
       <input class="pl-input" type="text" name="${escAttr(name)}" id="${escAttr(
-    name
-  )}" inputmode="text" />
+        name,
+      )}" inputmode="text" />
     </div>
     <div class="pl-feedback" aria-live="polite"></div>
   </fieldset>
@@ -147,7 +148,7 @@ export const pl_checkbox = ($: any, el: any) => {
   const itemOrder: string[] = [];
   let html = `
 <form class="pl-form pl-form--checkbox answers" action="" method="" name="${escAttr(
-    nm
+    nm,
   )}">
   <fieldset class="pl-fieldset">
     <legend class="pl-legend">Select all that apply</legend>
@@ -168,7 +169,7 @@ export const pl_checkbox = ($: any, el: any) => {
     html += `
       <label class="pl-option">
         <input class="pl-input pl-input--checkbox response" type="checkbox" id="${escAttr(
-          id
+          id,
         )}" name="${escAttr(nm)}" value="${j + 1}" />
         <span class="pl-option__text">${escText(`${j + 1}. ${text}`)}</span>
       </label>`.trim();
@@ -193,7 +194,7 @@ export const pl_multiple_choice = ($: any, el: any) => {
   const itemOrder: string[] = [];
   let html = `
 <form class="pl-form pl-form--mcq answers" action="" method="" name="${escAttr(
-    nm
+    nm,
   )}">
   <fieldset class="pl-fieldset">
     <legend class="pl-legend">Choose one</legend>
@@ -214,7 +215,7 @@ export const pl_multiple_choice = ($: any, el: any) => {
     html += `
       <label class="pl-option">
         <input class="pl-input pl-input--radio response" type="radio" id="${escAttr(
-          id
+          id,
         )}" name="${escAttr(nm)}" value="${j + 1}" />
         <span class="pl-option__text">${escText(`${j + 1}. ${text}`)}</span>
       </label>`.trim();
@@ -245,14 +246,14 @@ export const pl_number_input_fixed = ($: any, qdata: any, el: any) => {
 
   const html = `
 <form class="pl-form pl-form--number answers" name="${escAttr(
-    name
+    name,
   )}" action="" method="">
   <fieldset class="pl-fieldset">
     <legend class="pl-legend">Answer</legend>
     <div class="pl-field">
       <label class="pl-label" for="${escAttr(name)}">${escText(label)}</label>
       <input class="pl-input pl-input--number response" type="number" name="${escAttr(
-        name
+        name,
       )}" id="${escAttr(name)}" inputmode="decimal" />
     </div>
     <div class="pl-feedback" aria-live="polite"></div>
@@ -276,14 +277,14 @@ export const pl_number_input = ($: any, qdata: any, el: any) => {
   console.log("Handle this val", val);
   const html = `
 <form class="pl-form pl-form--number answers" name="${escAttr(
-    name
+    name,
   )}" action="" method="">
   <fieldset class="pl-fieldset">
     <legend class="pl-legend">Answer</legend>
     <div class="pl-field">
       <label class="pl-label" for="${escAttr(name)}">${escText(label)}</label>
       <input class="pl-input pl-input--number response" type="number" name="${escAttr(
-        name
+        name,
       )}" id="${escAttr(name)}" inputmode="decimal" />
     </div>
     <div class="pl-feedback" aria-live="polite"></div>
@@ -308,14 +309,14 @@ export const pl_matrix_input = ($: any, _qdata: any, el: any) => {
 
   const html = `
 <form class="pl-form pl-form--matrix answers" name="${escAttr(
-    name
+    name,
   )}" action="" method="">
   <fieldset class="pl-fieldset">
     <legend class="pl-legend">Answer</legend>
     <div class="pl-field">
       <label class="pl-label" for="${escAttr(name)}">${escText(label)}</label>
       <input class="pl-input pl-input--matrix response" type="text" name="${escAttr(
-        name
+        name,
       )}" id="${escAttr(name)}" />
     </div>
     <div class="pl-feedback" aria-live="polite"></div>
@@ -337,7 +338,7 @@ export const emitLatexMatrix = (mat: number[][]): string => {
     return "\\begin{bmatrix}\\end{bmatrix}";
   const rows = mat
     .map((row) =>
-      row.map((el) => String(math.round(Number(el) * 100) / 100)).join(" & ")
+      row.map((el) => String(math.round(Number(el) * 100) / 100)).join(" & "),
     )
     .join(" \\\\ ");
   return `\\begin{bmatrix} ${rows} \\end{bmatrix}`;

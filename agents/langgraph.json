@@ -1,0 +1,10 @@
+{
+  "$schema": "https://langgra.ph/schema.json",
+  "dependencies": [".", "../packages/gestalt_code_generator"],
+  "graphs": {
+    "agent": "./src/agent/core_agents/dynamic_agent.py:agent",
+    "core":  "./src/agent/core_agents/core.py:agent"
+  },
+  "env": ".env",
+  "image_distro": "wolfi"
+}

@@ -1,3 +1,2 @@
-export * from "./questionAPI"
-
-export * from "./questionSyncAPI"
+export * from "./questionAPI";
+export * from "./questionSyncAPI";

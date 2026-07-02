@@ -1,8 +1,9 @@
-import { type DropDownBase } from "./types";
-import { type IconType } from "react-icons";
-import { useState, useRef } from "react";
 import clsx from "clsx";
+import { useRef, useState } from "react";
+import { type IconType } from "react-icons";
+
 import { useOnClickOutside } from "../../hooks/hooks";
+import { type DropDownBase } from "./types";
 
 export type DropDownAdvanceOption = {
   value: string;
@@ -13,7 +14,7 @@ type DropDownAdvanceProps = DropDownBase<string> & {
   options: DropDownAdvanceOption[];
   open?: boolean;
   onOpenChange?: (open: boolean) => void;
-  className?: string
+  className?: string;
 };
 
 export default function DropDownAdvance({
@@ -23,8 +24,7 @@ export default function DropDownAdvance({
   label,
   open: controlledOpen,
   onOpenChange,
-  className
-
+  className,
 }: DropDownAdvanceProps) {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const [uncontrolledOpen, setUncontrolledOpen] = useState(false);
@@ -80,7 +80,7 @@ export default function DropDownAdvance({
                 }}
                 className={clsx(
                   "w-full px-3 py-2 flex items-center gap-2 text-sm text-left hover:bg-slate-100",
-                  opt.value === selected && "bg-slate-100 font-medium"
+                  opt.value === selected && "bg-slate-100 font-medium",
                 )}
               >
                 {Icon && <Icon className="size-5" />}

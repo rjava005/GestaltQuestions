@@ -76,7 +76,7 @@ export type ButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> & {
   name: string;
   color?: ButtonColor;
   size?: ButtonSize;
-  icon?: IconType
+  icon?: IconType;
 };
 
 //
@@ -100,7 +100,7 @@ const Button = ({
         colorClasses[color],
         sizeClasses[size],
         disabled && "opacity-50 cursor-not-allowed",
-        className
+        className,
       )}
       {...rest} // <-- inherits all button attributes (type, onClick, etc)
     >
@@ -109,5 +109,4 @@ const Button = ({
   );
 };
 
-
-export default Button
+export default Button;

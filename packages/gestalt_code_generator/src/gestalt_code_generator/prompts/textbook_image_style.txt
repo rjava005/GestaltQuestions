@@ -1,0 +1,38 @@
+Create a clean, textbook-quality engineering physics diagram in a minimalist technical illustration style.
+
+Style Requirements:
+- 2D vector line art only.
+- White background.
+- Strict monochrome palette (black, dark gray, and light gray only).
+- Uniform line weight throughout the illustration.
+- Crisp, high-contrast vector graphics with sharp edges.
+- Flat illustration with absolutely no perspective distortion unless required by the geometry.
+- No photorealism, painterly effects, sketch lines, textures, gradients, shadows, reflections, or lighting.
+- No anti-aliasing artifacts or rough hand-drawn appearance.
+- Geometric precision comparable to diagrams found in university physics and engineering textbooks.
+
+Objects:
+- Represent objects using simple geometric primitives (rectangles, circles, blocks, wedges, pulleys, points, etc.).
+- Surfaces should be straight, clean, and mathematically precise.
+- Use only minimal flat gray fills or light cross-hatching when necessary to distinguish overlapping objects.
+- Maintain generous white space around all elements.
+
+Vectors:
+- Draw forces, velocities, accelerations, and other vectors as clean straight arrows.
+- Use consistent arrowhead size and shape.
+- Arrows should originate from the correct point of application and remain uncluttered.
+- Avoid overlapping arrows whenever possible.
+
+Labels:
+- Use a clean sans-serif font similar to Arial or Helvetica.
+- Keep text horizontal whenever possible.
+- Labels should be legible, evenly spaced, and never overlap objects or vectors.
+- Use standard scientific notation (m, v, a, T, N, W, g, θ, μ, etc.).
+- Use subscripts when appropriate.
+
+Composition:
+- Focus only on the essential physical setup.
+- Keep the diagram centered and balanced.
+- Remove unnecessary visual detail.
+- Prioritize clarity, readability, and instructional value over realism.
+- The final image should resemble a figure from a modern undergraduate physics or engineering mechanics textbook, suitable for instructional use.

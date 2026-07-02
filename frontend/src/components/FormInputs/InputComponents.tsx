@@ -51,8 +51,7 @@ export const inputStyles: Record<InputStyleVariant, InputStyleConfig> = {
   },
   createQuestion: {
     wrapper: "w-full flex flex-col gap-1",
-    label:
-      "text-xs font-semibold uppercase tracking-wide text-slate-600",
+    label: "text-xs font-semibold uppercase tracking-wide text-slate-600",
     input:
       "block w-full rounded-md bg-white px-3 py-2 text-sm text-slate-900 " +
       "border border-slate-300 shadow-sm " +

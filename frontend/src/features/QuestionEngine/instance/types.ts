@@ -1,6 +1,6 @@
 // Question Metadata
-import { type QuestionRead } from "../../../types/questionTypes";
 import type { FileData } from "../../../types/fileTypes";
+import { type QuestionRead } from "../../../types/questionTypes";
 // General Types for the values
 
 export type QuestionValue = string | number | string[] | boolean | null;

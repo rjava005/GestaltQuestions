@@ -1,14 +1,17 @@
 import * as cheerio from "cheerio";
-import * as plutil from "./plutil";
 import * as math from "mathjs";
+
 import * as mathhelper from "./mathHelpers";
+import * as plutil from "./plutil";
 
 export const processPrairielearnTags = (
   html: string,
   qdata: any,
   // qdir: string,
   questionName: string,
-  choiceParams: { fracQuestions?: [number, number] } = { fracQuestions: [1, 1] }
+  choiceParams: { fracQuestions?: [number, number] } = {
+    fracQuestions: [1, 1],
+  },
 ) => {
   try {
     const $ = cheerio.load(html, { xmlMode: false });
@@ -61,11 +64,11 @@ export const processPrairielearnTags = (
     const [fracMin, fracMax] = choiceParams.fracQuestions ?? [1, 1];
     const minQuestions = Math.max(
       0,
-      Math.floor(numQuestions * Math.max(0, fracMin))
+      Math.floor(numQuestions * Math.max(0, fracMin)),
     );
     const maxQuestions = Math.min(
       numQuestions,
-      Math.ceil(numQuestions * Math.min(1, Math.max(fracMin, fracMax)))
+      Math.ceil(numQuestions * Math.min(1, Math.max(fracMin, fracMax))),
     );
     const numSelQuestions = numQuestions
       ? math.randomInt(minQuestions, maxQuestions + 1)

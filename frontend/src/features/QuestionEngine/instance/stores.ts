@@ -1,8 +1,9 @@
 import { createStore } from "zustand";
+
 import type {
   QuestionInstanceState,
-  QuestionRunTimeResponse,
   QuestionInstanceStore,
+  QuestionRunTimeResponse,
 } from "./types";
 
 export function toQuestionInstanceState(

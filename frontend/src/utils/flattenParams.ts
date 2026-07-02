@@ -1,5 +1,3 @@
-
-
 // const template = `
 // Speed: [[params.speed]] [[params.unitsSpeed]]
 // Converted: [[params.intermediate.convertedSpeed]]
@@ -20,7 +18,7 @@ export function flattenParams(
   prefix = "",
   out: Record<any, any> = {},
   opts: Options = {},
-  rounding = true
+  rounding = true,
 ) {
   const {
     arrayMode = "index", // "index" | "join" | "json"
@@ -74,7 +72,7 @@ function applyPlaceHolders(
     onMissing = "keep",
     warn = console.warn,
     ...opts
-  } = {}
+  } = {},
 ) {
   if (!data) return template;
   const flat = flattenParams(data, rootPrefix, {}, opts); // Flattens the data so that we can use it
@@ -94,7 +92,7 @@ function applyPlaceHolders(
       if (onMissing === "empty") return "";
       if (onMissing === "warn") warn?.(`No value for placeholder ${key}`);
       return match; // keep as-is
-    }
+    },
   );
 }
 export default applyPlaceHolders;

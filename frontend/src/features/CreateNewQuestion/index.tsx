@@ -1,1 +1,1 @@
-export {default as CreateNewQuestion} from "./CreateNewQuestion"
+export { default as CreateNewQuestion } from "./CreateNewQuestion";

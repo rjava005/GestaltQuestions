@@ -9,9 +9,8 @@ export type SidebarContextValue<T = string> = {
   toggle: () => void;
 };
 
-export const SidebarContext = createContext<SidebarContextValue<unknown> | null>(
-  null
-);
+export const SidebarContext =
+  createContext<SidebarContextValue<unknown> | null>(null);
 
 export function useSideBar<T = string>() {
   const context = useContext(SidebarContext);

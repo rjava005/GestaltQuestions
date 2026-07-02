@@ -1,8 +1,7 @@
 import clsx from "clsx";
-import Button from "./Button";
 import type { IconType } from "react-icons";
 
-
+import Button from "./Button";
 
 type ActionButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> & {
   icon?: IconType;
@@ -23,12 +22,17 @@ export default function ActionButton({
       className={clsx(
         "w-full flex justify-center border p-2 rounded-md shadow hover:scale-105 uration-300 ease-in-out",
         className,
-        rest.disabled
-          ? "opacity-50 cursor-not-allowed"
-          : "hover:scale-105",
+        rest.disabled ? "opacity-50 cursor-not-allowed" : "hover:scale-105",
       )}
     >
-      <Button {...rest} icon={Icon} name={label} size={"sm"} className="flex flex-row gap-2 items-center justify-between" color={"transparent"} />
+      <Button
+        {...rest}
+        icon={Icon}
+        name={label}
+        size={"sm"}
+        className="flex flex-row gap-2 items-center justify-between"
+        color={"transparent"}
+      />
     </div>
   );
 }

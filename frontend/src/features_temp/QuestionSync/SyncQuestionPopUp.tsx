@@ -1,11 +1,11 @@
 // Third-party imports
 import { FaSyncAlt } from "react-icons/fa";
 import { toast } from "react-toastify";
+
 import { PopUpHelpIcon } from "../../components/Base/PopUpHelper";
-import FormatMetrics from "./FormatMetrics";
 // Local utilities / API / types
 import { QuestionSyncAPI } from "../../services/questionSyncAPI";
-
+import FormatMetrics from "./FormatMetrics";
 
 export default function SyncQuestionsPopUp() {
   const syncQuestions = async () => {
@@ -22,7 +22,7 @@ export default function SyncQuestionsPopUp() {
         />,
         {
           position: "top-right",
-        }
+        },
       );
     } catch (error) {
       toast.error(`Sync Failed\n${String(error)}`, {

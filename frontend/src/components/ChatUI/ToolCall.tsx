@@ -61,6 +61,3 @@ export default function DisplayToolCall({
     </div>
   );
 }
-
-
-

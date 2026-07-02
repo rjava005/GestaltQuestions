@@ -1,5 +1,6 @@
-import type { CleanableContent } from "../instance/types";
 import type { ContentBlock, ToolMessage } from "langchain";
+
+import type { CleanableContent } from "../instance/types";
 
 export function normalizeContent(content: unknown): CleanableContent {
   if (typeof content === "string") return content;

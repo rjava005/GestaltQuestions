@@ -1,26 +1,30 @@
-import { useState } from "react"
+import { useState } from "react";
 
 export type Flag = {
-  key: string
-  label: string
-  type?: "checkbox" | "toggle" | "select"
-  options?: string[]
-}
+  key: string;
+  label: string;
+  type?: "checkbox" | "toggle" | "select";
+  options?: string[];
+};
 
 type FilterProps = {
-  flags: Flag[]
-  onChange: (filters: Record<string, any>) => void
-  disabled?: boolean
-}
+  flags: Flag[];
+  onChange: (filters: Record<string, any>) => void;
+  disabled?: boolean;
+};
 
-export default function ModularFilter({ flags, onChange, disabled = false }: FilterProps) {
-  const [filters, setFilters] = useState<Record<string, any>>({})
+export default function ModularFilter({
+  flags,
+  onChange,
+  disabled = false,
+}: FilterProps) {
+  const [filters, setFilters] = useState<Record<string, any>>({});
 
   const updateFilter = (key: string, value: any) => {
-    const updated = { ...filters, [key]: value }
-    setFilters(updated)
-    onChange(updated)
-  }
+    const updated = { ...filters, [key]: value };
+    setFilters(updated);
+    onChange(updated);
+  };
 
   return (
     <div
@@ -52,7 +56,7 @@ export default function ModularFilter({ flags, onChange, disabled = false }: Fil
                   ))}
                 </select>
               </div>
-            )
+            );
 
           default: // checkbox/toggle fallback
             return (
@@ -70,9 +74,9 @@ export default function ModularFilter({ flags, onChange, disabled = false }: Fil
                 />
                 <span>{flag.label}</span>
               </label>
-            )
+            );
         }
       })}
     </div>
-  )
+  );
 }

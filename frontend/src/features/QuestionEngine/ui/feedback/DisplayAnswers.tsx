@@ -1,9 +1,9 @@
 import clsx from "clsx";
 
 import type {
-  QuizData,
   QuestionAnswerMap,
   QuestionValue,
+  QuizData,
 } from "../../instance/types";
 
 type AnswerTableVariant = "default" | "compact" | "emphasis";

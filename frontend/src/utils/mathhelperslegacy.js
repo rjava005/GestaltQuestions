@@ -54,9 +54,9 @@ function getRandomMask(maxElements, minOnes, maxOnes) {
 }
 
 export {
-  getRandomPermutationRange,
   getRandomInt,
-  getRandomPermutationArray,
-  shuffleArray,
   getRandomMask,
+  getRandomPermutationArray,
+  getRandomPermutationRange,
+  shuffleArray,
 };

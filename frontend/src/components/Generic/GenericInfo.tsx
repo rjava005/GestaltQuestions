@@ -26,8 +26,6 @@ export const FormatMetaData = ({
   );
 };
 
-
-
 interface GenericInfoProps {
   title: string;
   data?: string[];

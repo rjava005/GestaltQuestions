@@ -1,14 +1,14 @@
 import api from "../../services/client";
+import type { FileData } from "../../types/fileTypes";
 import type {
   QuestionAllRow,
   QuestionCreate,
   QuestionDeleteResponse,
   QuestionFileList,
+  QuestionFilter,
   QuestionRead,
   QuestionUpdate,
-  QuestionFilter,
 } from "../../types/questionTypes";
-import type { FileData } from "../../types/fileTypes";
 import { downloadZip } from "../../utils/downloadUtils";
 export default class QuestionBuilderAPI {
   private static readonly base = "/developer/questions";

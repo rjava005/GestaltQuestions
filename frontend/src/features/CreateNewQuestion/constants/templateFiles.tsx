@@ -84,7 +84,8 @@ const TemplateFiles: QuestionFileSpec[] = [
     type: "javascript",
     required: false,
     isAdaptive: true,
-    description: "Generates dynamic parameters for adaptive questions (JavaScript).",
+    description:
+      "Generates dynamic parameters for adaptive questions (JavaScript).",
     template: [
       {
         adaptive: true,
@@ -113,7 +114,8 @@ module.exports = { generate };
     type: "python",
     required: false,
     isAdaptive: true,
-    description: "Generates dynamic parameters for adaptive questions (Python).",
+    description:
+      "Generates dynamic parameters for adaptive questions (Python).",
     template: [
       {
         adaptive: true,
@@ -144,14 +146,17 @@ type TemplateModePreset = {
   defaultFiles: Filenames[];
 };
 
-const TemplateModePresets: Record<"adaptive" | "nonAdaptive", TemplateModePreset> = {
+const TemplateModePresets: Record<
+  "adaptive" | "nonAdaptive",
+  TemplateModePreset
+> = {
   adaptive: {
     questionData: {
       isAdaptive: true,
       topics: ["adaptive", "generated-params"],
       qTypes: ["numerical"],
       ai_generated: false,
-      title: "Add Numbers Adaptive"
+      title: "Add Numbers Adaptive",
     },
     defaultFiles: ["question.html", "solution.html", "server.js"],
   },
@@ -161,7 +166,7 @@ const TemplateModePresets: Record<"adaptive" | "nonAdaptive", TemplateModePreset
       topics: ["static"],
       qTypes: ["multiple-choice"],
       ai_generated: false,
-      title: "Add Numbers MC"
+      title: "Add Numbers MC",
     },
     defaultFiles: ["question.html", "solution.html"],
   },

@@ -1,1 +1,1 @@
-export {default as QuestionTableBase} from "./QuestionTableBase"
+export { default as QuestionTableBase } from "./QuestionTableBase";

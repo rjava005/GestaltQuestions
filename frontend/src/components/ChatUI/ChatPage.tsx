@@ -1,13 +1,13 @@
 import { useState } from "react";
-import ChatUI from "./ChatUI";
 
+import ChatUI from "./ChatUI";
 
 export const availableChats = [
   "math_helper",
   "topic_classification",
   "ucr_mechanical_courses",
   "testing",
-  "gestalt_agent"
+  "gestalt_agent",
 ] as const;
 
 export type AvailableChats = (typeof availableChats)[number];
@@ -21,8 +21,8 @@ const Chats: Record<AvailableChats, string> = {
   ucr_mechanical_courses:
     "A chatbot that answer questions based on the UCR mechanical engineering Catalog using embedding similarity or metadata lookup. ",
   testing: "A basic chatbot for testing things such as serving files",
-  gestalt_agent: "An agent tasked with creating educational modules"
-}
+  gestalt_agent: "An agent tasked with creating educational modules",
+};
 function ChatDropDown({
   selectedChat,
   setSelectedChat,
@@ -31,7 +31,7 @@ function ChatDropDown({
   setSelectedChat: (val: AvailableChats) => void;
 }) {
   const handleSelectionChange = (
-    event: React.ChangeEvent<HTMLSelectElement>
+    event: React.ChangeEvent<HTMLSelectElement>,
   ) => {
     setSelectedChat(event.target.value as AvailableChats);
   };

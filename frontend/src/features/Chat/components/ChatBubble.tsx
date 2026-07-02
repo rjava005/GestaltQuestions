@@ -1,7 +1,13 @@
+import type {
+  AIMessageBubbleProps,
+  ChatBubbleRender,
+  ChatType,
+  HumanBubbleProps,
+  ToolBubbleProps,
+} from "../instance/types";
+import { normalizeContent } from "../utils/parsingUtils";
 import { cleanChildren } from "../utils/utils";
 import Markdown from "./MarkdownRender";
-import type { ChatType, ChatBubbleRender, AIMessageBubbleProps, ToolBubbleProps, HumanBubbleProps } from "../instance/types";
-import { normalizeContent } from "../utils/parsingUtils";
 
 const ChatBubbleBase =
   "my-2 max-w-[85%] rounded-lg px-4 py-3 text-sm leading-relaxed whitespace-pre-wrap shadow-soft";
@@ -27,7 +33,9 @@ function renderBubbleContent(model: ChatBubbleRender) {
     if (hasToolCalls && model.showTools !== false) {
       return (
         <div className="space-y-2">
-          <div className="text-xs uppercase tracking-wide text-text-soft">Tool calls</div>
+          <div className="text-xs uppercase tracking-wide text-text-soft">
+            Tool calls
+          </div>
           {model.msg.tool_calls!.map((toolCall, index) => (
             <details
               key={`${toolCall.name}-${index}`}
@@ -50,7 +58,9 @@ function renderBubbleContent(model: ChatBubbleRender) {
   if (model.bubble === "tool") {
     return (
       <div className="space-y-1">
-        <div className="text-xs uppercase tracking-wide text-accent">Tool response</div>
+        <div className="text-xs uppercase tracking-wide text-accent">
+          Tool response
+        </div>
         <div className="font-medium">{model.msg.name ?? "unknown_tool"}</div>
         <div>{cleanChildren(normalizeContent(model.msg.content))}</div>
       </div>
@@ -75,11 +85,17 @@ export function AIBubble({
 }: AIMessageBubbleProps) {
   return (
     <div className={ChatBubbleStyles[type]}>
-      <Markdown>{renderBubbleContent({ bubble: "ai", msg, showTools })}</Markdown>
+      <Markdown>
+        {renderBubbleContent({ bubble: "ai", msg, showTools })}
+      </Markdown>
     </div>
   );
 }
 
 export function ToolMessageBubble({ msg, type = "tool" }: ToolBubbleProps) {
-  return <div className={ChatBubbleStyles[type]}>{renderBubbleContent({ bubble: "tool", msg })}</div>;
+  return (
+    <div className={ChatBubbleStyles[type]}>
+      {renderBubbleContent({ bubble: "tool", msg })}
+    </div>
+  );
 }

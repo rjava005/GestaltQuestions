@@ -1,13 +1,14 @@
-
 import MDEditor from "@uiw/react-md-editor";
-
 
 interface MarkdownEditorProps {
   content: string;
   setContent: (value: string) => void;
 }
 
-export default function MarkDownEditor({ content, setContent }: MarkdownEditorProps) {
+export default function MarkDownEditor({
+  content,
+  setContent,
+}: MarkdownEditorProps) {
   return (
     <div className="flex flex-col gap-4 p-3" data-color-mode="light">
       <h3 className="text-lg font-semibold">Markdown Editor</h3>

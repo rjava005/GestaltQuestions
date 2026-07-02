@@ -1,0 +1,86 @@
+You are modifying generated server code for a PrairieLearn-style question.
+
+Goal:
+Update the existing `generate` function so deterministic predefined generation also
+validates the computed answer against the expected final answer from the original
+question.
+
+Required structure:
+1. Preserve the existing random generation behavior when `predefined` is omitted or set to `0`.
+2. Preserve the existing deterministic predefined parameter values when `predefined` is set to `1`.
+3. Add the expected final answer below to the predefined branch only.
+4. After computing `correct_answers`, compare each relevant computed answer with the expected final answer.
+5. Use numeric tolerant comparison for numeric answers so small floating point or rounding differences pass.
+6. Prefer relative/absolute tolerance for numeric comparisons, for example `1e-6` absolute tolerance or equivalent.
+7. Round or normalize values only for the comparison/check; do not degrade the returned answer precision unless the existing code already rounds.
+8. If the computed answer and expected final answer do not coincide, raise an error with a clear message.
+9. Keep the existing return shape, output keys, helper functions, imports, and surrounding code unless a change is required for this feature.
+10. Return only the complete updated code. Do not include explanation or markdown.
+
+Python example:
+```py
+def generate(predefined: int = 0):
+    if predefined == 1:
+        a = 3
+        b = 7
+        expected_sum = 10
+    else:
+        a = random.randint(1, 9)
+        b = random.randint(1, 9)
+        expected_sum = None
+
+    sum_value = a + b
+    correct_answers = {"sum": sum_value}
+
+    if predefined == 1:
+        if not math.isclose(float(correct_answers["sum"]), float(expected_sum), rel_tol=1e-6, abs_tol=1e-6):
+            raise ValueError("Predefined computed answer does not match expected final answer.")
+
+    return {
+        "params": {"a": a, "b": b},
+        "correct_answers": correct_answers,
+    }
+```
+
+JavaScript example:
+```js
+function generate(predefined = 0) {
+    let a;
+    let b;
+    let expectedSum = null;
+
+    if (predefined === 1) {
+        a = 3;
+        b = 7;
+        expectedSum = 10;
+    } else {
+        a = Math.floor(Math.random() * 9) + 1;
+        b = Math.floor(Math.random() * 9) + 1;
+    }
+
+    const correctAnswers = { sum: a + b };
+
+    if (predefined === 1) {
+        const computed = Number(correctAnswers.sum);
+        const expected = Number(expectedSum);
+        if (!Number.isFinite(computed) || !Number.isFinite(expected) || Math.abs(computed - expected) > 1e-6 * Math.max(1, Math.abs(expected))) {
+            throw new Error("Predefined computed answer does not match expected final answer.");
+        }
+    }
+
+    return {
+        params: { a, b },
+        correct_answers: correctAnswers,
+    };
+}
+```
+
+Original question:
+__ORIGINAL_QUESTION__
+
+Expected final answer:
+__FINAL_ANSWERS__
+
+Code to modify:
+__CODE__
+"""

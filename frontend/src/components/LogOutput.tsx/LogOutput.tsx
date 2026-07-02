@@ -1,5 +1,3 @@
-
-
 // interface LogOutputProps {
 //     filename?: string;
 // }

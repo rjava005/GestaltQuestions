@@ -1,10 +1,9 @@
-import AuthBase from "./AuthBase";
-import { toast } from "react-toastify";
 import { FirebaseError } from "firebase/app";
+import { toast } from "react-toastify";
 
 import { UserAPI } from "../../api";
 import type { UserCreate, ValidInstitutions } from "../../types";
-
+import AuthBase from "./AuthBase";
 
 export function SignUpForm() {
   const handleSubmit = async (
@@ -13,7 +12,7 @@ export function SignUpForm() {
     username?: string,
     firstName?: string,
     lastName?: string,
-    institution?: ValidInstitutions | null
+    institution?: ValidInstitutions | null,
   ) => {
     try {
       // const userCredential = await createUserWithEmailAndPassword(auth, email, password);
@@ -29,7 +28,7 @@ export function SignUpForm() {
         last_name: lastName ?? "",
         username: username ?? "",
         email: email ?? "",
-        password: password ?? ""
+        password: password ?? "",
       };
 
       await UserAPI.createUser(userData, {
@@ -38,7 +37,8 @@ export function SignUpForm() {
 
       toast.success("Account created successfully.");
     } catch (error) {
-      const errorMsg = error instanceof FirebaseError ? error.message : String(error);
+      const errorMsg =
+        error instanceof FirebaseError ? error.message : String(error);
       toast.error(`Could not create account: ${errorMsg}`);
     }
   };

@@ -1,8 +1,12 @@
 import { useEffect, useMemo, useState } from "react";
+
 import { CodeEditor } from "../../components/CodeEditor";
 import { DropDown } from "../../components/DropDown";
-import { useQuestionCreate, type Filenames } from "../CreateNewQuestion/instance";
 import { TemplateFiles } from "../CreateNewQuestion/constants/templateFiles";
+import {
+  type Filenames,
+  useQuestionCreate,
+} from "../CreateNewQuestion/instance";
 
 type QuestionTemplateEditorProps = {
   mode: "blank" | "template";
@@ -35,7 +39,9 @@ const getDefaultTemplateContent = (
   return adaptiveMatch?.template ?? spec.template[0]?.template ?? "";
 };
 
-export default function QuestionTemplateEditor({ mode }: QuestionTemplateEditorProps) {
+export default function QuestionTemplateEditor({
+  mode,
+}: QuestionTemplateEditorProps) {
   const defaultFiles = useQuestionCreate((s) => s.defaultFiles);
   const questionIsAdaptive = useQuestionCreate((s) => s.questionIsAdaptive);
   const fileDrafts = useQuestionCreate((s) => s.fileDrafts);
@@ -66,7 +72,9 @@ export default function QuestionTemplateEditor({ mode }: QuestionTemplateEditorP
   if (!editorFiles.length || !activeFile) {
     return (
       <section className="rounded-2xl border border-border bg-surface-strong/80 p-4 shadow-sm">
-        <h2 className="text-lg font-semibold text-text">Question File Editor</h2>
+        <h2 className="text-lg font-semibold text-text">
+          Question File Editor
+        </h2>
         <p className="mt-2 text-sm text-text-muted">
           Select files in the Question Files section to edit them here.
         </p>
@@ -81,9 +89,12 @@ export default function QuestionTemplateEditor({ mode }: QuestionTemplateEditorP
   return (
     <section className="rounded-2xl border border-border bg-surface-strong/80 p-4 shadow-sm">
       <div className="mb-3">
-        <h2 className="text-lg font-semibold text-text">Question File Editor</h2>
+        <h2 className="text-lg font-semibold text-text">
+          Question File Editor
+        </h2>
         <p className="text-sm text-text-muted">
-          View and edit file contents that will be used when creating this question.
+          View and edit file contents that will be used when creating this
+          question.
         </p>
       </div>
 

@@ -1,6 +1,6 @@
-import { useState } from "react";
-import type { FormEvent } from "react";
 import { getAuth, sendPasswordResetEmail } from "firebase/auth";
+import type { FormEvent } from "react";
+import { useState } from "react";
 import { toast } from "react-toastify";
 
 import { UseAuthMode } from "../../../../context/AuthMode";
@@ -13,7 +13,7 @@ type AuthProps = {
     username?: string,
     firstName?: string,
     lastName?: string,
-    institution?: ValidInstitutions | null
+    institution?: ValidInstitutions | null,
   ) => Promise<void>;
 };
 
@@ -51,7 +51,9 @@ export default function AuthBase({ onSubmit }: AuthProps) {
   const [username, setUserName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [institution, setInstitution] = useState<ValidInstitutions | null>(null);
+  const [institution, setInstitution] = useState<ValidInstitutions | null>(
+    null,
+  );
 
   const isSignUp = mode === "signup";
   const isLogin = mode === "login";
@@ -94,7 +96,10 @@ export default function AuthBase({ onSubmit }: AuthProps) {
 
       {!isReset && (
         <div className="mb-5">
-          <div className={shellStyles.modeRow} aria-label="Authentication mode switch">
+          <div
+            className={shellStyles.modeRow}
+            aria-label="Authentication mode switch"
+          >
             <button
               type="button"
               onClick={() => setMode("login")}
@@ -164,7 +169,9 @@ export default function AuthBase({ onSubmit }: AuthProps) {
             </>
           )}
 
-          <div className={`${shellStyles.field} ${isSignUp ? shellStyles.full : ""}`}>
+          <div
+            className={`${shellStyles.field} ${isSignUp ? shellStyles.full : ""}`}
+          >
             <label htmlFor="email" className={shellStyles.label}>
               Email
             </label>
@@ -181,7 +188,9 @@ export default function AuthBase({ onSubmit }: AuthProps) {
           </div>
 
           {!isReset && (
-            <div className={`${shellStyles.field} ${isSignUp ? shellStyles.full : ""}`}>
+            <div
+              className={`${shellStyles.field} ${isSignUp ? shellStyles.full : ""}`}
+            >
               <label htmlFor="password" className={shellStyles.label}>
                 Password
               </label>
@@ -215,7 +224,9 @@ export default function AuthBase({ onSubmit }: AuthProps) {
               <select
                 id="institution"
                 value={institution ?? ""}
-                onChange={(e) => setInstitution(e.target.value as ValidInstitutions)}
+                onChange={(e) =>
+                  setInstitution(e.target.value as ValidInstitutions)
+                }
                 className={shellStyles.select}
               >
                 <option value="" disabled>
@@ -236,7 +247,11 @@ export default function AuthBase({ onSubmit }: AuthProps) {
         </button>
 
         {isReset && (
-          <button type="button" className={shellStyles.secondary} onClick={() => setMode("login")}>
+          <button
+            type="button"
+            className={shellStyles.secondary}
+            onClick={() => setMode("login")}
+          >
             Go Back to Login
           </button>
         )}

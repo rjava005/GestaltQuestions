@@ -1,13 +1,16 @@
 import type { ToolMessage } from "@langchain/langgraph-sdk";
 import { useState } from "react";
 import { FaArrowDown, FaArrowUp } from "react-icons/fa";
+
 import { ToolShowContainer } from "./ToolCall";
 
 type DisplayToolResponseProps = {
   message: ToolMessage;
 };
 
-export default function DisplayToolResponse({ message }: DisplayToolResponseProps) {
+export default function DisplayToolResponse({
+  message,
+}: DisplayToolResponseProps) {
   const [showToolCall, setShowToolCall] = useState(false);
 
   const handleDownload = (filename: string, content: string) => {
@@ -20,7 +23,7 @@ export default function DisplayToolResponse({ message }: DisplayToolResponseProp
     a.click();
     URL.revokeObjectURL(url);
   };
-  console.log(typeof message.content)
+  console.log(typeof message.content);
   return (
     <div className="top-0">
       {/* Toggle Button */}
@@ -45,35 +48,44 @@ export default function DisplayToolResponse({ message }: DisplayToolResponseProp
           <div key={message.id} className="p-2 border-b last:border-none">
             <div className="font-semibold text-gray-800">
               Tool Response: {String(message.content)}
-
               <br />
               Status: {message.status ?? "unknown"}
-              {message.name === "prepare_file" && (() => {
-                let data;
+              {message.name === "prepare_file" &&
+                (() => {
+                  let data;
 
-                try {
-                  data = JSON.parse(String(message.content));
-                  console.log(data)
-                } catch (err) {
-                  console.error("Invalid JSON in message.content:", message.content);
-                  return <div className="text-red-600">Error parsing file data</div>;
-                }
+                  try {
+                    data = JSON.parse(String(message.content));
+                    console.log(data);
+                  } catch (err) {
+                    console.error(
+                      "Invalid JSON in message.content:",
+                      message.content,
+                    );
+                    return (
+                      <div className="text-red-600">
+                        Error parsing file data
+                      </div>
+                    );
+                  }
 
-                return (
-                  <div className="mt-2 p-3 bg-green-50 border border-green-400 rounded-md">
-                    <p className="font-medium text-green-700">
-                      📄 A downloadable file is ready:
-                    </p>
+                  return (
+                    <div className="mt-2 p-3 bg-green-50 border border-green-400 rounded-md">
+                      <p className="font-medium text-green-700">
+                        📄 A downloadable file is ready:
+                      </p>
 
-                    <button
-                      className="mt-2 px-3 py-1 bg-green-600 hover:bg-green-700 text-white rounded"
-                      onClick={() => handleDownload(data.filename, data.base64)}
-                    >
-                      Download {data.filename}
-                    </button>
-                  </div>
-                );
-              })()}
+                      <button
+                        className="mt-2 px-3 py-1 bg-green-600 hover:bg-green-700 text-white rounded"
+                        onClick={() =>
+                          handleDownload(data.filename, data.base64)
+                        }
+                      >
+                        Download {data.filename}
+                      </button>
+                    </div>
+                  );
+                })()}
             </div>
           </div>
         </div>

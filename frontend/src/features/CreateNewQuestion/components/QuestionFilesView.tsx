@@ -1,12 +1,12 @@
-import type { Filenames, QuestionFileSpec } from "../instance";
 import { Checkbox } from "@mui/material";
-import { useQuestionCreate } from "../instance";
 import { useState } from "react";
-import { Toggle } from "../../../components/Toggles";
-import { TemplateFiles } from "../constants/templateFiles";
-import { UploadFiles, ShowUploadedFiles } from "../../../components/UploadFile";
 
+import { Toggle } from "../../../components/Toggles";
+import { ShowUploadedFiles, UploadFiles } from "../../../components/UploadFile";
 import { QuestionDirectoryPreview } from "../../../components/UploadFile";
+import { TemplateFiles } from "../constants/templateFiles";
+import type { Filenames, QuestionFileSpec } from "../instance";
+import { useQuestionCreate } from "../instance";
 
 function QuestionFileDisplay({
   filename,
@@ -24,9 +24,8 @@ function QuestionFileDisplay({
     required || adaptiveRequired || selectedFiles.includes(filename);
 
   if (required) {
-    add(filename)
+    add(filename);
   }
-
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value as Filenames;
@@ -39,7 +38,6 @@ function QuestionFileDisplay({
       <Checkbox
         value={filename}
         checked={isChecked}
-
         onChange={handleChange}
         className="mt-0.5"
       />

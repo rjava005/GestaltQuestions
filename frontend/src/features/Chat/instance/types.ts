@@ -1,10 +1,9 @@
-import type { ToolMessage, ContentBlock } from "langchain";
 import {
   AIMessage,
   HumanMessage,
   ToolMessageChunk,
 } from "@langchain/core/messages";
-import type { ThreadRead, ThreadMessageDetails } from "../ChatApi";
+import type { ContentBlock, ToolMessage } from "langchain";
 
 // ------------------------
 // TOOL Types
@@ -21,7 +20,7 @@ export type ToolExecute<TPayload> = (
   args: ToolExecuteArgs<TPayload>,
 ) => Promise<void>;
 // Tools that are specific and we want to render and get some sorth of output from
-export type ToolName = "final_question_payload"|"generate_image";
+export type ToolName = "final_question_payload" | "generate_image";
 
 export type RenderPreviewProps<TPayload> = {
   payload: TPayload;
@@ -70,20 +69,3 @@ export type CleanableContent = ContentBlock[] | string;
 // Payloads of interest
 
 export type UnknownRecord = Record<string, unknown>;
-
-// Context types
-export type ChatState = {
-  theadId: string | null;
-};
-export type ChatActions = {
-  setThreadId: (threadId: string | null) => void;
-  createdThread: (token: string, threadId: string) => Promise<ThreadRead>;
-  getUserThreads: (token: string) => Promise<ThreadRead[]>;
-  getUserThreadMessages: (
-    token: string,
-    threadId: string,
-  ) => Promise<ThreadMessageDetails>;
-  onThreadId: (val: string) => void;
-};
-
-export type ChatStore = ChatState & ChatActions;

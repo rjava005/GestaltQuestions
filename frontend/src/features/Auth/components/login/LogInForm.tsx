@@ -1,8 +1,8 @@
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { toast } from "react-toastify";
 
+import { auth } from "../../../../config/firebaseClient";
 import AuthBase from "./AuthBase";
-import {auth} from "../../../../config/firebaseClient"
 
 export function LogInForm() {
   const handleSubmit = async (email: string, password: string) => {

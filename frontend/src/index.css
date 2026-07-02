@@ -16,6 +16,8 @@
 
   --color-bg: #0d1117;
   --color-surface: rgba(15, 20, 30, 0.82);
+  --color-surface-secondary: rgba(255, 255, 255, 0.06);
+  --color-surface-tertiary: rgba(255, 255, 255, 0.035);
   --color-surface-strong: rgba(21, 28, 40, 0.96);
   --color-surface-muted: rgba(255, 255, 255, 0.04);
   --color-border: rgba(255, 255, 255, 0.08);
@@ -23,8 +25,17 @@
   --color-text: #edf2fb;
   --color-text-muted: #a7b3c9;
   --color-text-soft: #8892a6;
+  --color-text-tertiary: #7f8aa0;
   --color-accent: #82aaff;
   --color-accent-strong: #5fd0a5;
+  --color-approval: #5fd0a5;
+  --color-approval-foreground: #061711;
+  --color-approval-muted: rgba(95, 208, 165, 0.14);
+  --color-approval-border: rgba(95, 208, 165, 0.35);
+  --color-warning: #f59e0b;
+  --color-warning-foreground: #190f02;
+  --color-warning-muted: rgba(245, 158, 11, 0.16);
+  --color-warning-border: rgba(245, 158, 11, 0.38);
   --color-button-secondary: rgba(255, 255, 255, 0.05);
   --color-code: #0b0f15;
 }
@@ -53,6 +64,8 @@
 
     --color-bg: #eff2f7;
     --color-surface: rgba(255, 255, 255, 0.78);
+    --color-surface-secondary: rgba(20, 25, 36, 0.055);
+    --color-surface-tertiary: rgba(20, 25, 36, 0.035);
     --color-surface-strong: rgba(255, 255, 255, 0.96);
     --color-surface-muted: rgba(20, 25, 36, 0.04);
     --color-border: rgba(20, 25, 36, 0.08);
@@ -60,8 +73,17 @@
     --color-text: #0f1724;
     --color-text-muted: #4c566a;
     --color-text-soft: #6d7789;
+    --color-text-tertiary: #7b8494;
     --color-accent: #395bff;
     --color-accent-strong: #12856b;
+    --color-approval: #12856b;
+    --color-approval-foreground: #ffffff;
+    --color-approval-muted: rgba(18, 133, 107, 0.12);
+    --color-approval-border: rgba(18, 133, 107, 0.28);
+    --color-warning: #d97706;
+    --color-warning-foreground: #ffffff;
+    --color-warning-muted: rgba(217, 119, 6, 0.12);
+    --color-warning-border: rgba(217, 119, 6, 0.28);
     --color-button-secondary: rgba(20, 25, 36, 0.04);
     --color-code: #f7f9fc;
 
@@ -77,6 +99,13 @@
         transparent 24%
       ),
       #eff2f7;
+  }
+}
+
+@layer utilities {
+  .wrap-break-word {
+    overflow-wrap: anywhere;
+    word-break: break-word;
   }
 }
 

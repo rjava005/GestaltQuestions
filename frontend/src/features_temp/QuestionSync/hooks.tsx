@@ -1,5 +1,6 @@
-import { QuestionSyncAPI } from "../../services/questionSyncAPI";
 import { toast } from "react-toastify";
+
+import { QuestionSyncAPI } from "../../services/questionSyncAPI";
 import FormatMetrics from "./FormatMetrics";
 
 export const useSyncedQuestions = () => {
@@ -16,7 +17,7 @@ export const useSyncedQuestions = () => {
         />,
         {
           position: "top-right",
-        }
+        },
       );
     } catch (error) {
       toast.error(`Sync Failed\n${String(error)}`, {

@@ -7,7 +7,7 @@ export type SectionItem<K extends string = string> = {
 export type SectionTabProps = SectionItem & {
   selected: boolean;
   setSelected: (val: string) => void;
-  onClick?: () => void
+  onClick?: () => void;
 };
 
 export default function SectionTab({
@@ -26,7 +26,7 @@ export default function SectionTab({
 
         selected
           ? "text-blue-700 dark:text-blue-400"
-          : "text-slate-600 hover:text-slate-900 dark:text-slate-300 dark:hover:text-white"
+          : "text-slate-600 hover:text-slate-900 dark:text-slate-300 dark:hover:text-white",
       )}
     >
       {label}

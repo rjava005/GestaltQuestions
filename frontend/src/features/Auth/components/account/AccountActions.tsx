@@ -10,7 +10,7 @@ export default function AccountActions() {
     if (!user) return;
 
     const confirmed = window.confirm(
-      "Are you sure you want to permanently delete your account?"
+      "Are you sure you want to permanently delete your account?",
     );
     if (!confirmed) return;
 

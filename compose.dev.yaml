@@ -2,8 +2,8 @@ name: gestalt_questions_dev
 services:
   gestalt_backend_server:
     build:
-      context: ./backend
-      dockerfile: Dockerfile.dev
+      context: .
+      dockerfile: backend/Dockerfile.dev
     depends_on:
       - db
     environment:
@@ -13,7 +13,9 @@ services:
     ports:
       - 8000:8000
     volumes:
-      - ./backend:/app # mount project allows for reloading
+      - ./backend:/app/backend # mount project allows for reloading
+
+
   code_sandbox:
     build:
       context: ./code_sandbox

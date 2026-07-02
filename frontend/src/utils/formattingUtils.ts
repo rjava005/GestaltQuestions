@@ -27,7 +27,7 @@ export function formatArray(
   options: FormatArrayOptions = {
     mode: "index",
     join: ", ",
-  }
+  },
 ): string | Record<string, string> {
   switch (options.mode) {
     case "join":
@@ -48,7 +48,7 @@ export function formatArray(
 export function flattenObject(
   obj: unknown,
   prefix: string = "",
-  out: Record<any, any> = {}
+  out: Record<any, any> = {},
 ) {
   // Helper either formats is as prefix.value or return just the value
   const base = (s: any) => (prefix ? `${prefix}.${s}` : s);
@@ -71,7 +71,7 @@ export function flattenObject(
 export function applyPlaceHoldersTemplate(
   template: string,
   data: unknown,
-  prefix: string = ""
+  prefix: string = "",
 ): string {
   const flat = flattenObject(data, prefix);
 

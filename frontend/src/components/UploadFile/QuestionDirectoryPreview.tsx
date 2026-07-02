@@ -1,5 +1,6 @@
-import { MdOutlineSubdirectoryArrowRight } from "react-icons/md";
 import { CiFolderOn } from "react-icons/ci";
+import { MdOutlineSubdirectoryArrowRight } from "react-icons/md";
+
 import type { Filenames } from "../../features/CreateNewQuestion/instance";
 
 function FilePreview({ filename }: { filename: string }) {

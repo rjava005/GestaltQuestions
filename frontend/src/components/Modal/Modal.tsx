@@ -1,6 +1,7 @@
-import { useEffect, useRef } from "react";
-import { CloseButton } from "../CloseButton";
 import clsx from "clsx";
+import { useEffect, useRef } from "react";
+
+import { CloseButton } from "../CloseButton";
 
 const modalSizeVariants = {
   small: `
@@ -61,7 +62,7 @@ export default function Modal({
         className={clsx(
           "flex flex-col bg-white  border-gray-300 rounded-lg shadow-xl/30 p-8 overflow-auto dark:bg-background",
           modalSizeVariants[variant],
-          className
+          className,
         )}
       >
         <div className="self-end">

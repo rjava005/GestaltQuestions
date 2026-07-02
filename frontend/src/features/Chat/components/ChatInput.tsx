@@ -1,7 +1,8 @@
 import clsx from "clsx";
-import { useMemo, useState, useRef } from "react";
-import { UploadImagesChat } from "../../../components/UploadFile/UploadFileComponent";
+import { useMemo, useRef, useState } from "react";
 import { IoCloseCircle } from "react-icons/io5";
+
+import { UploadImagesChat } from "../../../components/UploadFile/UploadFileComponent";
 type ChatInputVariant = "default" | "subtle";
 
 const VariantClasses: Record<
@@ -79,7 +80,7 @@ export function ChatInput({
   };
 
   function onFileSelect(files: File[]) {
-    setFiles((prev) => [...prev, ...files])
+    setFiles((prev) => [...prev, ...files]);
   }
 
   return (
@@ -104,7 +105,9 @@ export function ChatInput({
                 alt={f.name || "Preview"}
                 className="h-28 w-full rounded-lg object-cover sm:h-32"
               />
-              <div className="truncate px-1 pt-1 text-xs text-text-soft">{f.name}</div>
+              <div className="truncate px-1 pt-1 text-xs text-text-soft">
+                {f.name}
+              </div>
             </div>
           ))}
         </div>
@@ -113,7 +116,10 @@ export function ChatInput({
       <div className={styles.toolbar}>
         <textarea
           ref={textareaRef}
-          className={clsx(styles.input, "min-h-10 max-h-55 resize-none overflow-y-auto")}
+          className={clsx(
+            styles.input,
+            "min-h-10 max-h-55 resize-none overflow-y-auto",
+          )}
           placeholder="Type a message..."
           disabled={disabled}
           value={message}

@@ -1,1 +1,1 @@
-export { default as ComponentPlayGround } from "./ComponentPlayGround"
+export { default as ComponentPlayGround } from "./ComponentPlayGround";

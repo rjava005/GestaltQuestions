@@ -2,7 +2,7 @@ import { useEffect } from "react";
 
 export function useOnClickOutside<T extends HTMLDivElement>(
   ref: React.RefObject<T | null>,
-  handler: (event: MouseEvent | TouchEvent) => void
+  handler: (event: MouseEvent | TouchEvent) => void,
 ) {
   if (ref === null) return;
   useEffect(() => {

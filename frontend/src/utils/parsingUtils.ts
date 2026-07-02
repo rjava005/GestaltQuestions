@@ -129,8 +129,6 @@ export function getImageBase64FileData(f: FileData): string | null {
   return toDataUrl(mime, payload);
 }
 
-
-
 export const handleCommaSeperatedValues = (val: string) => {
   return val
     .split(",")

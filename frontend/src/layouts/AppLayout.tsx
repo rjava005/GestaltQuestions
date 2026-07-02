@@ -1,16 +1,16 @@
 import { Outlet } from "react-router-dom";
-import NavBar from "../features/NavBar/NavBar";
-import navigationItems from "../features/NavBar";
 
+import navigationItems from "../features/NavBar";
+import NavBar from "../features/NavBar/NavBar";
 
 export default function AppLayout() {
-    return (
-        <div className="min-h-screen bg-bg text-text">
-            <NavBar items={navigationItems} />
+  return (
+    <div className="min-h-screen bg-bg text-text">
+      <NavBar items={navigationItems} />
 
-            <main className="mx-auto w-full px-4 py-6 ">
-                <Outlet />
-            </main>
-        </div>
-    );
+      <main className="w-full px-4 py-6 ">
+        <Outlet />
+      </main>
+    </div>
+  );
 }

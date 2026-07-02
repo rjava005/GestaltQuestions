@@ -1,10 +1,10 @@
+import { Button } from "../../components/Button";
 import type {
-  SyncMetrics,
   FolderCheckMetrics,
+  SyncMetrics,
   UnsyncedQuestion,
 } from "../../types/syncTypes";
 import { downloadJson } from "../../utils/downloadUtils";
-import { Button } from "../../components/Button";
 export type FormatMetricsProps = {
   metrics: SyncMetrics;
   deleted: FolderCheckMetrics;
@@ -40,5 +40,4 @@ const FormatMetrics: React.FC<FormatMetricsProps> = ({
   );
 };
 
-
-export default FormatMetrics
+export default FormatMetrics;

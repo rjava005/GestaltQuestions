@@ -2,19 +2,17 @@
 import { FaSyncAlt } from "react-icons/fa";
 import { toast } from "react-toastify";
 
-// Local components
-import { Button } from "../Button";
-import { PopUpHelpIcon } from "../Base/PopUpHelper";
-
 // Local utilities / API / types
 import { QuestionSyncAPI } from "../../services";
-import { downloadJson } from "../../utils/downloadUtils";
 import type {
   FolderCheckMetrics,
   SyncMetrics,
   UnsyncedQuestion,
 } from "../../types/syncTypes";
-
+import { downloadJson } from "../../utils/downloadUtils";
+import { PopUpHelpIcon } from "../Base/PopUpHelper";
+// Local components
+import { Button } from "../Button";
 
 interface FormatMetricsProps {
   metrics: SyncMetrics;
@@ -66,7 +64,7 @@ export default function SyncQuestions() {
         />,
         {
           position: "top-right",
-        }
+        },
       );
     } catch (error) {
       toast.error(`Sync Failed\n${String(error)}`, {

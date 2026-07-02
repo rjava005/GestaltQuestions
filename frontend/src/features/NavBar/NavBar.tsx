@@ -7,21 +7,20 @@ import {
   MenuItem,
   MenuItems,
 } from "@headlessui/react";
-import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 import { ChevronDownIcon } from "@heroicons/react/20/solid";
+import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 import clsx from "clsx";
+import { type User } from "firebase/auth";
 import { Link, NavLink } from "react-router-dom";
 
+import { useAuth, type UserRole } from "../Auth";
 import { ThemeToggle } from "../ThemeToggle";
-import { useAuth, type UserRole } from "../Auth"
-import { type User } from "firebase/auth";
-
 
 type Base = {
   label: string;
   to: string;
-  requiresAuth?: boolean
-  allowedRoles?: UserRole[]
+  requiresAuth?: boolean;
+  allowedRoles?: UserRole[];
 };
 
 export type BaseRoute = Base & {
@@ -45,33 +44,31 @@ const styles = {
   topbarActions: "flex items-center gap-4",
   viewSwitcher: clsx(
     "flex items-center gap-2.5 p-2 rounded-full border",
-    "border-border bg-surface backdrop-blur-[18px]"
+    "border-border bg-surface backdrop-blur-[18px]",
   ),
   viewPillBase: clsx(
     "px-4 py-2.5 rounded-full",
     "transition-colors duration-200",
-    "text-text-muted hover:text-text"
+    "text-text-muted hover:text-text",
   ),
   viewPillActive: "bg-surface-strong text-text",
   viewPillInactive: "bg-transparent",
   menuPanel: clsx(
     "absolute left-0 mt-2 w-44 rounded-2xl border p-1 shadow-soft",
-    "border-border bg-surface text-text backdrop-blur-md focus:outline-none"
+    "border-border bg-surface text-text backdrop-blur-md focus:outline-none",
   ),
   rightAction: clsx(
     "rounded-md px-3 py-2 text-sm font-medium",
-    "text-text-muted transition hover:bg-surface-muted hover:text-text"
+    "text-text-muted transition hover:bg-surface-muted hover:text-text",
   ),
 };
 
 export function canAccessRoute(
   nav: NavigationItem,
   user: User | null,
-  userRole: UserRole[] // Actual role of the user
+  userRole: UserRole[], // Actual role of the user
 ): boolean {
-
   if (nav.requiresAuth && !user) return false;
-
 
   // Route has role restrictions
   if (nav.allowedRoles && nav.allowedRoles.length > 0) {
@@ -82,12 +79,10 @@ export function canAccessRoute(
   return true;
 }
 
-
-
 function routePillClassName(isActive: boolean) {
   return clsx(
     styles.viewPillBase,
-    isActive ? styles.viewPillActive : styles.viewPillInactive
+    isActive ? styles.viewPillActive : styles.viewPillInactive,
   );
 }
 
@@ -102,7 +97,13 @@ function RoutePill({ to, label }: Base) {
 function DropDownNav({ nav }: { nav: DropDownNavRoute }) {
   return (
     <Menu as="div" className="relative">
-      <MenuButton className={clsx(styles.viewPillBase, styles.viewPillInactive, "inline-flex items-center gap-1.5")}>
+      <MenuButton
+        className={clsx(
+          styles.viewPillBase,
+          styles.viewPillInactive,
+          "inline-flex items-center gap-1.5",
+        )}
+      >
         <span>{nav.label}</span>
         <ChevronDownIcon className="h-4 w-4" />
       </MenuButton>
@@ -115,7 +116,7 @@ function DropDownNav({ nav }: { nav: DropDownNavRoute }) {
                 to={child.to}
                 className={clsx(
                   "block rounded-xl px-3 py-2 text-sm transition-colors",
-                  focus ? "bg-surface-strong text-text" : "text-text-muted"
+                  focus ? "bg-surface-strong text-text" : "text-text-muted",
                 )}
               >
                 {child.label}
@@ -135,7 +136,10 @@ function NavBar({ items }: NavBarProps) {
   const visibleItems = items.filter((item) => canAccessRoute(item, user, role));
 
   return (
-    <Disclosure as="nav" className="border-b border-border bg-surface text-text backdrop-blur-md">
+    <Disclosure
+      as="nav"
+      className="border-b border-border bg-surface text-text backdrop-blur-md"
+    >
       <div className="mx-auto flex h-16 max-w-7xl items-center px-3 sm:px-6 lg:px-8">
         <div className="sm:hidden">
           <DisclosureButton
@@ -155,7 +159,7 @@ function NavBar({ items }: NavBarProps) {
                   <DropDownNav key={item.label} nav={item} />
                 ) : (
                   <RoutePill key={item.to} to={item.to} label={item.label} />
-                )
+                ),
               )}
             </nav>
           </div>
@@ -164,10 +168,12 @@ function NavBar({ items }: NavBarProps) {
         <div className="ml-auto flex items-center gap-2">
           {user ? (
             <>
-              <Link to="/account">
-                My Account
-              </Link>
-              <button type="button" onClick={logout} className={styles.rightAction}>
+              <Link to="/account">My Account</Link>
+              <button
+                type="button"
+                onClick={logout}
+                className={styles.rightAction}
+              >
                 Logout
               </button>
             </>

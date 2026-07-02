@@ -1,9 +1,9 @@
-import React, { memo, useMemo, useRef, useState, useCallback } from "react";
-import Editor from "@monaco-editor/react";
-import type { editor as MonacoEditor } from "monaco-editor";
 import type { OnChange } from "@monaco-editor/react";
-import { debounce } from "lodash";
+import Editor from "@monaco-editor/react";
 import clsx from "clsx";
+import { debounce } from "lodash";
+import type { editor as MonacoEditor } from "monaco-editor";
+import React, { memo, useCallback, useMemo, useRef, useState } from "react";
 
 const languageMap: Record<string, string> = {
   py: "python",
@@ -60,7 +60,7 @@ const CodeEditor: React.FC<CodeEditorProps> = ({
 
   const handleEditorChange: OnChange = useCallback(
     debounce((v?: string) => setValue(v ?? ""), 350),
-    [setValue]
+    [setValue],
   );
 
   return (
@@ -80,12 +80,14 @@ const CodeEditor: React.FC<CodeEditorProps> = ({
           <select
             id="editor-theme-toggle"
             value={editorThemeKey}
-            onChange={(e) => setEditorThemeKey(e.target.value as EditorThemeKey)}
+            onChange={(e) =>
+              setEditorThemeKey(e.target.value as EditorThemeKey)
+            }
             className={clsx(
               "rounded-md border border-border",
               "bg-surface-strong px-2 py-1 text-xs",
               "text-text",
-              "focus:outline-none focus:ring-2 focus:ring-accent focus:border-accent"
+              "focus:outline-none focus:ring-2 focus:ring-accent focus:border-accent",
             )}
           >
             <option value="light">Light</option>

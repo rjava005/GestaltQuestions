@@ -1,62 +1,63 @@
-import clsx from "clsx";
 import type { Message } from "@langchain/langgraph-sdk";
-import DisplayToolCall from "./ToolCall";
-import DisplayToolResponse from "./ToolResponse";
-import ReactMarkdown from "react-markdown";
+import { useDebounce } from "@uidotdev/usehooks";
 import { MathJax } from "better-react-mathjax";
+import clsx from "clsx";
+import ReactMarkdown from "react-markdown";
+
 import { markdownPlugins } from "./chatConfig";
 import { markdownComponents } from "./chatConfig";
-import { useDebounce } from "@uidotdev/usehooks";
+import DisplayToolCall from "./ToolCall";
+import DisplayToolResponse from "./ToolResponse";
 type MessageType = Message["type"];
 
 const ChatMessageStyle: Partial<Record<MessageType, string>> = {
-    human: "bg-blue-500 text-white self-end ml-auto",
-    ai: "bg-gray-200 text-gray-800 self-start",
-    tool: "bg-green-200 text-gray-800 self-start",
+  human: "bg-blue-500 text-white self-end ml-auto",
+  ai: "bg-gray-200 text-gray-800 self-start",
+  tool: "bg-green-200 text-gray-800 self-start",
 };
 
 type ChatMessageProps = {
-    message: Message;
+  message: Message;
 };
 export default function ChatMessageContainer({ message }: ChatMessageProps) {
-    const isAI = message.type === "ai";
-    const isTool = message.type === "tool";
+  const isAI = message.type === "ai";
+  const isTool = message.type === "tool";
 
-    const rawContent = String(message.content ?? "");
+  const rawContent = String(message.content ?? "");
 
-    const debouncedContent = useDebounce(rawContent, 300);
+  const debouncedContent = useDebounce(rawContent, 300);
 
-    const renderContent = () => {
-        if (isAI && message.tool_calls?.length) {
-            return <DisplayToolCall toolCalls={message.tool_calls} />;
-        }
+  const renderContent = () => {
+    if (isAI && message.tool_calls?.length) {
+      return <DisplayToolCall toolCalls={message.tool_calls} />;
+    }
 
-        if (isTool) {
-            return <DisplayToolResponse message={message} />;
-        }
+    if (isTool) {
+      return <DisplayToolResponse message={message} />;
+    }
 
-        // Default: regular text message
-        return (
-            <MathJax>
-                <ReactMarkdown
-                    remarkPlugins={markdownPlugins.remarkPlugins}
-                    components={markdownComponents}
-                >
-                    {String(debouncedContent)}
-                </ReactMarkdown>
-            </MathJax>
-        );
-    };
-
+    // Default: regular text message
     return (
-        <div
-            key={message.id}
-            className={clsx(
-                "flex-1 relative overflow-y-auto p-4 space-y-3 text-sm rounded-md",
-                ChatMessageStyle[message.type]
-            )}
+      <MathJax>
+        <ReactMarkdown
+          remarkPlugins={markdownPlugins.remarkPlugins}
+          components={markdownComponents}
         >
-            {renderContent()}
-        </div>
+          {String(debouncedContent)}
+        </ReactMarkdown>
+      </MathJax>
     );
+  };
+
+  return (
+    <div
+      key={message.id}
+      className={clsx(
+        "flex-1 relative overflow-y-auto p-4 space-y-3 text-sm rounded-md",
+        ChatMessageStyle[message.type],
+      )}
+    >
+      {renderContent()}
+    </div>
+  );
 }
