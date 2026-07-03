@@ -89,3 +89,9 @@ frontend/node_modules
 /sql_scripts
 
 agents/.langgraph_api
+client_secret**
+credentials.json
+packages/gdrive_importer/html_data
+packages/gdrive_importer/json_data
+packages/gdrive_importer/data.json
+packages/gdrive_importer/token.json
