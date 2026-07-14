@@ -44,7 +44,7 @@ class QuestionCreate(QuestionRelationships):
     ai_generated: bool = False
     isAdaptive: bool = False
 
-    model_config = ConfigDict(extra="forbid")
+    model_config = ConfigDict(extra="ignore")
 
 
 class QuestionInternalCreate(QuestionCreate):
