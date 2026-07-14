@@ -2,10 +2,15 @@ from typing import Any
 from uuid import uuid4
 
 import pytest
-
-from src.data.exceptions.question_exceptions import QuestionValidationError
-from src.data.question import QuestionDB
-from src.model.question import Question, QuestionCreate, QuestionRead, QuestionUpdate
+from backend.question import (
+    QType,
+    Question,
+    QuestionCreate,
+    QuestionDB,
+    QuestionRead,
+    QuestionUpdate,
+    QuestionValidationError,
+)
 
 PayloadMap = dict[str, QuestionCreate]
 
@@ -33,14 +38,14 @@ def question_payloads() -> PayloadMap:
             ai_generated=True,
             isAdaptive=True,
             topics=["fluid-dynamics", "flow-analysis"],
-            qTypes=["multiple-choice"],
+            qType=[QType.MC],
         ),
         "filter_seed": QuestionCreate(
             title="Addition",
             ai_generated=True,
             isAdaptive=False,
             topics=["math"],
-            qTypes=["multiple-choice"],
+            qType=[QType.NUM],
         ),
         "creator_owned": QuestionCreate(
             title="Creator Owned",
@@ -115,7 +120,7 @@ async def test_create_question_with_relationships(
     assert created is not None
     assert created.title == payload.title
     assert len(created.topics) == 2
-    assert len(created.qTypes) == 1
+    assert len(created.qType) == 1
 
 
 @pytest.mark.asyncio

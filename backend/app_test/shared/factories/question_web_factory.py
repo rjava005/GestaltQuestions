@@ -3,7 +3,6 @@ from pathlib import Path
 from uuid import UUID
 
 import pytest
-
 from src.model.question import Question, QuestionData
 
 ASSETS_DIR = Path("app_test/shared/test_assets/uploads")

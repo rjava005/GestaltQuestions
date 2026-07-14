@@ -1,32 +1,37 @@
-export type RowId = string;
-import type { QuestionAllRow } from "../../QuestionBuilder";
+// Handle the state of the table
+type TableFilterValues = Record<string, unknown>;
+type TableColumnVisibility = Record<string, boolean>;
 
-export type TableColumn = {
-  key: string;
-  render?: (
-    row: { id?: string | null | undefined },
-    className?: string,
-  ) => React.ReactNode;
-};
-
-type QuestionTableBaseState = {
+export type QuestionTableState = {
   selectedIDs: string[];
-  multiselect: boolean;
+  visibleColumns: TableColumnVisibility;
+  filters: TableFilterValues;
+  search: string;
+  limit: number;
+  offset: number;
 };
 
-type QuestionTableBaseActions = {
+export type QuestionTableBaseActions = {
   setSelectedIDs: (ids: string[]) => void;
-  setMultiSelect: (val: boolean) => void;
+  toggleSelectedId: (id: string) => void;
+  clearSelectedIds: () => void;
+
+  setColumnVisible: (key: string, visible: boolean) => void;
+  toggleColumnVisible: (key: string) => void;
+
+  setFilterValue: (key: string, value: unknown) => void;
+  clearFilterValue: (key: string) => void;
+  clearFilters: () => void;
+  setSearch: (value: string) => void;
+  setPagination: (next: { limit?: number; offset?: number }) => void;
 };
 
-export type QuestionTableState<TQuestion> = QuestionTableBaseState & {
-  questions: TQuestion[];
-};
+export type QuestionTableStore = QuestionTableState & QuestionTableBaseActions;
 
-export type QuestionTableActions<TQuestion> = QuestionTableBaseActions & {
-  setQuestions: (qs: TQuestion[]) => void;
-};
+// export type QuestionTableActions<TQuestion> = QuestionTableBaseActions & {
+//   setQuestions: (qs: TQuestion[]) => void;
+// };
 
-export type AllQuestionTActions = QuestionTableActions<QuestionAllRow>;
-export type QuestionTableStore<TQuestion> = QuestionTableState<TQuestion> &
-  QuestionTableActions<TQuestion>;
+// export type AllQuestionTActions = QuestionTableActions<QuestionAllRow>;
+// export type QuestionTableStore<TQuestion> = QuestionTableState<TQuestion> &
+//   QuestionTableActions<TQuestion>;

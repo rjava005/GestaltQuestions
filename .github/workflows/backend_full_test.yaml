@@ -1,0 +1,54 @@
+name: Backend API Startup
+# Only triggers if there is a backend change
+on:
+  # Run on all changes to backend or this file
+  push:
+    paths: 
+      - 'backend/**'
+      - '.github/workflows/backend_api_startup.yml'
+    branches: ["main", "dev"]
+  pull_request:
+    paths: 
+      - 'backend/**'
+      - '.github/workflows/backend_api_startup.yml'
+    branches: ["main", "dev"]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        python-version: [3.12, 3.13]
+
+    env:
+      ENV: testing
+      STORAGE_BUCKET: ${{secrets.STORAGE_BUCKET}}
+      FIREBASE_CRED: ${{vars.FIREBASE_JSON_PATH}}
+      FIREBASE_AUTH_EMULATOR_HOST: 127.0.0.1:9099
+      STORAGE_EMULATOR_HOST: http://localhost:9199
+      RUN_FIREBASE_STORAGE_TESTS: 1
+    steps:
+      - uses: actions/checkout@v4
+
+      # Uses custom action to install uv and install dependencies
+      - uses: ./.github/actions/setup-python-project
+        with:
+          python-version: ${{ matrix.python-version }}
+          working-dir: "./backend"
+      
+      # Decore the firebase credentials and saves to file
+      # Probably not needed for this test. It just throws an error in our pydantic settings
+      - uses: ./.github/actions/firebase-credentials
+        with:
+          firebase-json: ${{ secrets.FIREBASE_JSON }}
+          credentials-path: ${{ vars.FIREBASE_JSON_PATH }}
+      # Start the emulator
+      - uses: ./.github/actions/firebase-emulator-start
+        name: Start firebase emulator
+      # Actually run the test
+      # Current just running the unit test but should be moved to actual api test
+      - name: Run Test
+        run: |
+          uv run pytest app_test
+        working-directory: ./backend

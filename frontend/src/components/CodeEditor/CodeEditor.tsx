@@ -1,31 +1,13 @@
 import type { OnChange } from "@monaco-editor/react";
 import Editor from "@monaco-editor/react";
-import clsx from "clsx";
 import { debounce } from "lodash";
 import type { editor as MonacoEditor } from "monaco-editor";
 import React, { memo, useCallback, useMemo, useRef, useState } from "react";
 
-const languageMap: Record<string, string> = {
-  py: "python",
-  python: "python",
-  js: "javascript",
-  javascript: "javascript",
-  ts: "typescript",
-  typescript: "typescript",
-  json: "json",
-  html: "html",
-  md: "markdown",
-  markdown: "markdown",
-};
-
-const editorThemeOptions = {
-  light: "vs",
-  dark: "vs-dark",
-  highContrast: "hc-black",
-} as const;
-
-type EditorThemeKey = keyof typeof editorThemeOptions;
-
+import CodeEditorToolBar from "./CodeEditorToolBar";
+import type { EditorThemeKey } from "./types";
+import { languageMap } from "./types";
+import { editorThemeOptions } from "./types";
 interface CodeEditorProps {
   value: string;
   setValue: (val: string) => void;
@@ -65,37 +47,11 @@ const CodeEditor: React.FC<CodeEditorProps> = ({
 
   return (
     <div className="w-full overflow-hidden rounded-lg border border-border bg-surface">
-      <div className="flex flex-wrap items-center justify-between gap-3 border-b border-border bg-surface-strong px-3 py-2">
-        <div className="text-xs font-semibold uppercase tracking-wide text-text-soft">
-          Editor: {resolvedLanguage}
-        </div>
-
-        <div className="flex items-center gap-2">
-          <label
-            htmlFor="editor-theme-toggle"
-            className="text-xs font-medium text-text-muted"
-          >
-            Theme
-          </label>
-          <select
-            id="editor-theme-toggle"
-            value={editorThemeKey}
-            onChange={(e) =>
-              setEditorThemeKey(e.target.value as EditorThemeKey)
-            }
-            className={clsx(
-              "rounded-md border border-border",
-              "bg-surface-strong px-2 py-1 text-xs",
-              "text-text",
-              "focus:outline-none focus:ring-2 focus:ring-accent focus:border-accent",
-            )}
-          >
-            <option value="light">Light</option>
-            <option value="dark">Dark</option>
-            <option value="highContrast">High Contrast</option>
-          </select>
-        </div>
-      </div>
+      <CodeEditorToolBar
+        language={resolvedLanguage}
+        theme={editorThemeKey}
+        setEditorTheme={setEditorThemeKey}
+      />
 
       <Editor
         height="70vh"

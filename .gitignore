@@ -86,7 +86,7 @@ frontend/node_modules/**
 **/.env.dev.**
 frontend/.env.dev.docker
 frontend/node_modules
-/sql_scripts
+
 
 agents/.langgraph_api
 client_secret**

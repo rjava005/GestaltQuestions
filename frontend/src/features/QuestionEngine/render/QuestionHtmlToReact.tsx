@@ -130,9 +130,13 @@ export default function QuestionHTMLToReact({ html }: { html: string | null }) {
     parsed = html;
   }
 
+  console.log("Parsed", parsed);
+
   return (
     <SafeRenderer>
-      <MathJax>{parsed}</MathJax>
+      <MathJax>
+        <div className="flex flex-col gap-5">{parsed}</div>
+      </MathJax>
     </SafeRenderer>
   );
 }

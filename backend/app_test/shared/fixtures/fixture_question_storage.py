@@ -2,11 +2,10 @@ from pathlib import Path
 
 import pytest
 import pytest_asyncio
-from src.types import FileData
-from src.web.service import refactor_question_storage_service as qs
-
 from src.core.config import get_settings
 from src.model.question import Question
+from src.types import FileData
+from src.web.service import refactor_question_storage_service as qs
 
 settings = get_settings()
 

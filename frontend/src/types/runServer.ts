@@ -1,4 +1,4 @@
-import type { QuizData } from "../features/QuestionEngine/instance";
+import type { QuizData } from "../services/QuestionRuntime/types";
 import { type CodeLanguage } from "./settingsType";
 
 export type ServerRunSuccess = {

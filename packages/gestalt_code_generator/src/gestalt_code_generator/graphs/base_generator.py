@@ -1,5 +1,3 @@
-
-
 from langchain.chat_models import init_chat_model
 from langchain_core.documents import Document
 from langgraph.graph import END, START, StateGraph
@@ -119,10 +117,12 @@ builder.add_edge("generate_code", END)
 graph = builder.compile()
 
 if __name__ == "__main__":
-    from gestalt_code_generator.utils import to_serializable
-    from pathlib import Path
-    from gestalt_code_generator.vectorstore import build_vectorstore_from_csv
     import json
+    from pathlib import Path
+
+    from gestalt_code_generator.utils import to_serializable
+    from gestalt_code_generator.vectorstore import build_vectorstore_from_csv
+
     vector_store = build_vectorstore_from_csv()
     result = graph.invoke(
         BaseGeneratorState(

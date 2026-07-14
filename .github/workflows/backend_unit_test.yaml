@@ -19,7 +19,7 @@ jobs:
 
     strategy:
       matrix:
-        python-version: [3.11, 3.12, 3.13]
+        python-version: [3.12, 3.13]
 
     env:
       ENV: testing
@@ -27,6 +27,7 @@ jobs:
       FIREBASE_CRED: ${{vars.FIREBASE_JSON_PATH}}
       FIREBASE_AUTH_EMULATOR_HOST: 127.0.0.1:9099
       STORAGE_EMULATOR_HOST: http://localhost:9199
+      RUN_FIREBASE_STORAGE_TESTS: 1
     steps:
       - uses: actions/checkout@v4
 
@@ -42,6 +43,9 @@ jobs:
         with:
           firebase-json: ${{ secrets.FIREBASE_JSON }}
           credentials-path: ${{ vars.FIREBASE_JSON_PATH }}
+      # Start the emulator
+      - uses: ./.github/actions/firebase-emulator-start
+        name: Start firebase emulator
       # Actually run the test
       - name: Run Test
         run: |

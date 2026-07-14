@@ -1,10 +1,15 @@
 import pytest
+from backend.auth import (
+    User,
+    UserCreate,
+    UserCreateError,
+    UserManager,
+    UserRoles,
+    ValidInstitutions,
+)
+from backend.auth.services import user_manager as user_manager_module
 
 from app_test.unit.shared import USERS
-from src.model.institution import ValidInstitutions
-from src.model.users import User, UserCreate, UserRoles
-from src.service.user import user_manager as user_manager_module
-from src.service.user.user_manager import UserManager
 
 
 @pytest.fixture
@@ -76,7 +81,7 @@ async def test_create_user_auth_failed(
 
     monkeypatch.setattr(user_manager_module.auth, "create_user", fake_auth)
 
-    with pytest.raises(ValueError) as exc_info:
+    with pytest.raises(UserCreateError) as exc_info:
         await make_user(**user_data)
 
     assert "Failed to create user" in str(exc_info.value)

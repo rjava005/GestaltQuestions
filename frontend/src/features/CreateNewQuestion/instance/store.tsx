@@ -10,7 +10,7 @@ const initialState: QuestionCreationState = {
   questionData: {
     title: "",
     topics: [],
-    qTypes: [],
+    qType: [],
     isAdaptive: false,
     ai_generated: false,
   },

@@ -1,4 +1,5 @@
 import clsx from "clsx";
+import { useId, useState } from "react";
 import { CiCirclePlus } from "react-icons/ci";
 import { MdDriveFolderUpload } from "react-icons/md";
 
@@ -8,7 +9,12 @@ import { type UploadAccept } from "./types";
 export const uploadFilesBase =
   "w-full mx-auto cursor-pointer transition-colors p-8 flex flex-col items-center justify-center text-center focus-within:outline-none focus-within:ring-2";
 
-export type UploadFilesStyle = "outline" | "solid" | "ghost" | "editor";
+export type UploadFilesStyle =
+  | "outline"
+  | "solid"
+  | "ghost"
+  | "editor"
+  | "editorDropzone";
 export const UploadFilesStyles: Record<UploadFilesStyle, string> = {
   outline:
     "rounded-lg border-2 border-dashed border-blue-400 bg-blue-50 " +
@@ -22,6 +28,9 @@ export const UploadFilesStyles: Record<UploadFilesStyle, string> = {
 
   editor:
     "rounded-lg border border-border-strong bg-code text-text hover:border-accent focus-within:ring-accent",
+
+  editorDropzone:
+    "min-h-38 rounded-lg border border-dashed border-border-strong bg-code/70 text-text-muted shadow-inner hover:border-accent hover:bg-surface-muted focus-within:ring-accent",
 };
 
 export type UploadFileSize = "sm" | "md" | "lg" | "full";
@@ -53,8 +62,16 @@ export default function UploadFiles({
   multiple = true,
   accept = "any",
 }: UploadFilesProp) {
+  const inputId = useId();
+  const [isDragging, setIsDragging] = useState(false);
+  const isEditorDropzone = variant === "editorDropzone";
+
+  const selectFiles = (files: FileList | null) => {
+    onFilesSelected(files ? Array.from(files) : []);
+  };
+
   const handleClick = () => {
-    document.getElementById("file-input")?.click();
+    document.getElementById(inputId)?.click();
   };
 
   return (
@@ -63,29 +80,69 @@ export default function UploadFiles({
         uploadFilesBase,
         UploadFilesSize[size],
         UploadFilesStyles[variant],
+        isDragging && "border-accent bg-surface-muted",
       )}
       onClick={handleClick}
+      onDragEnter={(e) => {
+        e.preventDefault();
+        setIsDragging(true);
+      }}
+      onDragOver={(e) => {
+        e.preventDefault();
+        setIsDragging(true);
+      }}
+      onDragLeave={() => setIsDragging(false)}
+      onDrop={(e) => {
+        e.preventDefault();
+        setIsDragging(false);
+        selectFiles(e.dataTransfer.files);
+      }}
       role="button"
       tabIndex={0}
     >
       <MdDriveFolderUpload
-        className="text-blue-500 dark:text-blue-400 mb-3"
-        size={40}
+        className={clsx(
+          "mb-3",
+          isEditorDropzone ? "text-accent" : "text-blue-500 dark:text-blue-400",
+        )}
+        size={isEditorDropzone ? 48 : 40}
       />
-      <span className="text-lg font-semibold text-blue-700 dark:text-blue-300">
-        Click to select file(s)
+      <span
+        className={clsx(
+          "font-semibold",
+          isEditorDropzone
+            ? "text-base text-text"
+            : "text-lg text-blue-700 dark:text-blue-300",
+        )}
+      >
+        {isEditorDropzone
+          ? "Drag & drop files here"
+          : "Click to select file(s)"}
       </span>
-      <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">{message}</p>
+      {isEditorDropzone && (
+        <span className="mt-1 text-sm font-medium text-accent">
+          or click to browse
+        </span>
+      )}
+      <p
+        className={clsx(
+          "mt-2 text-sm",
+          isEditorDropzone
+            ? "text-text-soft"
+            : "text-gray-600 dark:text-gray-400",
+        )}
+      >
+        {message}
+      </p>
 
       <input
         type="file"
         accept={accept}
-        id="file-input"
+        id={inputId}
         className="sr-only"
         multiple={multiple}
         onChange={(e) => {
-          const files = e.target.files ? Array.from(e.target.files) : [];
-          onFilesSelected(files);
+          selectFiles(e.target.files);
         }}
       />
     </div>

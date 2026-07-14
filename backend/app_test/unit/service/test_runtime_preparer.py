@@ -1,15 +1,14 @@
 import json
 
 import pytest
-
-from src.service.question_runtime.exceptions import (
+from backend.question_runtime import (
     ConfigurationError,
     InvalidEntryError,
     InvalidFilePayloadError,
+    Language,
     RuntimeResolutionError,
 )
-from src.service.question_runtime.models import Language
-from src.service.question_runtime.runtime_preparer import RuntimePreparer
+from backend.question_runtime.service.prepare_runtime import RuntimePreparer
 
 
 @pytest.fixture

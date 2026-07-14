@@ -9,6 +9,7 @@ class TestConfig(BaseSettings):
 
 test_config = TestConfig(asset_path=Path("app_test/assets").resolve())
 
+
 @pytest.fixture
 def get_asset_path():
     return test_config.asset_path

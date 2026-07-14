@@ -1,19 +1,20 @@
+from langgraph.graph import END, START, StateGraph
+
 from gestalt_code_generator.graphs.server_generator import (
     graph as server_graph,
 )
+from gestalt_code_generator.model import (
+    CodeArtifact,
+    GeneratorContext,
+    Question,
+    QuestionExampleColumn,
+    ServerExampleColumn,
+)
+from gestalt_code_generator.model.context import GeneratorContext
 from gestalt_code_generator.model.graph_models import (
     BaseGeneratorInput,
     BaseGeneratorState,
 )
-from gestalt_code_generator.model import (
-    GeneratorContext,
-    ServerExampleColumn,
-    QuestionExampleColumn,
-    Question,
-    CodeArtifact,
-)
-from gestalt_code_generator.model.context import GeneratorContext
-from langgraph.graph import END, START, StateGraph
 
 
 class ServerState(BaseGeneratorInput[QuestionExampleColumn, ServerExampleColumn]):
@@ -44,7 +45,6 @@ def generate_server_js(
             ),
             context=context,
         )
-        print("Raw", result)
         code = BaseGeneratorState.model_validate(result).code
         if code:
             return code
@@ -77,10 +77,11 @@ def generate_server_py(
 
 
 if __name__ == "__main__":
-    from gestalt_code_generator.utils import to_serializable
-    from pathlib import Path
-    from gestalt_code_generator.vectorstore import build_vectorstore_from_csv
     import json
+    from pathlib import Path
+
+    from gestalt_code_generator.utils import to_serializable
+    from gestalt_code_generator.vectorstore import build_vectorstore_from_csv
 
     vector_store = build_vectorstore_from_csv()
 

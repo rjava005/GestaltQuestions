@@ -1,0 +1,51 @@
+DROP VIEW IF EXISTS question_table_view;
+
+CREATE VIEW
+    question_table_view AS
+SELECT
+    "question"."id" AS "question_id",
+    "developer_profile"."user_id" AS "owner_id",
+    "developer_profile"."id" AS "developer_profile_id",
+    "question"."title",
+    "institution"."id" AS "institution_id",
+    "institution"."name" AS "institution",
+    "user"."email" AS "created_by",
+    "question"."isAdaptive",
+    "question"."status",
+    array_agg(DISTINCT "topic"."name"::text ORDER BY "topic"."name"::text) AS "topics",
+
+array_agg(
+    DISTINCT "question_type"."name"::text
+    ORDER BY "question_type"."name"::text
+) AS "question_type",
+
+coalesce(
+    array_agg(
+        DISTINCT "question_runtime"."language"::text
+        ORDER BY "question_runtime"."language"::text
+    ) FILTER (WHERE "question_runtime"."language" IS NOT NULL),
+    ARRAY[]::text[]
+) AS "available_runtimes",
+    "question"."created_at",
+    "question"."updated_at"
+FROM
+    "question"
+    LEFT JOIN "question_topic_link" ON "question_topic_link"."question_id" = "question"."id"
+    LEFT JOIN "topic" ON "topic"."id" = "question_topic_link"."topic_id"
+    LEFT JOIN  "question_qtype_link" ON "question_qtype_link"."question_id" = "question"."id"
+    LEFT JOIN  "question_type" ON "question_type"."id" = "question_qtype_link"."qtype_id"
+    LEFT JOIN "question_runtime" ON "question_runtime"."question_id" = "question"."id"
+    JOIN "developer_profile" ON "developer_profile"."id" = "question"."created_by_id"
+    JOIN "user" ON "user"."id" = "developer_profile"."user_id"
+    LEFT JOIN "institution" ON "user"."institution_id" = "institution"."id"
+GROUP BY
+    "question"."id",
+    "developer_profile"."user_id",
+    "developer_profile"."id",
+    "question"."title",
+    "institution"."id",
+    "institution"."name",
+    "user"."email",
+    "question"."status",
+    "question"."created_at",
+    "question"."updated_at";

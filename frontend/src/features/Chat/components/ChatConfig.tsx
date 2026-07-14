@@ -24,12 +24,13 @@ function AssistantConfig() {
         onChange={(event) => setAssistant(event.target.value as AssistantId)}
         className="w-full rounded-md border border-border bg-surface px-3 py-2 text-text"
       >
-        {ASSISTANTS.map((assistant) => (
-          assistant.active?
-          (<option key={assistant.assistant_id} value={assistant.assistant_id}>
-            {assistant.label}
-          </option>):null
-        ))}
+        {ASSISTANTS.map((assistant) =>
+          assistant.active ? (
+            <option key={assistant.assistant_id} value={assistant.assistant_id}>
+              {assistant.label}
+            </option>
+          ) : null,
+        )}
       </select>
       {selectedAssistant ? (
         <p className="text-sm text-text-muted">
@@ -43,8 +44,6 @@ function AssistantConfig() {
 function ModelConfig() {
   const model = useChatStore((s) => s.model);
   const setModel = useChatStore((s) => s.setModel);
-
-  
 
   return (
     <div className="space-y-2">
@@ -60,12 +59,13 @@ function ModelConfig() {
         onChange={(event) => setModel(event.target.value as ChatModel)}
         className="w-full rounded-md border border-border bg-surface px-3 py-2 text-text"
       >
-        {CHAT_MODELS.map((chatModel) => (
-          chatModel.active ?
-            (<option key={chatModel.value} value={chatModel.value}>
+        {CHAT_MODELS.map((chatModel) =>
+          chatModel.active ? (
+            <option key={chatModel.value} value={chatModel.value}>
               {chatModel.label}
-            </option>) : null
-        ))}
+            </option>
+          ) : null,
+        )}
       </select>
     </div>
   );

@@ -4,7 +4,7 @@ import { Header } from "../components/Header";
 import { ComponentPlayGround } from "../features/ComponentPlayGround";
 import CreateQuestionFromBlank from "../features/CreateNewQuestion/CreateNewQuestion";
 import { QuestionCreateProvider } from "../features/CreateNewQuestion/instance";
-import { DevQuestionTable } from "../features/QuestionTables";
+import { MyQuestionsTable } from "../features/QuestionTables";
 
 export default function QuestionBuilderPage() {
   return (
@@ -75,7 +75,7 @@ export function QuestionsListPage() {
   const navigate = useNavigate();
 
   return (
-    <DevQuestionTable
+    <MyQuestionsTable
       onQuestionSelect={(qid) =>
         navigate(`/question_builder/questions/${qid}/edit`)
       }

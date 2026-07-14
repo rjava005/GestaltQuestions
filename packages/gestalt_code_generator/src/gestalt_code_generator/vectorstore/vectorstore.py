@@ -1,16 +1,17 @@
-from pathlib import Path
 from functools import lru_cache
+from pathlib import Path
+
 from dotenv import load_dotenv
 from langchain_core.vectorstores import InMemoryVectorStore
 from langchain_google_genai import GoogleGenerativeAIEmbeddings
 
 from gestalt_code_generator.document_loader import QuestionDocumentLoader
 
-
 load_dotenv()
 CSV_PATH = Path(r"./data/QuestionDataV2_06122025_classified.csv").resolve()
 embeddings = GoogleGenerativeAIEmbeddings(model="models/gemini-embedding-001")
 vector_store = InMemoryVectorStore(embeddings)
+
 
 @lru_cache
 def build_vectorstore_from_csv(

@@ -1,5 +1,5 @@
 import operator
-from typing import Annotated, Generic, List, TypeVar
+from typing import Annotated, List, TypeVar
 
 from langchain_core.documents import Document
 from pydantic import BaseModel, Field
@@ -10,7 +10,7 @@ SourceColumnT = TypeVar("SourceColumnT", bound=str)
 TargetColumnT = TypeVar("TargetColumnT", bound=str)
 
 
-class BaseGeneratorInput(BaseModel, Generic[SourceColumnT, TargetColumnT]):
+class BaseGeneratorInput[SourceColumnT: str, TargetColumnT: str](BaseModel):
     question: Question = Field(
         description="Payload containing all question content needed for generation."
     )

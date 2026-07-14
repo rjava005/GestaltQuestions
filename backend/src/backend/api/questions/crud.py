@@ -1,0 +1,74 @@
+from collections.abc import Sequence
+
+from fastapi import APIRouter, HTTPException
+from starlette import status
+
+from backend.api.deps import QuestionDBDependency, QuestionQueryDependency
+from backend.core import logger
+from backend.question import Question, QuestionFilter, QuestionRead, QuestionTableRow
+from backend.shared import ID
+
+router = APIRouter(
+    prefix="/questions",
+    tags=[
+        "questions",
+    ],
+)
+
+
+@router.get("/all")
+async def get_all(
+    service: QuestionQueryDependency, filter: QuestionFilter
+) -> Sequence[QuestionTableRow]:
+    return await service.get_table()
+
+
+@router.post("/all")
+async def get_all_filtered(
+    service: QuestionQueryDependency, filter: QuestionFilter
+) -> Sequence[QuestionTableRow]:
+    return await service.filter_questions(title=filter.title)
+
+
+# Retrieving
+@router.get("/{qid}")
+async def get_question(qid: ID, qdb: QuestionDBDependency) -> Question:
+    try:
+        question = await qdb.get_question(qid)
+        if not question:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail=f"Could not find question {qid}",
+            )
+        return question
+    except Exception as e:
+        raise HTTPException(
+            status_code=404, detail=f"Failed to get question {e}"
+        ) from e
+
+
+@router.get("/{offset:int}/{limit:int}")
+async def get_all_questions(
+    qdb: QuestionDBDependency, offset: int = 0, limit: int = 100
+) -> Sequence[Question | QuestionRead]:
+    try:
+        return await qdb.get_all_questions(offset, limit)
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=f"Failed to get all questions {e}",
+        ) from e
+
+
+@router.post("/filter")
+async def filter_questions(
+    qdb: QuestionDBDependency, filter: QuestionFilter, offset: int = 0, limit: int = 100
+) -> Sequence[QuestionRead]:
+    try:
+        logger.info("Raw filter crud %s", filter)
+        return await qdb.filter_questions(filter)
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=f"Failed to filter questions {e}",
+        ) from e

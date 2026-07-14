@@ -34,7 +34,6 @@ for item in data:
     parent_dict[parent_id].append(item)
 
 for parent_id, files in parent_dict.items():
-
     for file in files:
         # print(f"  - {file.name} ({file.id})")
         if file.name == "question.html":

@@ -3,7 +3,6 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { Button } from "../../../components/Button";
 import { CodeEditor } from "../../../components/CodeEditor";
 import { Container } from "../../../components/Container";
-import { DropDown } from "../../../components/DropDown";
 import { ShowUploadedFiles, UploadFiles } from "../../../components/UploadFile";
 import { type FileData } from "../../../types/fileTypes";
 import {
@@ -178,15 +177,6 @@ export default function EditorPane({ qid, fileData }: EditorPaneProps) {
   return (
     <Container header="Code Editor">
       <div className="mb-3 flex flex-wrap items-end gap-3 rounded-md border border-border bg-surface p-3">
-        <div className="min-w-55 flex-1">
-          <DropDown
-            label="Question Files"
-            options={files.map((f) => f.filename)}
-            selected={activeFile.filename}
-            setSelected={setSelectedFile}
-          />
-        </div>
-
         <div className="flex items-center gap-2">
           <Button
             name={isSaving ? "Saving..." : "Save"}

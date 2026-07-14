@@ -9,6 +9,7 @@ const navigationItems: NavigationItem[] = [
     requiresAuth: true,
   },
   { label: "Questions", to: "/questions", type: "route" },
+  { label: "Test", to: "/test", type: "route" },
 ];
 
 export default navigationItems;

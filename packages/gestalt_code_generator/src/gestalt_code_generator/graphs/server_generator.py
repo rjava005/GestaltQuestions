@@ -97,10 +97,11 @@ graph = builder.compile()
 
 
 if __name__ == "__main__":
-    from gestalt_code_generator.utils import to_serializable
-    from pathlib import Path
-    from gestalt_code_generator.vectorstore import build_vectorstore_from_csv
     import json
+    from pathlib import Path
+
+    from gestalt_code_generator.utils import to_serializable
+    from gestalt_code_generator.vectorstore import build_vectorstore_from_csv
 
     vector_store = build_vectorstore_from_csv()
     result = graph.invoke(

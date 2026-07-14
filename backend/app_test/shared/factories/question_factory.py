@@ -1,5 +1,4 @@
 import pytest
-
 from src.model.question import Question, QuestionData
 
 

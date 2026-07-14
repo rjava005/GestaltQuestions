@@ -1,7 +1,5 @@
 import pytest
-
-from src.data.institution import InstitutionDB
-from src.model.institution import ValidInstitutions
+from backend.auth import InstitutionDB, InstitutionValidationError, ValidInstitutions
 
 
 @pytest.fixture
@@ -34,10 +32,13 @@ async def test_get_institution_by_id(institution_db) -> None:
 
 
 @pytest.mark.asyncio
-async def test_get_institution_with_none_identifier_raises_value_error(
+async def test_get_institution_with_none_identifier_raises_validation_error(
     institution_db,
 ) -> None:
-    with pytest.raises(ValueError, match="Identifier cannot be None"):
+    with pytest.raises(
+        InstitutionValidationError,
+        match="Institution identifier cannot be None",
+    ):
         await institution_db.get_institution(None)
 
 

@@ -3,11 +3,11 @@ from unittest.mock import AsyncMock, MagicMock
 from uuid import uuid4
 
 import pytest
-
-from src.model.users import DeveloperProfile, UserRoles
-from src.service.question_manager.developer_question_service import (
+from backend.auth import (
     DeveloperAccessDenied,
     DeveloperAccessService,
+    DeveloperProfile,
+    UserRoles,
 )
 
 

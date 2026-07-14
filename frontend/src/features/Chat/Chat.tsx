@@ -10,11 +10,11 @@ import { AIBubble, HumanBubble } from "./components/ChatBubble";
 import ChatContainer from "./components/ChatContainer";
 import { ChatInput } from "./components/ChatInput";
 import { ApprovalCard } from "./components/hitlApproval";
+import RenderToolCalls from "./components/ToolCallRender";
 import { useHITLReview } from "./hooks";
 import { useThreadStore } from "./instance/store";
 import { useChatStore } from "./instance/store";
 import { prepareMessage } from "./utils";
-import RenderToolCalls from "./components/ToolCallRender";
 
 export function ChatSession() {
   // User

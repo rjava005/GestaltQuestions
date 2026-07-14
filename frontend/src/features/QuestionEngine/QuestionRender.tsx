@@ -1,115 +1,58 @@
-import { type FormEvent, useState } from "react";
-import { Panel, PanelGroup, PanelResizeHandle } from "react-resizable-panels";
+import type { QuestionRuntimeLanguage } from "../../services";
+import { QuestionInstanceProvider, useQuestionInstance } from "./instance";
+import QuestionRenderShell from "./layout/QuestionRenderShell";
+import { useRunQuestion } from "./runtime/useQuestionRunTime";
 
-import { Button } from "../../components/Button";
-import { Error } from "../../components/Error";
-import type { ServerSettings } from "../QuestionBuilder/components/ServerToggle";
-import {
-  QuestionInstanceProvider,
-  useQuestionInstance,
-  useRunQuestion,
-} from "./instance";
-import QuestionHTMLToReact from "./render/QuestionHtmlToReact";
-import { DisplayAnswers, QuestionHeader } from "./ui";
 type QuestionRenderProps = {
-  qid: string | null;
-  serverSettings: ServerSettings;
+  qid: string;
+  serverSettings: QuestionRuntimeLanguage;
+  withProvider?: boolean;
 };
 
 function QuestionRenderBody({ qid, serverSettings }: QuestionRenderProps) {
-  const [refreshKey, setRefreshKey] = useState(0);
-  const [showSolution, setShowSolution] = useState<boolean>(false);
-  useRunQuestion(qid, serverSettings, refreshKey);
-
-  // Unpack
-  const loading = useQuestionInstance((s) => s.loading);
-  const error = useQuestionInstance((s) => s.error);
-  const qhtml = useQuestionInstance((s) => s.questionHtml);
-  const shtml = useQuestionInstance(
-    (s) => s.solutionHtml ?? "No Solution Available for Question",
+  const refreshKey = useQuestionInstance((s) => s.refreshKey);
+  const { qPayload, error, loading } = useRunQuestion(
+    qid,
+    serverSettings,
+    refreshKey,
   );
-  const quizData = useQuestionInstance((s) => s.quizData);
-  const qmeta = useQuestionInstance((s) => s.questionMeta);
-  const answers = useQuestionInstance((s) => s.answers);
-  const resetAll = useQuestionInstance((s) => s.resetAll);
-  const isSubmitted = useQuestionInstance((s) => s.hasSubmitted);
-  const submit = useQuestionInstance((s) => s.submitAnswers);
-
   if (error) {
-    return <Error error={error} variant="codeExecution" />;
+    return (
+      <div
+        className="w-full rounded-[var(--radius-md)] border border-red-200 bg-red-50 p-4 text-sm text-red-800"
+        role="alert"
+      >
+        <div className="font-semibold">Code execution failed</div>
+        <pre className="mt-2 whitespace-pre-wrap font-mono text-xs">
+          {error}
+        </pre>
+      </div>
+    );
   }
 
-  const handleSubmit = (e: FormEvent) => {
-    e.preventDefault();
-    submit();
-  };
-  const handleGenerateVariant = () => {
-    setRefreshKey((prev) => prev + 1);
-    resetAll();
-  };
-
-  if (loading) {
-    return <div>Loading</div>;
+  if (loading || !qPayload) {
+    return (
+      <div
+        className="flex min-h-130 w-full items-center justify-center rounded-[var(--radius-md)] border border-[var(--color-border)] bg-[var(--color-surface-strong)] text-sm font-medium text-text-muted"
+        role="status"
+        aria-live="polite"
+      >
+        Loading question...
+      </div>
+    );
   }
 
-  return (
-    <div className="space-y-4">
-      <QuestionHeader qdata={qmeta} />
-
-      <PanelGroup direction="horizontal" className="w-full gap-3">
-        <Panel
-          order={1}
-          defaultSize={200}
-          minSize={25}
-          className="rounded-lg border border-border bg-surface p-4"
-        >
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <div className="text-text">
-              <QuestionHTMLToReact html={qhtml} />
-            </div>
-
-            <div className="flex flex-wrap gap-2">
-              <Button type="submit" name="Submit" color="submitQuestion" />
-              <Button
-                type="button"
-                onClick={handleGenerateVariant}
-                name="Generate Variant"
-                color="generateVariant"
-              />
-              <Button
-                type="button"
-                onClick={() => setShowSolution((prev) => !prev)}
-                name={showSolution ? "Hide Solution" : "Show Solution"}
-                color="showSolution"
-              />
-            </div>
-          </form>
-          {isSubmitted && (
-            <DisplayAnswers quizData={quizData} submittedAnswer={answers} />
-          )}
-        </Panel>
-
-        {showSolution && (
-          <>
-            <PanelResizeHandle className="w-2 rounded-sm bg-border hover:bg-border-strong transition-colors duration-200 cursor-col-resize" />
-            <Panel
-              order={2}
-              defaultSize={200}
-              minSize={25}
-              className="rounded-lg border border-border bg-surface p-4"
-            >
-              <div className="text-text">
-                <QuestionHTMLToReact html={shtml} />
-              </div>
-            </Panel>
-          </>
-        )}
-      </PanelGroup>
-    </div>
-  );
+  return <QuestionRenderShell qpayload={qPayload} />;
 }
 
-export default function QuestionRender(props: QuestionRenderProps) {
+export default function QuestionRender({
+  withProvider = true,
+  ...props
+}: QuestionRenderProps) {
+  if (!withProvider) {
+    return <QuestionRenderBody {...props} />;
+  }
+
   return (
     <QuestionInstanceProvider>
       <QuestionRenderBody {...props} />

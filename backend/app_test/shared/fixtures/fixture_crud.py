@@ -2,7 +2,6 @@ import json
 from typing import Literal
 
 import pytest
-
 from src.utils.normalization_utils import normalize_content, to_serializable
 
 

@@ -4,15 +4,19 @@ from pathlib import Path
 import pytest
 from dotenv import load_dotenv
 from langchain_core.vectorstores import InMemoryVectorStore
-from gestalt_code_generator.vectorstore import build_vectorstore_from_csv
+
 from gestalt_code_generator.graphs.base_generator import (
     Question,
 )
-from gestalt_code_generator.model import GeneratorContext
 from gestalt_code_generator.graphs.base_generator import (
     graph as BaseGenerator,
 )
-from gestalt_code_generator.model.graph_models import BaseGeneratorInput, BaseGeneratorState
+from gestalt_code_generator.model import GeneratorContext
+from gestalt_code_generator.model.graph_models import (
+    BaseGeneratorInput,
+    BaseGeneratorState,
+)
+from gestalt_code_generator.vectorstore import build_vectorstore_from_csv
 
 ENV_PATH = Path(__file__).resolve().parents[1] / "src" / ".env"
 load_dotenv(ENV_PATH)

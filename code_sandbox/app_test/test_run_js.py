@@ -7,7 +7,6 @@ import pytest
 # --- Local Modules ---
 from src.services.code_runner.javascript_runner import JavaScriptRunner
 from src.services.code_runner.models import ExecutionResult, RuntimeExecutionConfig
-from src.services.code_runner.error_handling import ExecutionError
 
 
 def _read_asset(asset_dir: Path, filename: str) -> str:
@@ -75,7 +74,9 @@ def test_js_execution_with_utils(js_config_with_utils: RuntimeExecutionConfig):
     assert any("mock js with utils" in log for log in response.logs)
 
 
-def test_js_execution_with_custom_function(js_config_custom_func: RuntimeExecutionConfig):
+def test_js_execution_with_custom_function(
+    js_config_custom_func: RuntimeExecutionConfig,
+):
     runner = JavaScriptRunner(js_config_custom_func)
     response = ExecutionResult.model_validate(runner.run())
 

@@ -1,8 +1,6 @@
 import clsx from "clsx";
 import { twMerge } from "tailwind-merge";
 
-import { getImageBase64FileData } from "../../../../../utils";
-import { useQuestionInstance } from "../../../instance";
 export type ImageSize = "sm" | "md" | "lg";
 
 export interface PLFigureProps {
@@ -33,18 +31,7 @@ export default function PLFigure({
   size = "md",
   variant = "default",
 }: PLFigureProps) {
-  const files = useQuestionInstance((state) => state.files);
-
   const resolvedName = src || filename || "default.png";
-
-  const fileMatch = files?.find((f) => {
-    if (!src && !filename) return false;
-    return f.filename === src || f.filename === filename;
-  });
-
-  const resolvedImage = fileMatch
-    ? getImageBase64FileData(fileMatch)
-    : resolvedName;
 
   return (
     <div
@@ -57,7 +44,7 @@ export default function PLFigure({
       )}
     >
       <img
-        src={resolvedImage ?? resolvedName}
+        src={resolvedName}
         alt={resolvedName}
         className={clsx(
           "w-full h-auto object-contain transition-transform duration-(--duration-base) hover:scale-[1.02]",

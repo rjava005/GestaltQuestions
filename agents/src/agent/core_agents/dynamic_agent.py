@@ -4,9 +4,9 @@ from langchain.agents import create_agent
 from langchain.chat_models import init_chat_model
 
 from src.agent.core.context import (
+    ConfigSchema,
     GeminiModel,
     ModelProvider,
-    ConfigSchema,
     ModelRoutingMiddleware,
 )
 
@@ -17,6 +17,6 @@ model = init_chat_model(
 agent = create_agent(
     model=model,
     system_prompt="You are a helpful assistant",
-    middleware=[ModelRoutingMiddleware()], # type: ignore
+    middleware=[ModelRoutingMiddleware()],  # type: ignore
     context_schema=ConfigSchema,
 )  # type: ignore

@@ -4,18 +4,14 @@ from alembic import context
 from sqlalchemy import engine_from_config, pool
 from sqlmodel import SQLModel
 
-from src.core.config import get_settings
-from src.model.institution import Institution
-from src.model.question import (
-    Question,
-    QuestionQTypeLink,
-    QuestionTopicLink,
-    QuestionType,
-    Topic,
-)
-from src.model.question_attempt import QuestionAttempt
-from src.model.thread import Message, Thread
-from src.model.users import DeveloperProfile, User, UserRoleLink
+# Import all the models
+from backend.auth.model import *  # type: ignore
+from backend.chat.model import *  # type: ignore
+from backend.core import get_settings
+from backend.question.models import *  # type: ignore
+from backend.question_attempt.model import *  # type: ignore
+from backend.question_runtime.model import *  # type: ignore
+from backend.storage.model import *  # type: ignore
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.

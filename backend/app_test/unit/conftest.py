@@ -1,10 +1,6 @@
 import pytest
 from sqlmodel import Session
-
-from src.data.institution import InstitutionDB
-from src.data.role import RoleDB
-from src.data.user import UserDB
-from src.model import Role, UserRoles
+from backend.auth import InstitutionDB, Role, RoleDB, UserDB, UserRoles
 
 
 # Create the database session

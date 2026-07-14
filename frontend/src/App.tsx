@@ -1,10 +1,10 @@
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 
 import { RequireRole } from "./features/Auth";
+import QuestionWorkspace from "./features/QuestionWorkspace/QuestionWorkspace";
 import AppLayout from "./layouts/AppLayout";
 import {
   AccountPage,
-  EditQuestionPage,
   Home,
   LoginPage,
   QuestionBuilder,
@@ -41,7 +41,7 @@ function App() {
                 <Route path="questions/new" element={<CreateNewQuestion />} />
                 <Route
                   path="questions/:qid/edit"
-                  element={<EditQuestionPage />}
+                  element={<QuestionWorkspace />}
                 />
                 <Route
                   path="playground"
@@ -50,7 +50,6 @@ function App() {
                 <Route path="chat" element={<ChatPage />} />
               </Route>
             </Route>
-
             <Route path="*" element={<Navigate to="/" replace />} />
           </Route>
         </Routes>

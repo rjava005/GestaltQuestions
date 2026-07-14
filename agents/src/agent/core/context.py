@@ -1,16 +1,12 @@
 """Shared agent context, model registry, and middleware utilities."""
 
-from dataclasses import dataclass
 from enum import StrEnum
 from functools import lru_cache
-from typing import Any, Awaitable, Callable
+from typing import Awaitable, Callable
 
 from langchain.agents.middleware import AgentMiddleware, ModelRequest, ModelResponse
 from langchain.chat_models import init_chat_model
 from langchain_core.language_models.chat_models import BaseChatModel
-from langchain_core.messages import ToolMessage
-from langgraph.prebuilt.tool_node import ToolCallRequest
-from langgraph.types import Command
 from pydantic import BaseModel, Field, model_validator
 
 
@@ -85,7 +81,6 @@ class ModelRoutingMiddleware(AgentMiddleware):
     ) -> ModelResponse:
         """Route async model calls through the cached model registry."""
         model_name = request.runtime.context.model
-        print("Model change", model_name)
         return await handler(request.override(model=get_model(model_name)))
 
 

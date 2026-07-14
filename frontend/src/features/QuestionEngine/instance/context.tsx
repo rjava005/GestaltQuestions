@@ -20,6 +20,7 @@ export function QuestionInstanceProvider({
   if (!storeRef.current) {
     storeRef.current = createQuestionInstanceStore(initialState);
   }
+
   return (
     <QuestionInstanceContext.Provider value={storeRef.current}>
       {children}

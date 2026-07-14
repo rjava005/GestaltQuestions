@@ -1,6 +1,5 @@
 import logging
 import os
-from dotenv import load_dotenv
 
 
 # Create the logger

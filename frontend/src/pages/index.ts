@@ -1,5 +1,4 @@
 export { default as AccountPage } from "./AccountPage";
-export { default as EditQuestionPage } from "./EditQuestion";
 export { default as Home } from "./Home";
 export { default as LoginPage } from "./LoginPage";
 export { default as QuestionBuilder } from "./QuestionBuilder";

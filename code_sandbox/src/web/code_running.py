@@ -20,7 +20,7 @@ def execute_code(
                 "server.js": "function generate(){ return {ok:true}; }\nmodule.exports={generate};"
             },
         }
-    )
+    ),
 ) -> ExecutionResult:
     language = config.language
 
@@ -43,7 +43,11 @@ def execute_code(
     except ExecutionError as e:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
-            detail={f"Failed to execute:  {e}"},
+            detail={
+                "error_code": getattr(e, "error_code", "EXECUTION_ERROR"),
+                "exit_code": getattr(e, "exit_code", None),
+                "message": f"Failed to execute: {e}",
+            },
         )
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"An unexpected result occured {e}")

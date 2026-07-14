@@ -1,17 +1,19 @@
 """Dynamic agent configured with runtime model routing."""
 
+from datetime import datetime
+from typing import Any, Dict
+
 from langchain.agents import create_agent
+from langchain.agents.middleware import HumanInTheLoopMiddleware
 from langchain.chat_models import init_chat_model
-from langchain.agents.middleware import HumanInTheLoopMiddleware, InterruptOnConfig
 from langchain.tools import tool
+
 from src.agent.core.context import (
+    ConfigSchema,
     GeminiModel,
     ModelProvider,
-    ConfigSchema,
     ModelRoutingMiddleware,
 )
-from typing import Dict, Any, Optional
-from datetime import datetime
 
 model = init_chat_model(
     model_provider=ModelProvider.GEMINI.value,
@@ -23,8 +25,7 @@ _mock_database = []
 
 @tool
 def write_to_database(query: str) -> Dict[str, Any]:
-    """
-    Mock database write tool.
+    """Mock database write tool.
 
     Use this when the agent needs to simulate saving data to a database.
     The input should be a SQL INSERT, UPDATE, or DELETE statement.
@@ -54,14 +55,12 @@ def write_to_database(query: str) -> Dict[str, Any]:
 
 
 @tool
-def get_database_records(limit: Optional[int] = None) -> Dict[str, Any]:
-    """
-    Mock database read tool.
+def get_database_records(limit: int | None = None) -> Dict[str, Any]:
+    """Mock database read tool.
 
     Use this when the agent needs to retrieve records that were previously
     written to the mock database.
     """
-
     records = _mock_database if limit is None else _mock_database[:limit]
 
     return {

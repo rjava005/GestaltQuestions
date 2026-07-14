@@ -3,7 +3,6 @@ import clsx from "clsx";
 import React from "react";
 
 import { useQuestionInstance } from "../../../instance";
-import { uiInputStyles } from "../../../styles";
 
 export type PLNumberInputProps = {
   answerName: string;
@@ -41,17 +40,18 @@ const PLNumberInput: React.FC<PLNumberInputProps> = ({
       <div className={className}>
         <fieldset
           className={clsx(
-            uiInputStyles.fieldset,
+            "mb-4 flex w-full max-w-[620px] overflow-hidden rounded-[var(--radius-md)] border border-[var(--color-border-strong)]",
             variantStyles[variant],
-            className,
             submitted && "opacity-60",
           )}
         >
           <label
             htmlFor={answerName}
             className={clsx(
-              "text-sm font-bold px-2",
-              submitted ? "text-text-disabled" : "text-text-muted",
+              "flex min-w-[140px] items-center border-r border-[var(--color-border)] px-4 py-3 text-sm font-semibold",
+              submitted
+                ? "text-[var(--color-text-soft)]"
+                : "text-[var(--color-text)]",
             )}
           >
             {label}
@@ -62,13 +62,13 @@ const PLNumberInput: React.FC<PLNumberInputProps> = ({
             disabled={submitted}
             type="number"
             step={step}
-            placeholder={String(answerName)}
+            placeholder="Enter your answer"
             value={inputValue}
             onChange={(e) => setAnswer(answerName, e.target.value)}
             className={clsx(
-              uiInputStyles.base,
+              "min-w-0 flex-1 bg-transparent px-4 py-3 text-sm text-[var(--color-text)] placeholder:text-[var(--color-text-soft)] focus:outline-none focus:ring-2 focus:ring-inset focus:ring-[var(--color-accent)]",
               submitted &&
-                "cursor-not-allowed bg-surface-muted text-text-disabled",
+                "cursor-not-allowed bg-[var(--color-surface-muted)] text-[var(--color-text-soft)]",
             )}
           />
         </fieldset>
