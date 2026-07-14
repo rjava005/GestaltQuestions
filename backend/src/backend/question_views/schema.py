@@ -37,7 +37,7 @@ class QuestionTableRow(BaseModel):
     institution: str
     created_by: str
     status: Status | str
-    topics: list[str]|None 
+    topics: list[str | None] | None
     question_type: list[QType | str | None] | None
     available_runtimes: list[RuntimeLanguage | str]
     created_at: datetime
