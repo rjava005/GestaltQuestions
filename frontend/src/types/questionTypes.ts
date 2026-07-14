@@ -24,12 +24,12 @@ export function normalizeQuestionStatus(value: string | null | undefined) {
   return isQuestionStatus(normalized) ? normalized : "draft";
 }
 export const QUESTION_TYPE_VALUES = [
-  "MC",
-  "MCQ",
-  "MA",
-  "TF",
-  "FB",
-  "NUM",
+  "mc",
+  "mcq",
+  "ma",
+  "tf",
+  "fb",
+  "num",
 ] as const;
 
 export type QuestionType = (typeof QUESTION_TYPE_VALUES)[number];
@@ -38,22 +38,24 @@ export const QUESTION_TYPE_OPTIONS: {
   label: string;
   value: QuestionType;
 }[] = [
-  { label: "Multiple Choice", value: "MC" },
-  { label: "Multiple Choice Question", value: "MCQ" },
-  { label: "Multiple Answer", value: "MA" },
-  { label: "True / False", value: "TF" },
-  { label: "Fill in the Blank", value: "FB" },
-  { label: "Numerical", value: "NUM" },
+  { label: "Multiple Choice", value: "mc" },
+  { label: "Multiple Choice Question", value: "mcq" },
+  { label: "Multiple Answer", value: "ma" },
+  { label: "True / False", value: "tf" },
+  { label: "Fill in the Blank", value: "fb" },
+  { label: "Numerical", value: "num" },
 ];
 
 export function isQuestionType(value: string): value is QuestionType {
-  return QUESTION_TYPE_VALUES.includes(value as QuestionType);
+  return QUESTION_TYPE_VALUES.includes(value.toLowerCase() as QuestionType);
 }
 
 export function normalizeQuestionTypes(
   values: readonly string[],
 ): QuestionType[] {
-  return values.filter(isQuestionType);
+  return values
+    .map((value) => value.toLowerCase())
+    .filter(isQuestionType);
 }
 
 export type QuestionRead = {

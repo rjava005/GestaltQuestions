@@ -2,7 +2,7 @@ import clsx from "clsx";
 import React from "react";
 import { useState } from "react";
 
-import { uiChoiceStyles, uiInputStyles } from "../../../styles";
+import { uiChoiceStyles } from "../../../styles";
 
 export type PLAnswerProps = {
   correct: "true" | "false";
@@ -14,7 +14,8 @@ export const PLAnswer: React.FC<PLAnswerProps> = ({ children }) => {
 };
 
 const variantStyles: Record<string, string> = {
-  default: "bg-[var(--color-surface)] border border-[var(--color-border)]",
+  default:
+    "bg-[var(--color-surface)] border border-[var(--color-border-strong)]",
   minimal: "bg-[var(--color-surface-muted)] border border-transparent",
 };
 
@@ -58,26 +59,37 @@ export const PLMultipleChoice: React.FC<PLMultipleChoiceProps> = ({
   // useEffect(() => setResponse(answersName, selected), [answersName, selected, setResponse]);
 
   return (
-    <div
+    <fieldset
       className={clsx(
-        "flex py-3 px-3 rounded-md",
-        inline ? "flex-row gap-6 items-center" : "flex-col gap-2",
+        "mb-4 w-full max-w-180 rounded-md p-4",
         variantStyles[style],
       )}
     >
-      <label className={uiChoiceStyles.label}>{answersName}</label>
+      <legend className="px-1 text-sm font-semibold text-text-muted">
+        {answersName}
+      </legend>
       <div
-        className={clsx("flex", inline ? "flex-row gap-4" : "flex-col gap-2")}
+        className={clsx(
+          "mt-3",
+          inline
+            ? "grid gap-3 sm:grid-cols-[repeat(auto-fit,minmax(140px,1fr))]"
+            : "flex flex-col gap-2",
+        )}
       >
         {answersText.map((answer, index) => {
           const isCorrect = answer.props.correct === "true";
-          const answerValue = answer.props.children as string;
+          const answerValue = String(answer.props.children ?? "");
+          const isSelected = selected.includes(answerValue);
 
           return (
             <label
               key={index}
               className={clsx(
                 uiChoiceStyles.option,
+                "group flex min-h-11 items-center gap-3 rounded-[var(--radius-md)] border px-3 py-2.5 transition-colors",
+                isSelected
+                  ? "border-accent bg-accent/10"
+                  : "border-border bg-surface-strong hover:border-[var(--color-border-strong)] hover:bg-[var(--color-surface-muted)]",
                 showCorrectness &&
                   (isCorrect
                     ? uiChoiceStyles.optionCorrect
@@ -87,20 +99,18 @@ export const PLMultipleChoice: React.FC<PLMultipleChoiceProps> = ({
               <input
                 type={multiple ? "checkbox" : "radio"}
                 name={answersName}
-                checked={selected.includes(answerValue)}
+                checked={isSelected}
                 onChange={() => handleChange(answerValue)}
-                className={clsx(
-                  uiChoiceStyles.checkbox,
-                  uiInputStyles.base,
-                  "h-4 w-4 max-w-4 p-0",
-                )}
+                className="h-4 w-4 shrink-0 accent-[var(--color-accent)]"
               />
-              <span className="text-text">{answer.props.children}</span>
+              <span className="min-w-0 flex-1 text-sm font-medium text-[var(--color-text)]">
+                {answer.props.children}
+              </span>
             </label>
           );
         })}
       </div>
-    </div>
+    </fieldset>
   );
 };
 

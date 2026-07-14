@@ -154,7 +154,7 @@ const TemplateModePresets: Record<
     questionData: {
       isAdaptive: true,
       topics: ["adaptive", "generated-params"],
-      qType: ["NUM"],
+      qType: ["num"],
       ai_generated: false,
       title: "Add Numbers Adaptive",
     },
@@ -164,7 +164,7 @@ const TemplateModePresets: Record<
     questionData: {
       isAdaptive: false,
       topics: ["static"],
-      qType: ["MCQ"],
+      qType: ["mcq"],
       ai_generated: false,
       title: "Add Numbers MC",
     },

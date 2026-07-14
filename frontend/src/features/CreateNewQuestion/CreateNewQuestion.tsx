@@ -3,10 +3,13 @@ import { Panel, PanelGroup, PanelResizeHandle } from "react-resizable-panels";
 import { toast } from "react-toastify";
 
 import { Button } from "../../components/Button";
+import {
+  QuestionMetadataForm,
+  type QuestionMetadataFormValue,
+} from "../QuestionMetadata";
 import { useCreateQuestion } from "../QuestionBuilder";
 import { QuestionTemplateEditor } from "../QuestionEditor";
 import QuestionFilesDisplay from "./components/QuestionFilesView";
-import QuestionForm from "./components/QuestionForm";
 import { TemplateFiles, TemplateModePresets } from "./constants/templateFiles";
 import { type Filenames, useQuestionCreate } from "./instance";
 
@@ -78,6 +81,20 @@ export default function CreateQuestionFromBlank() {
     }
   }, [mode]);
 
+  const metadataValue: QuestionMetadataFormValue = {
+    title: qdata?.title ?? "",
+    status: "draft",
+    ai_generated: qdata?.ai_generated ?? false,
+    isAdaptive: qdata?.isAdaptive ?? false,
+    topics: qdata?.topics ?? [],
+    qType: qdata?.qType ?? [],
+  };
+
+  const handleMetadataChange = (nextValue: QuestionMetadataFormValue) => {
+    const { status: _status, ...questionData } = nextValue;
+    setQdata(questionData);
+  };
+
   const handleSubmit = async () => {
     if (!qdata?.title) {
       toast.error("Question title is required.");
@@ -142,7 +159,12 @@ export default function CreateQuestionFromBlank() {
       >
         <Panel defaultSize={showTemplateEditor ? 34 : 50} minSize={25}>
           <div className="h-full overflow-auto">
-            <QuestionForm value={qdata} onChange={setQdata} />
+            <QuestionMetadataForm
+              value={metadataValue}
+              onChange={handleMetadataChange}
+              showPublishingStatus={false}
+              showActions={false}
+            />
           </div>
         </Panel>
 

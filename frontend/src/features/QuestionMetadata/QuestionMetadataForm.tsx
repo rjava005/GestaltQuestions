@@ -13,9 +13,11 @@ import type { QuestionMetadataFormValue } from "./utils";
 type QuestionMetadataFormProps = {
   value: QuestionMetadataFormValue;
   onChange: Dispatch<QuestionMetadataFormValue>;
-  onReset: () => void;
-  onSubmit: () => void;
+  onReset?: () => void;
+  onSubmit?: () => void;
   disableSubmit?: boolean;
+  showPublishingStatus?: boolean;
+  showActions?: boolean;
 };
 
 export function QuestionMetadataForm({
@@ -24,6 +26,8 @@ export function QuestionMetadataForm({
   onReset,
   onSubmit,
   disableSubmit = false,
+  showPublishingStatus = true,
+  showActions = true,
 }: QuestionMetadataFormProps) {
   const patch = (partial: Partial<QuestionMetadataFormValue>) => {
     onChange({ ...value, ...partial });
@@ -39,10 +43,12 @@ export function QuestionMetadataForm({
           onTitleChange={(title) => patch({ title })}
         />
 
-        <PublishingStatusSection
-          status={value.status}
-          onStatusChange={(status) => patch({ status })}
-        />
+        {showPublishingStatus && (
+          <PublishingStatusSection
+            status={value.status}
+            onStatusChange={(status) => patch({ status })}
+          />
+        )}
 
         <BehaviorSection
           aiGenerated={value.ai_generated}
@@ -58,11 +64,13 @@ export function QuestionMetadataForm({
           onQuestionTypesChange={(qType) => patch({ qType })}
         />
 
-        <QuestionMetadataActions
-          onReset={onReset}
-          onSubmit={onSubmit}
-          disabled={disableSubmit}
-        />
+        {showActions && onReset && onSubmit && (
+          <QuestionMetadataActions
+            onReset={onReset}
+            onSubmit={onSubmit}
+            disabled={disableSubmit}
+          />
+        )}
       </div>
     </section>
   );
