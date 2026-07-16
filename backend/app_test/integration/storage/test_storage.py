@@ -52,7 +52,7 @@ def test_write_read_and_delete_file(
 
     assert written == target.rstrip("/")
     assert raw_storage.exists(written)
-    assert normalize_newlines(raw_storage.read(written)) == normalize_newlines( # type: ignore
+    assert normalize_newlines(raw_storage.read(written)) == normalize_newlines(  # type: ignore
         expected_content(raw_storage, content)
     )
 

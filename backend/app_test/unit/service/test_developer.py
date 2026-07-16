@@ -3,6 +3,7 @@ from unittest.mock import AsyncMock, MagicMock
 from uuid import uuid4
 
 import pytest
+
 from backend.auth import (
     DeveloperAccessDenied,
     DeveloperAccessService,

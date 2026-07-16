@@ -146,21 +146,16 @@ class UserManager:
         """Return a user by UUID or string ID."""
         return await self.udb.get_user(id)
 
+    async def get_user_by_email(self, email: str) -> User | None:
+        """Return a user by email."""
+        return await self.udb.get_user_by_email(email)
+
     async def read_user(self, id: ID) -> UserRead:
         try:
             base_user = await self.get_user(id)
             if not base_user:
                 raise UserNotFound(str(id))
-            user_roles = await self.get_user_role(id)
-            institution = await self.get_user_inst(id)
-            return UserRead(
-                first_name=base_user.first_name,
-                last_name=base_user.last_name,
-                username=base_user.username,
-                email=base_user.email,
-                roles=[r.name for r in user_roles],
-                institution=institution.name if institution else None,
-            )
+            return UserRead.from_model(base_user)
         except UserNotFound:
             raise
         except Exception as e:

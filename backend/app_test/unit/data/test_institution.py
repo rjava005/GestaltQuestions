@@ -1,4 +1,5 @@
 import pytest
+
 from backend.auth import InstitutionDB, InstitutionValidationError, ValidInstitutions
 
 

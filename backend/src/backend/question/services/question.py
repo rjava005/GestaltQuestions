@@ -20,7 +20,7 @@ from backend.question.exceptions import (
     QuestionUpdateError,
     QuestionValidationError,
 )
-from backend.question.models import Question, QuestionType, Topic
+from backend.question.models import Question, Topic
 from backend.question.schema import (
     QuestionCreate,
     QuestionFilter,
@@ -183,7 +183,7 @@ class QuestionDB:
         relationship_data = await self.get_question_relationship_data(q)
 
         payload = QuestionRead(**question_data, **relationship_data)
-        
+
         return payload
 
     async def update_question(
@@ -341,8 +341,8 @@ class QuestionDB:
 
     # Utils
     async def _attach_question_relationships(
-    self, question: Question, data: QuestionRelationships | QuestionUpdate
-) -> Question:
+        self, question: Question, data: QuestionRelationships | QuestionUpdate
+    ) -> Question:
         """
         Attach topic and question-type relationships to a question.
         """

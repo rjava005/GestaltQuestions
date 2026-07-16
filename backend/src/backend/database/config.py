@@ -52,6 +52,7 @@ def get_session() -> Generator[Session, None, None]:
 
 if __name__ == "__main__":
     from sqlalchemy import text
+
     print(DATABASE_URL)
     engine = create_engine(DATABASE_URL)
 

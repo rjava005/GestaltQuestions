@@ -54,7 +54,7 @@ def firebase_app_for_tests() -> Generator[Any]:
 def raw_storage(request: pytest.FixtureRequest) -> Storage:
     if request.param == "cloud":
         request.getfixturevalue("firebase_app_for_tests")
-        return FbStorage(settings.STORAGE_BUCKET) # type: ignore
+        return FbStorage(settings.STORAGE_BUCKET)  # type: ignore
     return LocalStorage()
 
 

@@ -1,13 +1,13 @@
-from sqlmodel import Session
-from sqlalchemy import text
-from backend.question_views.schema import QuestionSearchParams
+from enum import StrEnum
 from typing import Any
-from sqlalchemy import TextClause
 from uuid import UUID
-from backend.question_views.schema import QuestionTableRow
+
+from sqlalchemy import TextClause, text
+from sqlmodel import Session
+
+from backend.question_views.schema import QuestionSearchParams, QuestionTableRow
 from backend.shared import ID
 from backend.utils import convert_uuid
-from enum import StrEnum
 
 
 def _enum_names(value: StrEnum | list[StrEnum] | None) -> list[str]:
@@ -15,6 +15,7 @@ def _enum_names(value: StrEnum | list[StrEnum] | None) -> list[str]:
         return []
     values = value if isinstance(value, list) else [value]
     return [item.name for item in values]
+
 
 class TableQueryService:
     def __init__(self, session: Session):
@@ -150,8 +151,9 @@ class TableQueryService:
 
 
 if __name__ == "__main__":
-    from backend.database import engine
     import json
+
+    from backend.database import engine
 
     with Session(engine) as session:
         result = TableQueryService(session).search(

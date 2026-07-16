@@ -1,10 +1,17 @@
+import contextlib
+import os
+from collections.abc import Generator
+from typing import Any
+from backend.chat import model
+import firebase_admin
 import pytest
 from sqlmodel import Session, SQLModel, create_engine
+
+from backend.core import initialize_firebase_app
 from backend.core.logging import (
     in_test_ctx,
     logger,
 )
-import backend.chat.model  # noqa: F401
 from backend.question import QuestionDB
 from backend.question.services.qtype import QuestionQTypeDB
 
@@ -61,3 +68,35 @@ def mark_logs_in_test():
     token = in_test_ctx.set(True)
     yield
     in_test_ctx.reset(token)
+
+
+# Firebase 
+def normalize_storage_emulator_host()->bool:
+    host = os.environ.get("STORAGE_EMULATOR_HOST")
+    if not host or host == "...":
+        return False
+    if not host.startswith(("http://", "https://")):
+        os.environ["STORAGE_EMULATOR_HOST"] = f"http://{host}"
+    return True
+
+def storage_params()-> list[str]:
+    firebase_enabled = (
+        os.environ.get("RUN_FIREBASE_STORAGE_TESTS") == "1"
+        and os.environ.get("FIREBASE_AUTH_EMULATOR_HOST")
+        and normalize_storage_emulator_host()
+    )
+    if firebase_enabled:
+        return ["local", "cloud"]
+    return ["local"]
+
+@pytest.fixture(scope="session")
+def firebase_app_for_tests() -> Generator[Any]:
+    if not os.environ.get("FIREBASE_AUTH_EMULATOR_HOST"):
+        pytest.skip("Firebase auth emulator is not configured.")
+
+    app = initialize_firebase_app()
+    yield app
+
+    with contextlib.suppress(Exception):
+        firebase_admin.delete_app(app)
+    initialize_firebase_app.cache_clear()

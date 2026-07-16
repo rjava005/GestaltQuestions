@@ -49,7 +49,7 @@ class QuestionQTypeDB:
         except SQLAlchemyError as e:
             logger.error(f"[DB] Could not get institution: {e}")
             raise
-        
+
     def get_qtype_by_name(self, name: QType | str) -> QuestionType | None:
         qtype = name if isinstance(name, QType) else QType(name.lower())
         return self._session.exec(

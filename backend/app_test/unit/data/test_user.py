@@ -1,9 +1,9 @@
 import pytest
 from pydantic import ValidationError
-from backend.auth import User, UserCreate, UserDB, UserUpdate
-from backend.core import logger
 
 from app_test.unit.shared import INVALID_USERS, USERS
+from backend.auth import User, UserCreate, UserDB, UserUpdate
+from backend.core import logger
 
 
 @pytest.fixture

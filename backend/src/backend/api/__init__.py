@@ -1,4 +1,5 @@
 from backend.api.general import routes as general_routes
+from backend.api.health import health_routes
 from backend.api.langchain.langchain import router as agent_router
 from backend.api.question_manager import router as developer_question_router
 from backend.api.question_tables import router as question_tables_router
@@ -18,6 +19,7 @@ ALL_ROUTES = [
     chat_router,
     *general_routes,
     *RUNTIME_ROUTES,
+    *health_routes,
 ]
 
 __all__ = ["ALL_ROUTES"]

@@ -12,7 +12,6 @@ from backend.auth import (
     UserInstResponse,
     UserNotFound,
     UserRead,
-    UserRoleResponse,
 )
 from backend.core import logger
 from backend.shared import ID
@@ -31,14 +30,12 @@ async def create_user(
 ) -> UserRead:
     try:
         logger.debug("Attempting to create user")
+        print("Got data", payload.user)
         created_user = await user_manager.create_user(
-            data=payload.user, institution=payload.institution
+            role=payload.role, data=payload.user, institution=payload.institution
         )
-        return UserRead(
-            first_name=created_user.first_name,
-            last_name=created_user.last_name,
-            username=created_user.username,
-            email=created_user.email,
+        return UserRead.from_model(
+            created_user,
         )
     except HTTPException:
         raise
@@ -140,9 +137,7 @@ async def delete_user_by_id(user_manager: UserManagerDependeny, id: ID):
 
 
 @router.get("/{id}/roles")
-async def get_user_roles_by_id(
-    user_manager: UserManagerDependeny, id: ID
-) -> UserRoleResponse:
+async def get_user_roles_by_id(user_manager: UserManagerDependeny, id: ID) -> UserRead:
     """
     Retrieve all roles for a user by internal ID.
 
@@ -155,8 +150,7 @@ async def get_user_roles_by_id(
                 status_code=status.HTTP_404_NOT_FOUND,
                 detail=f"User '{id}' not found",
             )
-        roles = await user_manager.get_user_role(id)
-        return UserRoleResponse(user=user, roles=roles)
+        return UserRead.from_model(user)
     except HTTPException:
         raise
     except Exception as e:
@@ -170,7 +164,7 @@ async def get_user_roles_by_id(
 @router.post("/{id}/roles")
 async def add_user_role(
     user_manager: UserManagerDependeny, id: ID, payload: UpdateUserRole
-) -> UserRoleResponse:
+) -> UserRead:
     """
     Add a role to a user by internal ID and return the updated role set.
 
@@ -184,8 +178,7 @@ async def add_user_role(
                 detail=f"User '{id}' not found",
             )
         user = await user_manager.add_role_to_user(role=payload.role, user=id)
-        roles = await user_manager.get_user_role(id)
-        return UserRoleResponse(user=user, roles=roles)
+        return UserRead.from_model(user)
     except HTTPException:
         raise
     except ValueError as e:
@@ -218,7 +211,7 @@ async def get_institution_by_id(
                 detail=f"User '{id}' not found",
             )
         inst = await user_manager.get_user_inst(id)
-        return UserInstResponse(user=user, inst=inst)
+        return UserInstResponse.from_model(user, inst)
     except HTTPException:
         raise
     except Exception as e:
@@ -249,7 +242,7 @@ async def add_user_inst(
             institution=payload.institution, user=id
         )
         inst = await user_manager.get_user_inst(id)
-        return UserInstResponse(user=user, inst=inst)
+        return UserInstResponse.from_model(user, inst)
     except HTTPException:
         raise
     except ValueError as e:

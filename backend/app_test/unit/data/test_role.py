@@ -1,4 +1,5 @@
 import pytest
+
 from backend.auth import Role, UserRoles
 
 TEST_ROLES = [UserRoles.ADMIN, UserRoles.STUDENT, UserRoles.DEVELOPER]

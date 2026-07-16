@@ -1,23 +1,55 @@
-# import os
-# from contextlib import asynccontextmanager, suppress
-# from pathlib import Path
+import asyncio
+from contextlib import asynccontextmanager
 
-# import firebase_admin
-# import pytest
-# from fastapi import FastAPI
-# from fastapi.testclient import TestClient
-# from src.core import get_session, get_settings, initialize_firebase_app
-# from src.model.files import FileData
-# from src.service.question_manager import QuestionManager
-# from src.service.storage import FbStorage, LocalStorage
-# from src.web.dependencies import (
-#     get_local_base_path,
-#     get_storage_manager,
-#     get_storage_type,
-# )
-# from src.web.question_manager.dependencies import get_question_manager
+from fastapi import FastAPI
+import pytest
+from fastapi.testclient import TestClient
 
-# from src.main import get_application
+from backend.api.deps import get_session, get_user_mng
+from backend.auth import InstitutionDB, RoleDB, UserDB, UserManager
+from src.main import get_application
+
+
+@asynccontextmanager
+async def on_startup_test(app: FastAPI):
+    """Async startup context for tests (skips DB initialization)."""
+    yield
+
+
+@pytest.fixture(scope="function")
+def user_manager(db_session):
+    return UserManager(
+        session=db_session,
+        inst=InstitutionDB(db_session),
+        rm=RoleDB(db_session),
+        udb=UserDB(db_session),
+    )
+
+
+@pytest.fixture(scope="function")
+def api_client(db_session, user_manager):
+    asyncio.run(RoleDB(db_session).seed_roles())
+    asyncio.run(InstitutionDB(db_session).seed_institution())
+
+    app = get_application()
+    # Skips initialization in main
+    app.router.lifespan_context = on_startup_test
+
+    # Dependency override
+    def override_get_db():
+        yield db_session
+
+    def override_get_user_manager():
+        return user_manager
+
+    app.dependency_overrides[get_session] = override_get_db
+    app.dependency_overrides[get_user_mng] = override_get_user_manager
+
+    with TestClient(app, raise_server_exceptions=True) as client:
+        yield client
+
+    app.dependency_overrides.clear()
+
 
 # settings = get_settings()
 
@@ -60,12 +92,6 @@
 # @pytest.fixture
 # def question_manager(storage, question_db):
 #     return QuestionManager(question_db, storage)
-
-
-# @asynccontextmanager
-# async def on_startup_test(app: FastAPI):
-#     """Async startup context for tests (skips DB initialization)."""
-#     yield
 
 
 # @pytest.fixture(scope="function")

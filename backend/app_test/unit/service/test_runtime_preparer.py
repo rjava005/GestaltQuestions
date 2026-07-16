@@ -1,6 +1,7 @@
 import json
 
 import pytest
+
 from backend.question_runtime import (
     ConfigurationError,
     InvalidEntryError,
