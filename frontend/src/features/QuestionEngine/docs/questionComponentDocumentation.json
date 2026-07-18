@@ -146,7 +146,7 @@
           "prop": "fileName",
           "type": "string",
           "required": true,
-          "description": "Question-local CircuitDefinitionV1 JSON asset. Use circuit.json by convention."
+          "description": "Question-local CircuitDefinitionV1 or CircuitDefinitionV2 JSON asset. Use circuit.json by convention."
         },
         {
           "htmlAttribute": "class|classname",

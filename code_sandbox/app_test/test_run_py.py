@@ -112,3 +112,16 @@ def test_failed_execution():
 
     with pytest.raises(ExecutionError):
         PythonScriptRunner(config).run()
+
+
+def test_python_generation_context_is_forwarded():
+    config = RuntimeExecutionConfig(
+        entry="server.py",
+        language="python",
+        generation_context={"previousCircuitVariant": "lowPass"},
+        files={"server.py": "def generate(context):\n    return context\n"},
+    )
+
+    response = PythonScriptRunner(config).run()
+
+    assert response.output == {"previousCircuitVariant": "lowPass"}

@@ -1,3 +1,4 @@
+import json
 import os
 from pathlib import Path
 
@@ -28,14 +29,20 @@ class JavaScriptRunner(CodeRunner):
         if isinstance(entry_point_path, Path):
             entry_point_path = entry_point_path.as_posix()
 
+        context = json.dumps(self.runtime_config.generation_context)
+        invocation = (
+            f'mod["{self.runtime_config.func_name}"]()'
+            if self.runtime_config.generation_context is None
+            else f'mod["{self.runtime_config.func_name}"]({context})'
+        )
         runner = """
         const mod = require("%(path)s");
         let result;
-        result = mod["%(func)s"]();
+        result = %(invocation)s;
         console.log(JSON.stringify(result));
         """ % {
             "path": entry_point_path,
-            "func": self.runtime_config.func_name,
+            "invocation": invocation,
         }
         return runner
 

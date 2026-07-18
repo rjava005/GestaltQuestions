@@ -1,8 +1,9 @@
 import mimetypes
 from pathlib import PurePosixPath
-from typing import Annotated
+from typing import Annotated, Literal
 
-from fastapi import APIRouter, HTTPException, Query, Response, status
+from fastapi import APIRouter, Body, HTTPException, Query, Response, status
+from pydantic import BaseModel
 
 from backend.api.deps import (
     QuestionManagerDependency,
@@ -20,13 +21,21 @@ router = APIRouter(
 ALLOWED_IMAGE_SUFFIXES = {".gif", ".jpeg", ".jpg", ".png", ".svg", ".webp"}
 
 
+class QuestionRunRequest(BaseModel):
+    previousCircuitVariant: Literal["lowPass", "highPass"] | None = None
+
+
 @router.post("/run", response_model=RenderedQuestionBundle)
 async def run(
     qid: ID,
     runtime_service: QuestionRuntimeServiceDependency,
     language: Annotated[RuntimeLanguage | None, Query()] = None,
+    request: Annotated[QuestionRunRequest | None, Body()] = None,
 ) -> RenderedQuestionBundle:
-    return await runtime_service.run(qid, language)
+    generation_context = (
+        request.model_dump(exclude_none=True) if request is not None else None
+    )
+    return await runtime_service.run(qid, language, generation_context)
 
 
 @router.get("/assets/{filename:path}", response_class=Response)

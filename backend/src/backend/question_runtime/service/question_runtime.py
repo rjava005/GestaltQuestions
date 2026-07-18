@@ -1,7 +1,7 @@
 from uuid import UUID, uuid4
 
 from fastapi import HTTPException
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, JsonValue
 
 from backend.core import logger
 from backend.question import QuestionRead
@@ -43,7 +43,10 @@ class QuestionRunTimeService:
         self._sync = QuestionRunTimeSyncService(self._runtime_db)
 
     async def run(
-        self, qid: ID, language: RuntimeLanguage | None
+        self,
+        qid: ID,
+        language: RuntimeLanguage | None,
+        generation_context: dict[str, JsonValue] | None = None,
     ) -> RenderedQuestionBundle:
         question = await self._qm.get_question(qid, method="full")
         if not question:
@@ -75,6 +78,7 @@ class QuestionRunTimeService:
             language=runtime.language,  # type: ignore
             func_name=runtime.func_name,
             files=question_files.files,
+            generation_context=generation_context,
         )
 
         try:

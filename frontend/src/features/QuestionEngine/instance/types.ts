@@ -1,4 +1,7 @@
-import type { QuestionRunResponse } from "../../../services/QuestionRuntime";
+import type {
+  PreviousCircuitVariant,
+  QuestionRunResponse,
+} from "../../../services/QuestionRuntime";
 import type {
   QuestionAnswerMap,
   QuestionValue,
@@ -11,6 +14,7 @@ export type QuestionInstanceState = QuestionRuntimeState & {
   hasSubmitted: boolean;
   refreshKey: number;
   showSolution: boolean;
+  previousCircuitVariant?: PreviousCircuitVariant;
 };
 
 export type QuestionInstanceActions = {

@@ -36,6 +36,7 @@ class PythonScriptRunner(CodeRunner):
 
             entry = Path({entry_point_path!r}).resolve()
             func_name = {self.runtime_config.func_name!r}
+            generation_context = {self.runtime_config.generation_context!r}
 
             spec = importlib.util.spec_from_file_location("entry_module", entry)
             if spec is None or spec.loader is None:
@@ -48,7 +49,7 @@ class PythonScriptRunner(CodeRunner):
             if not callable(fn):
                 raise RuntimeError(f"Function '{{func_name}}' not found or not callable")
 
-            result = fn()
+            result = fn() if generation_context is None else fn(generation_context)
             print(json.dumps(result))
             """
         )

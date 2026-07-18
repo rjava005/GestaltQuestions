@@ -111,6 +111,8 @@ elements, annotations, and optional parameter bindings. Coordinates are authored
 explicitly; the renderer does not perform automatic layout. A direct value
 binding names a `quiz_data.params` path and its `sourceUnit`. A templated value
 can combine several named bindings. Values are refreshed from the current
-adaptive instance without reloading the topology.
+adaptive instance without reloading the definition. Version 2 definitions add
+a parameter selector and independently authored variant scenes, allowing an
+adaptive instance to redraw its topology without another asset request.
 
 ---

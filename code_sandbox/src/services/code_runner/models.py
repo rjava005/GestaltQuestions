@@ -1,4 +1,4 @@
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, JsonValue
 from typing import Sequence, Literal, Dict
 
 
@@ -17,6 +17,10 @@ class RuntimeExecutionConfig(BaseModel):
         ..., description="The allowed runtimes currently only javascript and python"
     )
     files: Dict[str, str] = Field(..., description="The content of the files")
+    generation_context: dict[str, JsonValue] | None = Field(
+        default=None,
+        description="Optional JSON-safe context passed to the generator.",
+    )
 
 
 class ExecutionResult(BaseModel):

@@ -18,7 +18,18 @@ export function createQuestionInstanceStore(
         hasSubmitted: false,
         answers: {},
       })),
-    setRefreshKey: () => set((state) => ({ refreshKey: state.refreshKey + 1 })),
+    setRefreshKey: () =>
+      set((state) => {
+        const circuitVariant = state.quiz_data?.params.circuitVariant;
+        const previousCircuitVariant =
+          circuitVariant === "lowPass" || circuitVariant === "highPass"
+            ? circuitVariant
+            : undefined;
+        return {
+          refreshKey: state.refreshKey + 1,
+          previousCircuitVariant,
+        };
+      }),
     setAnswer: (name, value) =>
       set((state) => ({
         answers: { ...state.answers, [name]: value },

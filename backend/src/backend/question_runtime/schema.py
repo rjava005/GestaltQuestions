@@ -2,7 +2,7 @@ import json
 from typing import Literal, Union
 from uuid import UUID
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, JsonValue
 
 from backend.storage import FileData
 from backend.utils import normalize_content
@@ -32,6 +32,10 @@ class RunTimeConfigBase(BaseModel):
 class RuntimeExecutionConfig(RunTimeConfigBase):
     files: dict[str, str] = Field(
         default_factory=dict, description="The content of the files"
+    )
+    generation_context: dict[str, JsonValue] | None = Field(
+        default=None,
+        description="Optional JSON-safe context passed to the generator.",
     )
 
 

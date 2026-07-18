@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { firebase } from "../../../config/firebaseClient";
 import { questionAPIURL } from "../../../config/apiConfig";
 import type {
+  PreviousCircuitVariant,
   QuestionRunResponse,
   QuestionRuntimeLanguage,
 } from "../../../services/QuestionRuntime";
@@ -14,6 +15,7 @@ export function useRunQuestion(
   questionID: string,
   serverMode: QuestionRuntimeLanguage | null,
   refreshKey?: number,
+  previousCircuitVariant?: PreviousCircuitVariant,
 ) {
   const setRunTimeContent = useQuestionInstance((s) => s.setRunTimeContent);
   const [loading, setLoading] = useState<boolean>(false);
@@ -31,6 +33,7 @@ export function useRunQuestion(
         const data = await QuestionRuntimeApi.runQuestion(
           questionID,
           serverMode,
+          previousCircuitVariant,
         );
 
         if (!cancelled) {
@@ -54,7 +57,13 @@ export function useRunQuestion(
     return () => {
       cancelled = true;
     };
-  }, [questionID, serverMode, refreshKey, setRunTimeContent]);
+  }, [
+    questionID,
+    serverMode,
+    refreshKey,
+    previousCircuitVariant,
+    setRunTimeContent,
+  ]);
 
   return {
     qPayload,
