@@ -6,5 +6,6 @@ declare module "react-markdown/lib/ast-to-react" {
     "pl-number-input"?: any;
     "pl-solution-panel"?: any;
     "pl-figure"?: any;
+    "pl-circuit"?: any;
   }
 }

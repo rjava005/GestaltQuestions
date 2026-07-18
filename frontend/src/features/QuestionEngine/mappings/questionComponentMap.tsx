@@ -9,6 +9,8 @@ import {
   type PLDerivationStepProps,
   PLFigure,
   type PLFigureProps,
+  PLCircuit,
+  type PLCircuitProps,
   PLHint,
   type PLHintProps,
   PLMultipleChoice,
@@ -27,6 +29,7 @@ export type ValidComponents =
   | "pl-question-panel"
   | "pl-number-input"
   | "pl-figure"
+  | "pl-circuit"
   | "pl-solution-panel"
   | "pl-hint"
   | "pl-derivation-container"
@@ -39,6 +42,7 @@ export type TagRegistry = {
   "pl-question-panel": PLQuestionPanelProps;
   "pl-number-input": PLNumberInputProps;
   "pl-figure": PLFigureProps;
+  "pl-circuit": PLCircuitProps;
   "pl-solution-panel": PLSolutionPanelProps;
   "pl-hint": PLHintProps;
   "pl-derivation-container": PLDerivationProps;
@@ -55,6 +59,7 @@ export const ComponentMap: Record<
   "pl-question-panel": PLQuestionPanel,
   "pl-number-input": PLNumberInput,
   "pl-figure": PLFigure,
+  "pl-circuit": PLCircuit,
   "pl-solution-panel": PLSolutionPanel,
   "pl-hint": PLHint,
   "pl-derivation-container": PLDerivation,
@@ -96,11 +101,15 @@ export const TagAttributeMapping: {
   }),
   "pl-figure": (attrs) => ({
     src: attrs["src"],
-    filename: attrs["filename"],
+    filename: attrs["filename"] ?? attrs["file-name"],
     className: attrs["classname"] || attrs["class"],
     size: attrs["size"],
     variant: attrs["variant"],
     useClientFilesDir: attrs["legacy"] ? true : false,
+  }),
+  "pl-circuit": (attrs) => ({
+    fileName: attrs["file-name"] ?? attrs["filename"] ?? "",
+    className: attrs["classname"] || attrs["class"],
   }),
   "pl-hint": (attrs) => ({
     level: attrs["level"],

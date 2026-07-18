@@ -1,6 +1,8 @@
 import clsx from "clsx";
 import { twMerge } from "tailwind-merge";
 
+import { useQuestionFigureSource } from "../../../runtime/useQuestionRunTime";
+
 export type ImageSize = "sm" | "md" | "lg";
 
 export interface PLFigureProps {
@@ -30,8 +32,14 @@ export default function PLFigure({
   className = "",
   size = "md",
   variant = "default",
+  useClientFilesDir = false,
 }: PLFigureProps) {
-  const resolvedName = src || filename || "default.png";
+  const resolvedName = useQuestionFigureSource(
+    src,
+    filename,
+    useClientFilesDir,
+  );
+  const altText = filename || src || "Question figure";
 
   return (
     <div
@@ -45,7 +53,7 @@ export default function PLFigure({
     >
       <img
         src={resolvedName}
-        alt={resolvedName}
+        alt={altText}
         className={clsx(
           "w-full h-auto object-contain transition-transform duration-(--duration-base) hover:scale-[1.02]",
           sizeStyles[size as ImageSize],

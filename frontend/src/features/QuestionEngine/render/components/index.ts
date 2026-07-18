@@ -4,6 +4,8 @@ export type { PLDerivationStepProps } from "./content/PLDerivationStep";
 export { PLDerivationStep } from "./content/PLDerivationStep";
 export type { PLFigureProps } from "./content/PLFigure";
 export { default as PLFigure } from "./content/PLFigure";
+export type { PLCircuitProps } from "./content/PLCircuit";
+export { default as PLCircuit } from "./content/PLCircuit";
 export type { PLHintProps } from "./content/PLHint";
 export { default as PLHint } from "./content/PLHint";
 export type {

@@ -34,14 +34,13 @@ cd Gestalt_Question_Review
 
 The application consists of three main components that must be running:
 
-1. **Backend API** (FastAPI): Main api for questions 
+1. **Backend API** (FastAPI): Main api for questions
 2. **Code_Sandbox** (Fastapi): A sandbox env for code execution
 3. **Frontend** (Vite + React): Ui for viewing the questions
 
 Each service can be started individually in separate terminals, or all three can be started automatically using **Docker Compose**.
 
 Installation and setup instructions for each component can be found at the following links:
-
 
 * [Backend Setup Guide](https://github.com/lucib3196/GestaltQuestions/tree/feature/docker_install/backend)
 
@@ -98,5 +97,20 @@ If you encounter issues or need assistance with the setup, feel free to reach ou
 
 ---
 
+## Circuit question authoring
 
+Circuit questions should keep an authored, versioned `circuit.json` beside
+`question.html` and render it with:
 
+```html
+<pl-circuit file-name="circuit.json"></pl-circuit>
+```
+
+The JSON defines an SVG `viewBox`, accessible label, wire polylines, circuit
+elements, annotations, and optional parameter bindings. Coordinates are authored
+explicitly; the renderer does not perform automatic layout. A direct value
+binding names a `quiz_data.params` path and its `sourceUnit`. A templated value
+can combine several named bindings. Values are refreshed from the current
+adaptive instance without reloading the topology.
+
+---
