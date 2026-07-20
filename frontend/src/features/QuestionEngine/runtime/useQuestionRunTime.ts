@@ -2,7 +2,9 @@ import { getDownloadURL, getStorage, ref } from "firebase/storage";
 import { useEffect, useState } from "react";
 
 import { firebase } from "../../../config/firebaseClient";
+import { questionAPIURL } from "../../../config/apiConfig";
 import type {
+  PreviousCircuitVariant,
   QuestionRunResponse,
   QuestionRuntimeLanguage,
 } from "../../../services/QuestionRuntime";
@@ -13,6 +15,7 @@ export function useRunQuestion(
   questionID: string,
   serverMode: QuestionRuntimeLanguage | null,
   refreshKey?: number,
+  previousCircuitVariant?: PreviousCircuitVariant,
 ) {
   const setRunTimeContent = useQuestionInstance((s) => s.setRunTimeContent);
   const [loading, setLoading] = useState<boolean>(false);
@@ -30,6 +33,7 @@ export function useRunQuestion(
         const data = await QuestionRuntimeApi.runQuestion(
           questionID,
           serverMode,
+          previousCircuitVariant,
         );
 
         if (!cancelled) {
@@ -53,7 +57,13 @@ export function useRunQuestion(
     return () => {
       cancelled = true;
     };
-  }, [questionID, serverMode, refreshKey, setRunTimeContent]);
+  }, [
+    questionID,
+    serverMode,
+    refreshKey,
+    previousCircuitVariant,
+    setRunTimeContent,
+  ]);
 
   return {
     qPayload,
@@ -94,6 +104,16 @@ export function useQuestionFigureSource(
       try {
         const relativePath = `${useClientFilesDir ? "clientFiles/" : ""}${filename ?? resolvedSource}`;
 
+        if (qmeta?.storage_type === "local" && qmeta.id) {
+          const encodedPath = relativePath
+            .split("/")
+            .map(encodeURIComponent)
+            .join("/");
+          const assetUrl = `${questionAPIURL}/questions/${encodeURIComponent(qmeta.id)}/runtimes/assets/${encodedPath}`;
+          if (!cancelled) setResolvedImageSrc(assetUrl);
+          return;
+        }
+
         if (qmeta?.storage_path) {
           const fullObjectPath = `${qmeta.storage_path.replace(/\/+$/, "")}/${relativePath}`;
           const storage = getStorage(firebase);
@@ -111,7 +131,7 @@ export function useQuestionFigureSource(
           const imageBlob = rawBlob.type.startsWith("image/")
             ? rawBlob
             : rawBlob.slice(0, rawBlob.size, "image/png");
-          const objectUrl = URL.createObjectURL(imageBlob);
+          objectUrl = URL.createObjectURL(imageBlob);
           if (!cancelled) setResolvedImageSrc(objectUrl);
           return;
         }
@@ -128,7 +148,14 @@ export function useQuestionFigureSource(
       cancelled = true;
       if (objectUrl) URL.revokeObjectURL(objectUrl);
     };
-  }, [src, filename, qmeta?.id, qmeta?.storage_path, useClientFilesDir]);
+  }, [
+    src,
+    filename,
+    qmeta?.id,
+    qmeta?.storage_path,
+    qmeta?.storage_type,
+    useClientFilesDir,
+  ]);
 
   return resolvedImageSrc;
 }

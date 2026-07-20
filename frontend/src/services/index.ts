@@ -1,5 +1,6 @@
 export * from "./questionAPI";
 export type {
+  PreviousCircuitVariant,
   QuestionRunAnswerMap,
   QuestionRunQuizData,
   QuestionRunResponse,

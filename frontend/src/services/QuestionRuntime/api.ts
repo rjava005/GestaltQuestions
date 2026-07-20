@@ -20,6 +20,8 @@ type RuntimeErrorDetail = {
       };
 };
 
+export type PreviousCircuitVariant = "lowPass" | "highPass";
+
 function getRuntimeErrorMessage(error: unknown): string {
   if (!isAxiosError(error)) {
     return error instanceof Error ? error.message : String(error);
@@ -61,13 +63,17 @@ export default class QuestionRuntimeApi {
   static async runQuestion(
     qid: string,
     language: QuestionRuntimeLanguage | null,
+    previousCircuitVariant?: PreviousCircuitVariant,
   ): Promise<QuestionRunResponse> {
     const url = language
       ? `${this.runtimeBase(qid)}/run?language=${encodeURIComponent(language)}`
       : `${this.runtimeBase(qid)}/run`;
 
     try {
-      const response = await api.post<QuestionRunResponse>(url);
+      const response = await api.post<QuestionRunResponse>(
+        url,
+        previousCircuitVariant ? { previousCircuitVariant } : undefined,
+      );
       return response.data;
     } catch (error) {
       throw new Error(getRuntimeErrorMessage(error));

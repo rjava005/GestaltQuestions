@@ -1,5 +1,15 @@
-const questionURLRaw = import.meta.env.VITE_API_URL ?? "http://localhost:8000";
-const aiURLRaw = import.meta.env.VITE_AI_URL;
+function withLocalDefault(value: string | undefined, fallback: string) {
+  return value?.trim() || fallback;
+}
+
+const questionURLRaw = withLocalDefault(
+  import.meta.env.VITE_API_URL,
+  "http://localhost:8000",
+);
+const aiURLRaw = withLocalDefault(
+  import.meta.env.VITE_AI_URL,
+  "http://localhost:2024",
+);
 
 function PrepareURL(raw: string | undefined | null, id?: string | null) {
   if (!raw) {

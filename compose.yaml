@@ -2,16 +2,28 @@
 services:
   server:
     build:
-      context: ./backend
-      dockerfile: Dockerfile.dev
+      context: .
+      dockerfile: backend/Dockerfile.dev
+    depends_on:
+      db:
+        condition: service_healthy
     env_file:
       - ./backend/.env
+    environment:
+      DATABASE_URL: postgresql://postgres:password@db:5432/gestalt_db
+      BACKEND_CORS_ORIGINS: http://localhost:5173,http://127.0.0.1:5173
+      SANDBOX_URL: http://code_sandbox:8080
+      STORAGE_SERVICE: local
+      STORAGE_EMULATOR_HOST: host.docker.internal:9199
     ports:
       - 8000:8000
     volumes:
-      - ./backend:/app        # mount project
-      - ./backend/questions:/questions
-      - ./backend/FIREBASE_CRED.json:/FIREBASE_CRED.json
+      - ./backend:/app/backend
+    command: >-
+      sh -c "python -m backend.database.bootstrap && alembic upgrade head &&
+      python -m backend.question.import_bundles &&
+      exec uvicorn src.main:app --reload --host 0.0.0.0 --port 8000
+      --forwarded-allow-ips '*'"
   code_sandbox:
     build: 
       context: ./code_sandbox
@@ -34,6 +46,26 @@ services:
       - ./frontend/.env
     tty: true
     stdin_open: true
+
+  db:
+    image: postgres:18
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: gestalt_db
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d gestalt_db"]
+      interval: 3s
+      timeout: 3s
+      retries: 20
+    volumes:
+      - postgres_data:/var/lib/postgresql
+
+volumes:
+  postgres_data:
 
 
 

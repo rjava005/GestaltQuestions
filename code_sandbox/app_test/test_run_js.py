@@ -88,6 +88,24 @@ def test_js_execution_with_custom_function(
     assert any("mock js custom func" in log for log in response.logs)
 
 
+def test_javascript_generation_context_is_forwarded():
+    config = RuntimeExecutionConfig(
+        entry="server.js",
+        language="javascript",
+        generation_context={"previousCircuitVariant": "highPass"},
+        files={
+            "server.js": (
+                "function generate(context) { return context; }\n"
+                "module.exports = { generate };\n"
+            )
+        },
+    )
+
+    response = JavaScriptRunner(config).run()
+
+    assert response.output == {"previousCircuitVariant": "highPass"}
+
+
 # def test_failed_execution(js_bad_code_path):
 #     bad_code = Path(js_bad_code_path).read_text(encoding="utf-8")
 #     config = RuntimeExecutionConfig(

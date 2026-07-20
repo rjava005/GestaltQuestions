@@ -39,6 +39,7 @@ const EXAMPLES_BY_TAG: Record<string, string> = {
   "pl-number-input": `<pl-number-input answers-name="x" digits="2" label="$x$"></pl-number-input>`,
   "pl-hint": `<pl-hint level="1">Try isolating the variable first.</pl-hint>`,
   "pl-figure": `<pl-figure filename="diagram.png" size="md"></pl-figure>`,
+  "pl-circuit": `<pl-circuit file-name="circuit.json"></pl-circuit>`,
   "pl-multiple-choice": `<pl-multiple-choice answers-name="q1">\n  <pl-answer correct="false">2</pl-answer>\n  <pl-answer correct="true">5</pl-answer>\n  <pl-answer correct="false">9</pl-answer>\n</pl-multiple-choice>`,
   "pl-checkbox": `<pl-checkbox answers-name="q2" multiple="true">\n  <pl-answer correct="true">Conservation of energy</pl-answer>\n  <pl-answer correct="false">Newton's 4th law</pl-answer>\n  <pl-answer correct="true">Momentum balance</pl-answer>\n</pl-checkbox>`,
   "pl-derivation-container": `<pl-derivation-container title="Derivation">\n  <pl-derivation-step>Start from $F=ma$</pl-derivation-step>\n  <pl-derivation-step>Integrate both sides over time.</pl-derivation-step>\n</pl-derivation-container>`,

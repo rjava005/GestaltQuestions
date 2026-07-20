@@ -14,7 +14,7 @@
           "type": "string",
           "required": false,
           "description": "Additional container classes."
-        }, 
+        },
         {
           "htmlAttribute": "size",
           "prop": "size",
@@ -132,6 +132,28 @@
           "default": "default",
           "allowedValues": ["default", "minimal"],
           "description": "Figure container style."
+        }
+      ]
+    },
+    {
+      "tag": "pl-circuit",
+      "componentName": "PLCircuit",
+      "summary": "Renders an accessible, responsive SVG circuit from an authored versioned JSON definition and current adaptive parameters.",
+      "children": "None.",
+      "attributes": [
+        {
+          "htmlAttribute": "file-name",
+          "prop": "fileName",
+          "type": "string",
+          "required": true,
+          "description": "Question-local CircuitDefinitionV1 or CircuitDefinitionV2 JSON asset. Use circuit.json by convention."
+        },
+        {
+          "htmlAttribute": "class|classname",
+          "prop": "className",
+          "type": "string",
+          "required": false,
+          "description": "Additional wrapper classes."
         }
       ]
     },

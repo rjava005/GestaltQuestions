@@ -1,4 +1,5 @@
 export { default as QuestionRuntimeApi } from "./api";
+export type { PreviousCircuitVariant } from "./api";
 export type {
   QuestionRunAnswerMap,
   QuestionRunQuizData,

@@ -11,10 +11,14 @@ type QuestionRenderProps = {
 
 function QuestionRenderBody({ qid, serverSettings }: QuestionRenderProps) {
   const refreshKey = useQuestionInstance((s) => s.refreshKey);
+  const previousCircuitVariant = useQuestionInstance(
+    (s) => s.previousCircuitVariant,
+  );
   const { qPayload, error, loading } = useRunQuestion(
     qid,
     serverSettings,
     refreshKey,
+    previousCircuitVariant,
   );
   if (error) {
     return (

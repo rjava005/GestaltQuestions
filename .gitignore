@@ -7,7 +7,11 @@
 ai.env
 FIREBASE_CRED.json
 backend/node_modules
-backend/questions
+backend/questions/*
+!backend/questions/EE30B_CH1_Q1/
+!backend/questions/EE30B_CH1_Q2/
+!backend/questions/EE_CH2_Q1/
+!backend/questions/EE_CH2_Q2/
 code_sandbox/node_modules
 test_questions
 # Byte-compiled / optimized / DLL files
