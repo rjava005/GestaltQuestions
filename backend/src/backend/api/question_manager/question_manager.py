@@ -1,9 +1,10 @@
 import asyncio
+from collections import Counter
 from collections.abc import Sequence
 
-from fastapi import APIRouter, HTTPException, UploadFile
+from fastapi import APIRouter, File, Form, HTTPException, UploadFile
 from fastapi.responses import Response
-from pydantic import BaseModel
+from pydantic import BaseModel, ValidationError
 from starlette import status
 
 from backend.api.deps import CurrentUser, DeveloperQuestionManagerDependency
@@ -27,6 +28,10 @@ class WriteFilePayload(BaseModel):
     content: str
 
 
+GUIDED_REQUIRED_FILES = {"question.html", "solution.html", "server.py", "server.js"}
+GUIDED_ALLOWED_FILES = GUIDED_REQUIRED_FILES | {"circuit.json"}
+
+
 @router.post("/", status_code=status.HTTP_201_CREATED)
 async def create_question(
     current_user: CurrentUser,
@@ -39,6 +44,45 @@ async def create_question(
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail=f"Failed to create question: {e}",
+        ) from e
+
+
+@router.post("/with-files", status_code=status.HTTP_201_CREATED)
+async def create_question_with_files(
+    current_user: CurrentUser,
+    question_manager: DeveloperQuestionManagerDependency,
+    metadata: str = Form(...),
+    files: list[UploadFile] = File(...),
+) -> Question:
+    """Create a guided question and its strictly limited initial file set."""
+    try:
+        payload = QuestionCreate.model_validate_json(metadata)
+        filenames = [file.filename or "" for file in files]
+        duplicates = [name for name, count in Counter(filenames).items() if count > 1]
+        missing = GUIDED_REQUIRED_FILES - set(filenames)
+        unsupported = set(filenames) - GUIDED_ALLOWED_FILES
+        if duplicates:
+            raise ValueError(f"Duplicate file names: {', '.join(sorted(duplicates))}")
+        if missing:
+            raise ValueError(f"Missing required files: {', '.join(sorted(missing))}")
+        if unsupported:
+            raise ValueError(f"Unsupported files: {', '.join(sorted(unsupported))}")
+        converter = UploadFileDataConverter()
+        file_data = await asyncio.gather(
+            *[converter.convert_to_filedata(file) for file in files]
+        )
+        return await question_manager.create_question(current_user, payload, files=file_data)
+    except (ValidationError, ValueError) as e:
+        raise HTTPException(
+            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+            detail=f"Invalid guided question: {e}",
+        ) from e
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=f"Failed to create guided question: {e}",
         ) from e
 
 

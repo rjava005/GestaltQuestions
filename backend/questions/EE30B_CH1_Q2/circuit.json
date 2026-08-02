@@ -1,0 +1,47 @@
+{
+  "version": 1,
+  "viewBox": [0, 0, 600, 300],
+  "ariaLabel": "Series RL high-pass circuit with output measured across the inductor",
+  "wires": [
+    { "points": [[110, 85], [190, 85]] },
+    { "points": [[330, 85], [480, 85], [480, 120]] },
+    { "points": [[480, 220], [480, 245], [110, 245]] }
+  ],
+  "elements": [
+    {
+      "id": "Vs",
+      "type": "voltageSource",
+      "from": [110, 245],
+      "to": [110, 85],
+      "label": "vₛ(t)",
+      "labelPosition": { "at": [70, 155], "anchor": "end" }
+    },
+    {
+      "id": "R",
+      "type": "resistor",
+      "from": [190, 85],
+      "to": [330, 85],
+      "label": "R",
+      "labelPosition": { "at": [260, 122] },
+      "value": { "path": "resistance", "sourceUnit": "Ω", "unit": "Ω", "significantDigits": 3 }
+    },
+    {
+      "id": "L",
+      "type": "inductor",
+      "from": [480, 120],
+      "to": [480, 220],
+      "label": "L",
+      "labelPosition": { "at": [440, 155], "anchor": "end" },
+      "value": { "path": "inductance", "sourceUnit": "H", "unit": "H", "significantDigits": 3 }
+    }
+  ],
+  "annotations": [
+    {
+      "type": "polarity",
+      "plus": [525, 130],
+      "minus": [525, 220],
+      "label": "vₒ(t)",
+      "labelPosition": { "at": [550, 168], "anchor": "start" }
+    }
+  ]
+}

@@ -1,0 +1,88 @@
+{
+  "version": 2,
+  "selector": { "path": "circuitVariant" },
+  "variants": {
+    "lowPass": {
+      "viewBox": [0, 0, 760, 430],
+      "ariaLabel": "Second-order Sallen-Key op-amp circuit with two series resistors and two capacitors",
+      "wires": [
+        { "points": [[80, 210], [80, 165], [120, 165]] },
+        { "points": [[190, 165], [220, 165]] },
+        { "points": [[290, 165], [350, 165]] },
+        { "points": [[350, 165], [350, 180], [460, 180]] },
+        { "points": [[205, 165], [205, 70], [260, 70]] },
+        { "points": [[380, 70], [600, 70], [600, 205], [580, 205]] },
+        { "points": [[350, 165], [330, 165], [330, 210]] },
+        { "points": [[330, 310], [330, 330], [80, 330]] },
+        { "points": [[460, 230], [400, 230], [400, 250]] },
+        { "points": [[400, 330], [400, 345]] },
+        { "points": [[440, 230], [440, 280], [460, 280]] },
+        { "points": [[550, 280], [600, 280], [600, 205]] },
+        { "points": [[580, 205], [650, 205]] },
+        { "points": [[650, 330], [650, 350]] }
+      ],
+      "elements": [
+        { "id": "Vs", "type": "voltageSource", "from": [80, 330], "to": [80, 210], "label": "vₛ", "labelPosition": { "at": [45, 245], "anchor": "end" } },
+        { "id": "R1", "type": "resistor", "from": [120, 165], "to": [190, 165], "label": "R₁", "labelPosition": { "at": [155, 125] }, "value": { "path": "R1", "sourceUnit": "Ohm", "unit": "Ω", "significantDigits": 3 } },
+        { "id": "R2", "type": "resistor", "from": [220, 165], "to": [290, 165], "label": "R₂", "labelPosition": { "at": [255, 125] }, "value": { "path": "R2", "sourceUnit": "Ohm", "unit": "Ω", "significantDigits": 3 } },
+        { "id": "C1", "type": "capacitor", "from": [260, 70], "to": [380, 70], "label": "C₁", "labelPosition": { "at": [320, 105] }, "value": { "path": "C1", "sourceUnit": "F", "unit": "F", "significantDigits": 3 } },
+        { "id": "C2", "type": "capacitor", "from": [330, 210], "to": [330, 310], "label": "C₂", "labelPosition": { "at": [315, 250], "anchor": "end" }, "value": { "path": "C2", "sourceUnit": "F", "unit": "F", "significantDigits": 3 } },
+        { "id": "A1", "type": "opAmp", "center": [520, 205], "width": 120, "height": 100 },
+        { "id": "R3", "type": "resistor", "from": [400, 250], "to": [400, 330], "label": "R₃", "labelPosition": { "at": [385, 285], "anchor": "end" }, "value": { "path": "R3", "sourceUnit": "Ohm", "unit": "Ω", "significantDigits": 3 } },
+        { "id": "R4", "type": "resistor", "from": [460, 280], "to": [550, 280], "label": "R₄", "labelPosition": { "at": [505, 315] }, "value": { "path": "R4", "sourceUnit": "Ohm", "unit": "Ω", "significantDigits": 3 } },
+        { "id": "GND", "type": "ground", "at": [400, 345] },
+        { "id": "VoPlus", "type": "terminal", "at": [650, 205] },
+        { "id": "VoMinus", "type": "terminal", "at": [650, 350] }
+      ],
+      "annotations": [
+        { "type": "node", "at": [205, 165] },
+        { "type": "node", "at": [350, 165] },
+        { "type": "node", "at": [400, 230] },
+        { "type": "node", "at": [440, 230] },
+        { "type": "polarity", "plus": [685, 215], "minus": [685, 355], "label": "vₒ", "labelPosition": { "at": [710, 270], "anchor": "start" } },
+        { "type": "text", "at": [650, 80], "text": "ω", "anchor": "middle", "value": { "path": "omega", "sourceUnit": "rad/s", "unit": "rad/s", "significantDigits": 3 } }
+      ]
+    },
+    "highPass": {
+      "viewBox": [0, 0, 760, 430],
+      "ariaLabel": "Second-order Sallen-Key op-amp circuit with two series capacitors and two resistors",
+      "wires": [
+        { "points": [[80, 210], [80, 165], [120, 165]] },
+        { "points": [[190, 165], [220, 165]] },
+        { "points": [[290, 165], [350, 165]] },
+        { "points": [[350, 165], [350, 180], [460, 180]] },
+        { "points": [[205, 165], [205, 70], [260, 70]] },
+        { "points": [[380, 70], [600, 70], [600, 205], [580, 205]] },
+        { "points": [[350, 165], [330, 165], [330, 210]] },
+        { "points": [[330, 310], [330, 330], [80, 330]] },
+        { "points": [[460, 230], [400, 230], [400, 250]] },
+        { "points": [[400, 330], [400, 345]] },
+        { "points": [[440, 230], [440, 280], [460, 280]] },
+        { "points": [[550, 280], [600, 280], [600, 205]] },
+        { "points": [[580, 205], [650, 205]] },
+        { "points": [[650, 330], [650, 350]] }
+      ],
+      "elements": [
+        { "id": "Vs", "type": "voltageSource", "from": [80, 330], "to": [80, 210], "label": "vₛ", "labelPosition": { "at": [45, 245], "anchor": "end" } },
+        { "id": "C1", "type": "capacitor", "from": [120, 165], "to": [190, 165], "label": "C₁", "labelPosition": { "at": [155, 125] }, "value": { "path": "C1", "sourceUnit": "F", "unit": "F", "significantDigits": 3 } },
+        { "id": "C2", "type": "capacitor", "from": [220, 165], "to": [290, 165], "label": "C₂", "labelPosition": { "at": [255, 125] }, "value": { "path": "C2", "sourceUnit": "F", "unit": "F", "significantDigits": 3 } },
+        { "id": "R1", "type": "resistor", "from": [260, 70], "to": [380, 70], "label": "R₁", "labelPosition": { "at": [320, 105] }, "value": { "path": "R1", "sourceUnit": "Ohm", "unit": "Ω", "significantDigits": 3 } },
+        { "id": "R2", "type": "resistor", "from": [330, 210], "to": [330, 310], "label": "R₂", "labelPosition": { "at": [315, 250], "anchor": "end" }, "value": { "path": "R2", "sourceUnit": "Ohm", "unit": "Ω", "significantDigits": 3 } },
+        { "id": "A1", "type": "opAmp", "center": [520, 205], "width": 120, "height": 100 },
+        { "id": "R3", "type": "resistor", "from": [400, 250], "to": [400, 330], "label": "R₃", "labelPosition": { "at": [385, 285], "anchor": "end" }, "value": { "path": "R3", "sourceUnit": "Ohm", "unit": "Ω", "significantDigits": 3 } },
+        { "id": "R4", "type": "resistor", "from": [460, 280], "to": [550, 280], "label": "R₄", "labelPosition": { "at": [505, 315] }, "value": { "path": "R4", "sourceUnit": "Ohm", "unit": "Ω", "significantDigits": 3 } },
+        { "id": "GND", "type": "ground", "at": [400, 345] },
+        { "id": "VoPlus", "type": "terminal", "at": [650, 205] },
+        { "id": "VoMinus", "type": "terminal", "at": [650, 350] }
+      ],
+      "annotations": [
+        { "type": "node", "at": [205, 165] },
+        { "type": "node", "at": [350, 165] },
+        { "type": "node", "at": [400, 230] },
+        { "type": "node", "at": [440, 230] },
+        { "type": "polarity", "plus": [685, 215], "minus": [685, 355], "label": "vₒ", "labelPosition": { "at": [710, 270], "anchor": "start" } },
+        { "type": "text", "at": [650, 80], "text": "ω", "anchor": "middle", "value": { "path": "omega", "sourceUnit": "rad/s", "unit": "rad/s", "significantDigits": 3 } }
+      ]
+    }
+  }
+}

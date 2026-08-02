@@ -103,8 +103,17 @@ bearer_scheme = HTTPBearer(auto_error=False)
 
 def get_firebase_token(
     token: Annotated[HTTPAuthorizationCredentials | None, Depends(bearer_scheme)],
+    settings: SettingDependency,
 ) -> dict | None:
     try:
+        if settings.AUTH_BYPASS_ENABLED:
+            if token and token.credentials == settings.AUTH_BYPASS_TOKEN:
+                return {
+                    "user_id": settings.AUTH_BYPASS_USER_ID,
+                    "email": "local-author@gestalt.invalid",
+                    "auth_bypass": True,
+                }
+            raise ValueError("Invalid local auth bypass token")
         if not token:
             raise ValueError("No Token")
         return verify_id_token(token.credentials)

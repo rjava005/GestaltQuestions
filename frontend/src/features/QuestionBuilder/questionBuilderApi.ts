@@ -27,6 +27,22 @@ export default class QuestionBuilderAPI {
     return response.data;
   }
 
+  static async createQuestionWithFiles(
+    token: string,
+    payload: QuestionCreate,
+    files: File[],
+  ): Promise<QuestionRead> {
+    const formData = new FormData();
+    formData.append("metadata", JSON.stringify(payload));
+    files.forEach((file) => formData.append("files", file));
+    const response = await api.post<QuestionRead>(
+      `${this.base}/with-files`,
+      formData,
+      { headers: this.authHeaders(token) },
+    );
+    return response.data;
+  }
+
   static async copyQuestion(
     token: string,
     questionID: string,

@@ -13,6 +13,9 @@ services:
       DATABASE_URL: postgresql://postgres:password@db:5432/gestalt_db
       BACKEND_CORS_ORIGINS: http://localhost:5173,http://127.0.0.1:5173
       SANDBOX_URL: http://code_sandbox:8080
+      AUTH_BYPASS_ENABLED: "true"
+      AUTH_BYPASS_USER_ID: "00000000-0000-4000-8000-000000000001"
+      AUTH_BYPASS_TOKEN: "local-dev-bypass"
       STORAGE_SERVICE: local
       STORAGE_EMULATOR_HOST: host.docker.internal:9199
     ports:
@@ -42,6 +45,8 @@ services:
       - /app/node_modules      # do NOT overwrite node_modules
     environment:
     - CHOKIDAR_USEPOLLING=true
+    - VITE_AUTH_BYPASS_ENABLED=true
+    - VITE_AUTH_BYPASS_TOKEN=local-dev-bypass
     env_file:
       - ./frontend/.env
     tty: true

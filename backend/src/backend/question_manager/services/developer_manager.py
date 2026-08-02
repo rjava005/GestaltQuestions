@@ -59,7 +59,8 @@ class DeveloperQuestionService:
             raise DeveloperProfileError("retrieve", str(user_id), "Profile not set")
         try:
             stmt = select(Question).where(
-                Question.created_by_id == convert_uuid(profile.id)
+                Question.created_by_id == convert_uuid(profile.id),
+                Question.id == convert_uuid(qid),
             )
             q = self.session.exec(stmt).first()
             if q is None:
@@ -127,6 +128,13 @@ class DeveloperQuestionService:
         except SQLAlchemyError as e:
             self.session.rollback()
             logger.warning("Failed assigning creator to question %s", question.id)
+            try:
+                await self.qmng.delete_question(question.id)
+            except Exception:
+                logger.exception(
+                    "Failed rolling back question %s after creator assignment failure",
+                    question.id,
+                )
             raise DeveloperProfileError(
                 "assign question creator", str(user_id), str(e)
             ) from e
@@ -187,7 +195,7 @@ class DeveloperQuestionService:
         self, user_id: ID, qid: ID, method: Literal["full", "simple"] = "simple"
     ) -> Question | QuestionRead:
         """Retrieve a question after checking developer question control."""
-        await self.has_question_control(user_id, qid)
+        await self.require_question_control(user_id, qid)
         if method == "full":
             q = await self.qmng.qdb.get_question_data(qid)
         else:
@@ -198,12 +206,12 @@ class DeveloperQuestionService:
 
     async def update_question(self, user_id: ID, qid: ID, update: QuestionUpdate):
         """Update question metadata after checking developer question control."""
-        await self.has_question_control(user_id, qid)
+        await self.require_question_control(user_id, qid)
         return await self.qmng.update_question_meta(qid, update)
 
     async def delete_question(self, user_id: ID, qid: ID) -> bool:
         """Delete a question and its storage after checking developer question control."""
-        await self.has_question_control(user_id, qid)
+        await self.require_question_control(user_id, qid)
         return await self.qmng.delete_question(qid)
 
     # Filtering
@@ -249,29 +257,29 @@ class DeveloperQuestionService:
 
     async def get_question_files(self, user_id: ID, qid: ID) -> Sequence[str]:
         """List stored files for a controlled question."""
-        await self.has_question_control(user_id, qid)
+        await self.require_question_control(user_id, qid)
         return await self.qmng.get_question_files(qid)
 
     async def get_question_filedata(self, user_id: ID, qid: ID) -> Sequence[FileData]:
-        await self.has_question_control(user_id, qid)
+        await self.require_question_control(user_id, qid)
         return await self.qmng.get_question_filedata(qid)
 
     async def read_file(self, user_id: ID, qid: ID, filename: str) -> bytes | None:
         """Read a stored question file after checking developer question control."""
-        await self.has_question_control(user_id, qid)
+        await self.require_question_control(user_id, qid)
         return await self.qmng.read_file(qid, filename)
 
     async def write_file(self, user_id: ID, qid: ID, filename: str, data: Any):
         """Write or replace a question file after checking developer question control."""
-        await self.has_question_control(user_id, qid)
+        await self.require_question_control(user_id, qid)
         return await self.qmng.write_file(qid, filename, data)
 
     async def delete_file(self, user_id: ID, qid: ID, filename: str):
         """Delete a question file after checking developer question control."""
-        await self.has_question_control(user_id, qid)
+        await self.require_question_control(user_id, qid)
         return await self.qmng.delete_file(qid, filename)
 
     async def upload_files(self, user_id: ID, qid: ID, files: list[FileData]):
         """Upload files to a question after checking developer question control."""
-        await self.has_question_control(user_id, qid)
+        await self.require_question_control(user_id, qid)
         return await self.qmng.upload_files(qid, files)

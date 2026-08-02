@@ -66,6 +66,9 @@ class AppSettings(BaseSettings):
     # FIREBASE EMULATOR
     FIREBASE_AUTH_EMULATOR_HOST: str | None = None
     STORAGE_EMULATOR_HOST: str | None = None
+    AUTH_BYPASS_ENABLED: bool = False
+    AUTH_BYPASS_USER_ID: str = "00000000-0000-4000-8000-000000000001"
+    AUTH_BYPASS_TOKEN: str = "local-dev-bypass"
 
     SANDBOX_URL: str | None = None
     LANGGRAPH_STREAM_URL: str | None = None
@@ -121,6 +124,8 @@ class AppSettings(BaseSettings):
 
     @model_validator(mode="after")
     def validate_emulators(self):
+        if self.AUTH_BYPASS_ENABLED and self.ENV == Environment.PRODUCTION:
+            raise InvalidConfigError("AUTH_BYPASS_ENABLED cannot be used in production")
         if self.ENV == "production":
             return self
 
@@ -171,6 +176,7 @@ def get_settings_pretty_print(mode: Literal["str", "json"] = "json") -> str:
                 app_settings.FIREBASE_AUTH_EMULATOR_HOST
                 or app_settings.STORAGE_EMULATOR_HOST
             ),
+            "auth_bypass_enabled": app_settings.AUTH_BYPASS_ENABLED,
         },
         "cors": {
             "origins_count": len(app_settings.BACKEND_CORS_ORIGINS),

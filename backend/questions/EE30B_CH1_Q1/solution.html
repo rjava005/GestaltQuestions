@@ -1,0 +1,44 @@
+Given the circuit with a sinusoidal source voltage $v_s(t) = V_s \cos(\omega t)$ V, we need to find the current $i(t)$ through the circuit.
+
+**Parameters Given:**
+- Source voltage amplitude $V_s = 10$ V
+- Source frequency $\omega = 1000$ rad/s
+- Resistance $R = 50 \, \Omega$
+- Capacitance $C = 0.01$ F
+- Inductance $L = 0.02$ H
+
+**Step 1: Convert Time Domain to Phasor Domain**
+
+The voltage source $v_s(t)$ is represented in phasor form as:
+$$ V_s = 10 \angle 0^\circ \text{ V} $$
+
+**Step 2: Calculate Impedances**
+
+- The impedance of the resistor is:
+  $$ Z_R = 50 \, \Omega $$
+- The impedance of the inductor is $Z_L = j \omega L$:
+  $$ Z_L = j(1000) \times (0.02) \, \Omega = j20 \, \Omega $$
+- The impedance of the capacitor is $Z_C = \frac{1}{j \omega C}$:
+  $$ Z_C = \frac{1}{j(1000 \times 0.01)} \, \Omega = -j100 \, \Omega $$
+
+**Step 3: Find the Total Impedance $Z$**
+
+$$ Z = Z_R + Z_L + Z_C $$
+- $Z = 50 + j20 - j100 \, \Omega = 50 - j80 \, \Omega$
+
+Express $Z$ in polar form:
+$$ Z = \sqrt{(50)^2 + (-80)^2} \angle \tan^{-1}\left(\frac{-80}{50}\right) \, \Omega $$
+- Magnitude: $\sqrt{2500 + 6400} = \sqrt{8900} \approx 94.34 \, \Omega$
+- Phase: $\tan^{-1}\left(\frac{-80}{50}\right) \approx -58.00^\circ$
+
+**Step 4: Calculate the Current $I$ using Ohm's Law**
+
+$$ I = \frac{V_s}{Z} $$
+$$ I = \frac{10 \angle 0^\circ}{94.34 \angle -58.00^\circ} $$
+  - Magnitude: $\frac{10}{94.34} \approx 0.106 \, \text{A}$
+  - Phase: $0^\circ + 58.00^\circ = 58.00^\circ$
+
+**Step 5: Convert Back to Time Domain**
+
+The time domain representation of the current is:
+$$ i(t) = 0.106 \cos(1000t + 58.00^\circ) \, \text{A} $$

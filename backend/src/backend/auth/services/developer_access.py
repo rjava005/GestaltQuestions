@@ -39,7 +39,7 @@ class DeveloperAccessService:
     # ------------------------------------------------------------------
 
     async def has_developer_role(self, user_id: ID) -> AccessDecision:
-        """Return whether the user has admin or developer privileges."""
+        """Return whether the user has question-author privileges."""
         logger.debug("Checking developer role for user %s", user_id)
         try:
             user = await self.user_mng.get_user(user_id)
@@ -54,13 +54,15 @@ class DeveloperAccessService:
             if (
                 UserRoles.ADMIN.value in role_names
                 or UserRoles.DEVELOPER.value in role_names
+                or UserRoles.TEACHER.value in role_names
             ):
-                logger.debug("Developer access granted for user %s", user_id)
+                logger.debug("Question-author access granted for user %s", user_id)
                 return AccessDecision(True, "Developer access granted")
 
             logger.warning("Developer role required for user %s", user_id)
             return AccessDecision(
-                False, "Developer role is required to perform this action"
+                False,
+                "Developer role is required to perform this action",
             )
         except Exception as e:
             logger.warning("Failed checking developer role for user %s: %s", user_id, e)

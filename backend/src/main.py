@@ -1,6 +1,7 @@
 # Standard library imports
 import os
 from contextlib import asynccontextmanager
+from uuid import UUID
 
 import uvicorn
 
@@ -8,10 +9,10 @@ import uvicorn
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.routing import APIRouter
-from sqlmodel import Session
+from sqlmodel import Session, select
 
 from backend.api import ALL_ROUTES
-from backend.auth import InstitutionDB, RoleDB
+from backend.auth import DeveloperProfile, InstitutionDB, RoleDB, User, UserRoles
 from backend.core import get_settings, initialize_firebase_app, logger
 from backend.database import engine
 from backend.question import QuestionQTypeDB
@@ -26,6 +27,36 @@ async def seed_database(session: Session) -> None:
     logger.info("[Initialization] Institution Created/verified Successfully")
     QuestionQTypeDB(session).seed_types()
     logger.info("[Initialization] QuestionQTypeDB Created/verified Successfully")
+    if settings.AUTH_BYPASS_ENABLED:
+        user_id = UUID(settings.AUTH_BYPASS_USER_ID)
+        user = session.get(User, user_id)
+        if user is None:
+            user = User(
+                id=user_id,
+                first_name="Local",
+                last_name="Author",
+                username="local_author",
+                email="local-author@gestalt.invalid",
+            )
+        author_role = await RoleDB(session).get_role(UserRoles.DEVELOPER)
+        if author_role is None:
+            raise ValueError("Developer role was not seeded for auth bypass")
+        if author_role not in user.roles:
+            user.roles.append(author_role)
+        session.add(user)
+        session.commit()
+        profile = session.exec(
+            select(DeveloperProfile).where(DeveloperProfile.user_id == user_id)
+        ).first()
+        if profile is None:
+            session.add(
+                DeveloperProfile(
+                    user_id=user_id,
+                    storage_path=f"local_authors/{user_id}/",
+                )
+            )
+            session.commit()
+        logger.warning("[Initialization] Local authentication bypass is enabled")
 
 
 ## Intializes the database

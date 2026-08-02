@@ -1,0 +1,34 @@
+<pl-solution-panel>
+<p>The displayed network is the {{params.filterDescription}} Sallen–Key form. Its non-inverting stage gain is</p>
+
+$$K=1+\frac{R_4}{R_3}=1+\frac{ {{params.R4}} }{ {{params.R3}} }={{params.K}}.$$
+
+<p>Because $R_1=R_2=R$ and $C_1=C_2=C$, define</p>
+
+$$\omega_0=\frac{1}{RC}={{params.omega0}}\ \mathrm{rad/s},\qquad s=j\omega.$$
+
+<pl-hint level="1">
+For either authored topology, the common second-order denominator is
+$$D(s)=(sRC)^2+(3-K)sRC+1.$$
+</pl-hint>
+
+<pl-hint level="2">
+The displayed topology determines the numerator. Here it is ${{params.numeratorExpression}}$, so
+$$H(s)=\frac{V_o}{V_s}=\frac{ {{params.numeratorExpression}} }{(sRC)^2+(3-K)sRC+1}= {{params.responseExpression}}.$$
+</pl-hint>
+
+<pl-hint level="3">
+Evaluate at $s=j\omega$ with $R={{params.R1}}\ \Omega$, $C={{params.C1}}\ \mathrm{F}$, and $\omega={{params.omega}}\ \mathrm{rad/s}$:
+$$D(j\omega)=(j\omega RC)^2+(3-K)j\omega RC+1.$$
+</pl-hint>
+
+<pl-hint level="4">
+The closed-loop gain magnitude is
+$$|H(j\omega)|={{correct_answers.gain}}.$$
+</pl-hint>
+
+<pl-hint level="5">
+Normalizing $\arg H(j\omega)$ to $[-180^\circ,180^\circ)$ gives
+$$\angle H(j\omega)={{correct_answers.phaseShift}}^\circ.$$
+</pl-hint>
+</pl-solution-panel>
