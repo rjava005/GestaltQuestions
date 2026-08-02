@@ -129,3 +129,24 @@ def test_generate_endpoint_executes_for_js_and_py_configs(
 
     assert body["output"]["source"] == expected_source
     assert body["output"]["total"] == expected_total
+
+
+def test_grading_endpoint_runs_in_isolated_worker(test_client):
+    response = test_client.post(
+        "/grading/grade",
+        json={
+            "answers": {"gain": {"latex": "2", "mathjson": 2}},
+            "private_data": {
+                "answer_specs": {
+                    "gain": {"type": "numeric", "absolute_tolerance": 0.01}
+                },
+                "correct_answers": {"gain": 2},
+            },
+        },
+    )
+
+    assert response.status_code == 200, response.text
+    assert response.json() == {
+        "overall": "correct",
+        "slots": {"gain": {"status": "correct"}},
+    }

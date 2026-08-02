@@ -43,7 +43,7 @@ export default function DisplayAnswers({
   submittedAnswer,
   variant = "default",
 }: DisplayAnswerProps) {
-  if (!quizData) return null;
+  if (!quizData?.correct_answers) return null;
 
   const effectiveResponses = submittedAnswer ?? null;
   const rows = buildAnswerComparisonRows(
@@ -73,7 +73,15 @@ export default function DisplayAnswers({
                 )}
               >
                 <td>{key}</td>
-                <td>{submitted ?? "—"}</td>
+                <td>
+                  {submitted == null
+                    ? "—"
+                    : typeof submitted === "object"
+                      ? "latex" in submitted
+                        ? submitted.latex
+                        : JSON.stringify(submitted)
+                      : String(submitted)}
+                </td>
                 <td>
                   <span className="qr-answer-pill">{String(correct)}</span>
                 </td>

@@ -1,5 +1,6 @@
 # Standard library imports
 import os
+from collections.abc import AsyncIterator
 from contextlib import asynccontextmanager
 from uuid import UUID
 
@@ -16,6 +17,7 @@ from backend.auth import DeveloperProfile, InstitutionDB, RoleDB, User, UserRole
 from backend.core import get_settings, initialize_firebase_app, logger
 from backend.database import engine
 from backend.question import QuestionQTypeDB
+from backend.question_runtime.service.instance_db import QuestionInstanceDB
 
 settings = get_settings()
 
@@ -61,13 +63,14 @@ async def seed_database(session: Session) -> None:
 
 ## Intializes the database
 @asynccontextmanager
-async def on_startup(app: FastAPI):
+async def on_startup(_app: FastAPI) -> AsyncIterator[None]:
     try:
         # Attempt to initialize firebase application
         initialize_firebase_app()
         # Ensures that the roles are present at startup
         with Session(engine) as session:
             await seed_database(session)
+            await QuestionInstanceDB(session).cleanup_expired()
         yield
     except Exception as e:
         raise ValueError(f"Failed to initialize app {e}") from e
@@ -78,7 +81,7 @@ def add_routes(app: FastAPI, routes: list[APIRouter] = ALL_ROUTES) -> None:
         app.include_router(r)
 
 
-def get_application(test_mode: bool = False):
+def get_application(_test_mode: bool = False) -> FastAPI:
     app = FastAPI(title=settings.PROJECT_NAME or "", lifespan=on_startup)
     add_routes(app)
 

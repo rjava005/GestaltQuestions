@@ -560,6 +560,29 @@ Technology documentation:
 - [LangGraph](https://docs.langchain.com/oss/python/langgraph/overview)
 - [MathJax](https://docs.mathjax.org/)
 
+## Signal/control framework
+
+`code_sandbox/src/gestalt_signal_systems` is the shared numerical boundary.
+Its signal, control, and serialization modules produce bounded, finite visual
+data. The grading module recursively validates slot-specific MathJSON before
+constructing SymPy expressions directly; submitted LaTeX is never parsed.
+Depth/node/sample limits and the sandbox process/request timeouts bound work.
+
+Secure adaptive runs are coordinated by `QuestionRunTimeService` and
+`QuestionInstanceDB`. `question_instance` rows contain an opaque UUID, question
+foreign key, private grading JSON, and creation/expiry timestamps. Secure runs
+strip answers and solutions; grade calls verify the question and 24-hour expiry,
+delegate to the sandbox, and reveal the formatted solution. Startup and normal
+traffic remove stale rows. Static and legacy adaptive output keeps the existing
+`correct_answers` contract.
+
+QuestionEngine registers `pl-math-input`, `pl-signal-plot`, and
+`pl-block-diagram`. Assets use the same validated local/Firebase delivery path
+as circuits. SVG scenes are responsive/accessibile, while answer controls are
+semantic HTML aligned over explicit authored coordinates. The existing Zustand
+question store holds both answer state and secure per-slot grade results, so
+public rendering and advanced workspace preview use the same implementation.
+
 ## Suggested onboarding path
 
 1. Start the root Compose stack and confirm `/health/live`, the frontend, and Swagger.

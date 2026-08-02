@@ -26,6 +26,8 @@ DEFAULT_BUNDLES = (
     "EE30B_CH1_Q2",
     "EE_CH2_Q1",
     "EE_CH2_Q2",
+    "framework_signal_demo",
+    "framework_feedback_demo",
 )
 IMPORT_NAMESPACE = UUID("bd844591-cc55-4db4-8670-31269c8ffcff")
 IMPORT_USER_ID = uuid5(IMPORT_NAMESPACE, "ee30b-import-user")
@@ -101,9 +103,10 @@ async def _sync_runtimes(
     runtime_db = QuestionRuntimeDB(session)
     configured: list[str] = []
 
+    has_javascript = (bundle_dir / "server.js").is_file()
     runtime_files = (
         ("server.js", RuntimeLanguage.JAVASCRIPT, True),
-        ("server.py", RuntimeLanguage.PYTHON, False),
+        ("server.py", RuntimeLanguage.PYTHON, not has_javascript),
     )
     for filename, language, is_default in runtime_files:
         if not (bundle_dir / filename).is_file():

@@ -98,6 +98,41 @@ If you encounter issues or need assistance with the setup, feel free to reach ou
 ---
 
 ## Circuit question authoring
+## Signal-processing and control authoring
+
+Questions can render `<pl-signal-plot file-name="signal-plot.json">`,
+`<pl-block-diagram file-name="block-diagram.json">`, and standalone
+`<pl-math-input answer-name="transfer">` fields. Signal-plot version 1 supports
+finite continuous/piecewise traces, stems, impulses, multiple traces, shaded
+regions, parameter bindings, toggles, cursor inspection, zoom/pan, and authored
+draggable markers or intervals. Block-diagram version 1 supports explicitly
+positioned transfer/function blocks, gains, sums, mixers, pickoffs, sources,
+sinks, integrators, delays, labels, directed wires/feedback paths, parameter
+bindings, and overlaid numeric or structured-math slots. Neither schema performs
+automatic layout or routing.
+
+MathLive fields show a focus-only, slot-filtered palette (a bottom drawer on
+small/touch screens), while retaining keyboard, LaTeX command, and plain-text
+fallback entry. The browser transports both display LaTeX and MathJSON. Only
+recursively validated MathJSON is converted directly to SymPy; raw LaTeX is
+never evaluated.
+
+Python runtimes may import `gestalt_signal_systems` for bounded signal sampling,
+piecewise functions, impulses, convolution, transforms, sampling, transfer
+functions, series/parallel/feedback systems, responses, and finite JSON output.
+The sandbox pins SymPy 1.14 and python-control 0.10.x.
+
+Secure grading is opt in with runtime output keys `secure_grading: true`,
+`answer_specs`, and `correct_answers`. Runs return an opaque instance ID but
+omit answers/solutions. Submit to
+`POST /questions/{qid}/runtimes/instances/{instance}/grade`; instances expire
+after 24 hours and return 410 after expiry. Numeric, symbolic/algebraic,
+transfer-function, definite/improper integral, derivative/partial derivative,
+finite-sum, and authored one/two-sided limit slots are supported. Legacy
+`correct_answers` behavior is unchanged. Framework-only examples are in
+`backend/questions/framework_signal_demo` and `framework_feedback_demo`.
+
+## Circuit question authoring
 
 Circuit questions should keep an authored, versioned `circuit.json` beside
 `question.html` and render it with:

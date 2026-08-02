@@ -1,8 +1,10 @@
-import { describe, expect, it } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
 
+import { QuestionRuntimeApi } from "../../../services/QuestionRuntime";
 import { createQuestionInstanceStore } from "./stores";
 
 describe("question variant regeneration context", () => {
+  afterEach(() => vi.restoreAllMocks());
   it("captures the active circuit variant only when regeneration is requested", () => {
     const store = createQuestionInstanceStore({
       quiz_data: {
@@ -16,5 +18,32 @@ describe("question variant regeneration context", () => {
 
     expect(store.getState().refreshKey).toBe(1);
     expect(store.getState().previousCircuitVariant).toBe("lowPass");
+  });
+
+  it("submits secure answers to the opaque instance and stores per-slot results", async () => {
+    const grade = vi
+      .spyOn(QuestionRuntimeApi, "gradeQuestion")
+      .mockResolvedValue({
+        status: "correct",
+        answers: { transfer: { status: "correct" } },
+        solution_html: "<p>solution</p>",
+      });
+    const store = createQuestionInstanceStore({
+      instance: "instance-1",
+      qmeta: { id: "question-1" } as never,
+      quiz_data: { params: {}, secure_grading: true, answer_specs: {} },
+      answers: { transfer: { latex: "s", mathjson: "s" } },
+    });
+
+    await store.getState().submitAnswers();
+
+    expect(grade).toHaveBeenCalledWith(
+      "question-1",
+      "instance-1",
+      store.getState().answers,
+    );
+    expect(store.getState().grading?.status).toBe("correct");
+    expect(store.getState().solution_html).toBe("<p>solution</p>");
+    expect(store.getState().hasSubmitted).toBe(true);
   });
 });
