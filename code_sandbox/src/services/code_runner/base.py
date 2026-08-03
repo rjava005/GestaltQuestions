@@ -13,6 +13,8 @@ from .models import ExecutionResult, Language, RuntimeExecutionConfig
 class CodeRunner(ABC):
     """Shared execution pipeline for language-specific runners."""
 
+    EXECUTION_TIMEOUT_SECONDS = 5
+
     def __init__(self, runtime_config: RuntimeExecutionConfig, language: Language):
         """Copy runtime config and validate language/entry requirements."""
         self.runtime_config = copy.deepcopy(runtime_config)
@@ -58,7 +60,7 @@ class CodeRunner(ABC):
                     cwd=tmp_path,
                     capture_output=True,
                     text=True,
-                    timeout=5,
+                    timeout=self.EXECUTION_TIMEOUT_SECONDS,
                     check=True,
                     env=env,
                 )
@@ -69,7 +71,8 @@ class CodeRunner(ABC):
                 )
             except subprocess.TimeoutExpired:
                 raise ExecutionError(
-                    f"{self.language} execution timed out after 5 seconds."
+                    f"{self.language} execution timed out after "
+                    f"{self.EXECUTION_TIMEOUT_SECONDS} seconds."
                 )
             except Exception as e:
                 raise ExecutionError(
