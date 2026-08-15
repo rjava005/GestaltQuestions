@@ -11,7 +11,6 @@ from backend.auth import (
     DeveloperAccessService,
     DeveloperProfileError,
 )
-from backend.auth.exceptions import DeveloperProfileError
 from backend.core import logger
 from backend.question.models import Question
 from backend.question.schema import (
