@@ -37,8 +37,11 @@ export default function ChatUI({ assistantID }: ChatUIProps) {
     <ChatContainer>
       {/* Messages container */}
       <div className="flex-1 overflow-y-auto p-4 space-y-3 text-sm">
-        {stableMessages.map((message) => (
-          <ChatMessageContainer message={message}></ChatMessageContainer>
+        {stableMessages.map((message, index) => (
+          <ChatMessageContainer
+            key={message.id ?? index}
+            message={message}
+          ></ChatMessageContainer>
         ))}
         <div ref={endRef} />
       </div>

@@ -196,7 +196,7 @@ export default function AccountProfile() {
         <FieldRow label="Roles">
           <div className="flex flex-col">
             {userData.roles.map((r) => (
-              <RenderRoleDescription role={r}></RenderRoleDescription>
+              <RenderRoleDescription key={r} role={r}></RenderRoleDescription>
             ))}
           </div>
         </FieldRow>

@@ -125,3 +125,15 @@ def test_python_generation_context_is_forwarded():
     response = PythonScriptRunner(config).run()
 
     assert response.output == {"previousCircuitVariant": "lowPass"}
+
+
+def test_python_runtime_without_stdout_raises_execution_error():
+    """A runtime that prints nothing must fail as ExecutionError, not IndexError."""
+    config = RuntimeExecutionConfig(
+        entry="server.py",
+        language="python",
+        files={"server.py": "import sys\n\ndef generate():\n    sys.exit(0)\n"},
+    )
+
+    with pytest.raises(ExecutionError, match="produced no output"):
+        PythonScriptRunner(config).run()
