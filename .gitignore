@@ -92,7 +92,7 @@ frontend/.env.dev.docker
 frontend/node_modules
 
 
-agents/.langgraph_api
+**/.langgraph_api
 client_secret**
 credentials.json
 packages/gdrive_importer/html_data

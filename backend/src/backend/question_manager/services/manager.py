@@ -10,10 +10,6 @@ from backend.question import (
     QuestionStorageService,
     QuestionUpdate,
 )
-from backend.question.schema import QuestionUpdate
-from backend.question.services.question_storage_service import (
-    QuestionStorageService,
-)
 from backend.question_manager.exceptions import (
     FileListError,
     FileOperationError,
@@ -246,17 +242,15 @@ class QuestionManager:
         """Save additional files to an existing question.
 
         If one file fails after earlier files were saved, the files saved during
-        this call are removed before the error is raised.
+        this call are removed before the error is raised. That rollback happens
+        inside _save_files, which is the only place that knows what it wrote.
         """
-        saved_files: list[str] = []
         try:
             storage_path = await self.get_storage_path(qid)
             return self._save_files(storage_path, files, qid)
         except QuestionManagerException:
-            self._rollback_saved_files(saved_files)
             raise
         except Exception as e:
-            self._rollback_saved_files(saved_files)
             raise FileOperationError("upload", str(qid), str(e)) from e
 
     async def get_storage_path(self, qid: ID) -> str:
