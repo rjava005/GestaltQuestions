@@ -20,6 +20,7 @@ from backend.core.config import AppSettings, get_settings
 from backend.database import get_session
 from backend.question import QuestionDB, QuestionQueryService
 from backend.question_manager import DeveloperQuestionService, QuestionManager
+from backend.question_runtime.service.instance_db import QuestionInstanceDB
 from backend.question_runtime.service.question_runtime import QuestionRunTimeService
 from backend.question_runtime.service.runtime_db import QuestionRuntimeDB
 from backend.question_runtime.service.runtime_sync import QuestionRunTimeSyncService
@@ -103,8 +104,17 @@ bearer_scheme = HTTPBearer(auto_error=False)
 
 def get_firebase_token(
     token: Annotated[HTTPAuthorizationCredentials | None, Depends(bearer_scheme)],
+    settings: SettingDependency,
 ) -> dict | None:
     try:
+        if settings.AUTH_BYPASS_ENABLED:
+            if token and token.credentials == settings.AUTH_BYPASS_TOKEN:
+                return {
+                    "user_id": settings.AUTH_BYPASS_USER_ID,
+                    "email": "local-author@gestalt.invalid",
+                    "auth_bypass": True,
+                }
+            raise ValueError("Invalid local auth bypass token")
         if not token:
             raise ValueError("No Token")
         return verify_id_token(token.credentials)
@@ -216,19 +226,29 @@ def get_message_db(session: SessionDep) -> MessageDB:
 MessageDBDependency = Annotated[MessageDB, Depends(get_message_db)]
 
 
-def get_qruntime(session: SessionDep):
+def get_qruntime(session: SessionDep) -> QuestionRuntimeDB:
     return QuestionRuntimeDB(session)
 
 
 QuestionRuntimeDBDependency = Annotated[QuestionRuntimeDB, Depends(get_qruntime)]
 
 
+def get_question_instance_db(session: SessionDep) -> QuestionInstanceDB:
+    return QuestionInstanceDB(session)
+
+
+QuestionInstanceDBDependency = Annotated[
+    QuestionInstanceDB, Depends(get_question_instance_db)
+]
+
+
 def get_question_runtime_service(
     qm: QuestionManagerDependency,
     runtime_db: QuestionRuntimeDBDependency,
     sandbox: SandboxDependency,
+    instance_db: QuestionInstanceDBDependency,
 ) -> QuestionRunTimeService:
-    return QuestionRunTimeService(qm, runtime_db, sandbox)
+    return QuestionRunTimeService(qm, runtime_db, sandbox, instance_db)
 
 
 QuestionRuntimeServiceDependency = Annotated[
@@ -236,7 +256,9 @@ QuestionRuntimeServiceDependency = Annotated[
 ]
 
 
-def get_runtime_sync(runtime_db: QuestionRuntimeDBDependency):
+def get_runtime_sync(
+    runtime_db: QuestionRuntimeDBDependency,
+) -> QuestionRunTimeSyncService:
     return QuestionRunTimeSyncService(runtime_db)
 
 

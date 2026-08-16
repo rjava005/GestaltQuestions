@@ -12,6 +12,8 @@ backend/questions/*
 !backend/questions/EE30B_CH1_Q2/
 !backend/questions/EE_CH2_Q1/
 !backend/questions/EE_CH2_Q2/
+!backend/questions/framework_signal_demo/
+!backend/questions/framework_feedback_demo/
 code_sandbox/node_modules
 test_questions
 # Byte-compiled / optimized / DLL files

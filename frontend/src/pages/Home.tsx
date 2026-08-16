@@ -27,7 +27,7 @@ function Hero() {
               className="px-6 py-3 rounded-xl text-lg font-bold"
             />
           </Link>
-          <Link to="/createQuestion">
+          <Link to="/create">
             <Button
               name="Create Question"
               color="secondary"

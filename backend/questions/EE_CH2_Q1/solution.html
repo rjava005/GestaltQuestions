@@ -1,0 +1,41 @@
+import numpy as np
+
+# Known values (placeholders replaced with variables)
+V_source = 10  # Example voltage in volts (so users need to provide the actual value)
+angle = 0  # Angle in radians
+R3 = 5  # Resistance in ohms
+R2 = 2  # Resistance in ohms
+R1 = 2  # Resistance in ohms
+L = 0.5  # Inductance in henries
+C = 0.02  # Capacitance in farads
+
+# Reactance calculations
+jL = 1j * L
+jC = -1j / C
+
+# KCL equations derived from the hints
+# Equation 1: Node V1
+# V1/R3 + V1/jL + V1/R2 + (V1 - V2)/R1 = V_source * exp(j*angle)/R3
+# Equation 2: Node V2
+# (V2 - V1)/R1 + V2/jC = 0
+
+# Coefficients for the matrix form
+A = np.array([
+    [1/R3 + 1/jL + 1/R2 + 1/R1, -1/R1],
+    [-1/R1, 1/R1 + 1/jC]
+])
+B = np.array([
+    V_source * np.exp(1j * angle) / R3,
+    0
+])
+
+# Solve the linear equations
+try:
+    V = np.linalg.solve(A, B)
+    V1, V2 = V[0], V[1]
+
+    # Calculate Io
+    I_o = (V1 - V2) / R1
+    print(f"The calculated current Io is: {I_o} A")
+except np.linalg.LinAlgError as e:
+    print("An error occurred while solving the equations:", str(e))

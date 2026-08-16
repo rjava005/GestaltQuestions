@@ -137,3 +137,22 @@ def test_python_runtime_without_stdout_raises_execution_error():
 
     with pytest.raises(ExecutionError, match="produced no output"):
         PythonScriptRunner(config).run()
+
+
+def test_python_runtime_can_import_signal_system_helpers():
+    config = RuntimeExecutionConfig(
+        entry="server.py",
+        language="python",
+        files={
+            "server.py": (
+                "from gestalt_signal_systems import transfer_function\n\n"
+                "def generate():\n"
+                "    system = transfer_function([1], [1, 1])\n"
+                "    return {'numerator': system.num[0][0].tolist()}\n"
+            )
+        },
+    )
+
+    response = PythonScriptRunner(config).run()
+
+    assert response.output == {"numerator": [1]}

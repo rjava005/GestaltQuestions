@@ -296,9 +296,9 @@ export function useUploadFile(onRefresh?: () => void) {
       setError(null);
 
       if (!user) {
-        setError("You must be signed in to delete files.");
+        setError("You must be signed in to create questions.");
         setLoading(false);
-        return;
+        throw new Error("You must be signed in to create questions.");
       }
 
       try {
@@ -387,16 +387,13 @@ export function useCreateQuestion() {
 
       try {
         const token = await user.getIdToken();
-        const qCreated = await QuestionBuilderAPI.createQuestion(
-          token,
-          payload,
-        );
-        const qId = qCreated.id;
-        if (files) {
-          await QuestionBuilderAPI.uploadFiles(token, qId, files);
-        }
+        const qCreated = files
+          ? await QuestionBuilderAPI.createQuestionWithFiles(token, payload, files)
+          : await QuestionBuilderAPI.createQuestion(token, payload);
+        return qCreated;
       } catch (err) {
         setError(err instanceof Error ? err.message : "Failed to upload file");
+        throw err;
       } finally {
         setLoading(false);
       }

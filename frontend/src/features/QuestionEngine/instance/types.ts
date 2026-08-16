@@ -1,4 +1,7 @@
+/* eslint-disable no-unused-vars */
+
 import type {
+  GradeResponse,
   PreviousCircuitVariant,
   QuestionRunResponse,
 } from "../../../services/QuestionRuntime";
@@ -14,6 +17,9 @@ export type QuestionInstanceState = QuestionRuntimeState & {
   hasSubmitted: boolean;
   refreshKey: number;
   showSolution: boolean;
+  grading?: GradeResponse;
+  gradingError?: string;
+  isGrading: boolean;
   previousCircuitVariant?: PreviousCircuitVariant;
 };
 
@@ -22,7 +28,7 @@ export type QuestionInstanceActions = {
   setRefreshKey: () => void;
   setAnswer: (name: string, value: QuestionValue) => void;
   resetAnswers: () => void;
-  submitAnswers: () => void;
+  submitAnswers: () => Promise<void>;
   resetSubmissions: () => void;
   setShowSolution: () => void;
 };

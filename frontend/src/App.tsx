@@ -11,8 +11,8 @@ import {
   Questions,
 } from "./pages";
 import ChatPage from "./pages/ChatPage";
+import GuidedQuestionCreator from "./features/GuidedCreator/GuidedQuestionCreator";
 import {
-  CreateNewQuestion,
   QuestionBuilderPlaygroundPage,
   QuestionsListPage,
 } from "./pages/QuestionBuilder";
@@ -34,11 +34,12 @@ function App() {
             {/* Non User Specific */}
 
             {/* Developer Only Routes */}
-            <Route element={<RequireRole allow={["admin", "developer"]} />}>
+            <Route element={<RequireRole allow={["admin", "developer", "teacher"]} />}>
+              <Route path="/create" element={<GuidedQuestionCreator />} />
               <Route path="/question_builder" element={<QuestionBuilder />}>
                 <Route path="questions" element={<QuestionsListPage />} />
                 <Route index element={<QuestionsListPage />} />
-                <Route path="questions/new" element={<CreateNewQuestion />} />
+                <Route path="questions/new" element={<Navigate to="/create" replace />} />
                 <Route
                   path="questions/:qid/edit"
                   element={<QuestionWorkspace />}

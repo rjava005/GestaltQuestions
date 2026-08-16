@@ -56,7 +56,10 @@ class SandboxClient:
 
             raise HTTPException(
                 status_code=status.HTTP_502_BAD_GATEWAY,
-                detail=f"Sandbox request failed with status {response_status}: {e.response.text}",
+                detail=(
+                    f"Sandbox request failed with status {response_status}: "
+                    f"{e.response.text}"
+                ),
             ) from e
         except httpx.RequestError as e:
             logger.exception("Failed to connect to sandbox service.")
@@ -78,4 +81,36 @@ class SandboxClient:
             )
 
         logger.info("Sandbox execution completed successfully.")
+        return data
+
+    async def grade(self, *, answers: dict, private_data: dict) -> dict:
+        endpoint = f"{self.base_url}/grading/grade"
+        try:
+            async with httpx.AsyncClient(timeout=8.0) as client:
+                response = await client.post(
+                    endpoint,
+                    json={"answers": answers, "private_data": private_data},
+                )
+                response.raise_for_status()
+                data = response.json()
+        except httpx.TimeoutException as exc:
+            raise HTTPException(
+                status_code=status.HTTP_504_GATEWAY_TIMEOUT,
+                detail="Grading timed out.",
+            ) from exc
+        except httpx.HTTPStatusError as exc:
+            raise HTTPException(
+                status_code=status.HTTP_502_BAD_GATEWAY,
+                detail="Sandbox grading failed.",
+            ) from exc
+        except httpx.RequestError as exc:
+            raise HTTPException(
+                status_code=status.HTTP_502_BAD_GATEWAY,
+                detail="Failed to connect to sandbox grading.",
+            ) from exc
+        if not isinstance(data, dict):
+            raise HTTPException(
+                status_code=status.HTTP_502_BAD_GATEWAY,
+                detail="Sandbox returned an invalid grading response.",
+            )
         return data

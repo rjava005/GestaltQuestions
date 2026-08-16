@@ -1,6 +1,10 @@
 FROM python:3.11-slim
 WORKDIR /app
 
+# Application modules and authored runtime helpers live under /app/src.
+# Keep them importable by both Uvicorn and isolated question subprocesses.
+ENV PYTHONPATH=/app/src
+
 RUN mkdir -p /app/tmp && chmod -R 777 /app/tmp
 # Install dependencies for building Python packages
 RUN apt-get update && apt-get install -y \

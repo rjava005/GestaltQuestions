@@ -2,6 +2,8 @@ import { isAxiosError } from "axios";
 
 import api from "../client";
 import type {
+  GradeResponse,
+  QuestionAnswerMap,
   QuestionRunResponse,
   QuestionRuntimeCreateRequest,
   QuestionRuntimeLanguage,
@@ -73,6 +75,22 @@ export default class QuestionRuntimeApi {
       const response = await api.post<QuestionRunResponse>(
         url,
         previousCircuitVariant ? { previousCircuitVariant } : undefined,
+      );
+      return response.data;
+    } catch (error) {
+      throw new Error(getRuntimeErrorMessage(error));
+    }
+  }
+
+  static async gradeQuestion(
+    qid: string,
+    instance: string,
+    answers: QuestionAnswerMap,
+  ): Promise<GradeResponse> {
+    try {
+      const response = await api.post<GradeResponse>(
+        `${this.runtimeBase(qid)}/instances/${encodeURIComponent(instance)}/grade`,
+        { answers },
       );
       return response.data;
     } catch (error) {

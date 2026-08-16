@@ -9,6 +9,8 @@ from src.services.code_runner.models import Language, RuntimeExecutionConfig
 class PythonScriptRunner(CodeRunner):
     """Runs Python code from a runtime execution configuration."""
 
+    EXECUTION_TIMEOUT_SECONDS = 15
+
     def __init__(
         self, runtime_config: RuntimeExecutionConfig, language: Language = "python"
     ):
@@ -19,9 +21,17 @@ class PythonScriptRunner(CodeRunner):
         """Return Python command used to execute inline script."""
         return ["python3", "-c"]
 
-    def _initialize_env(self) -> None:
-        """Build environment variables used by the Python subprocess."""
-        self._env = os.environ.copy()
+    def _initialize_env(self) -> dict[str, str]:
+        """Expose trusted sandbox helpers to the isolated Python subprocess."""
+        env = os.environ.copy()
+        source_root = Path(__file__).resolve().parents[2]
+        existing_pythonpath = env.get("PYTHONPATH")
+        env["PYTHONPATH"] = (
+            os.pathsep.join((str(source_root), existing_pythonpath))
+            if existing_pythonpath
+            else str(source_root)
+        )
+        return env
 
     def _build_runner_script(self, entry_point_path: str | Path) -> str:
         """Build inline bootstrap script that imports and calls configured function."""

@@ -1,0 +1,64 @@
+{
+  "version": 1,
+  "viewBox": [0, 0, 620, 300],
+  "ariaLabel": "Series RLC circuit driven by a sinusoidal voltage source",
+  "wires": [
+    { "points": [[90, 90], [150, 90]] },
+    { "points": [[270, 90], [330, 90]] },
+    { "points": [[400, 90], [500, 90], [500, 120]] },
+    { "points": [[500, 220], [500, 240], [90, 240]] }
+  ],
+  "elements": [
+    {
+      "id": "Vs",
+      "type": "voltageSource",
+      "from": [90, 240],
+      "to": [90, 90],
+      "label": "vₛ(t)",
+      "labelPosition": { "at": [55, 145], "anchor": "end" },
+      "value": {
+        "template": "{amplitude} cos({frequency}t) V",
+        "bindings": {
+          "amplitude": { "path": "vs_amplitude", "significantDigits": 3, "engineering": false },
+          "frequency": { "path": "vs_frequency", "significantDigits": 3, "engineering": false }
+        }
+      }
+    },
+    {
+      "id": "R",
+      "type": "resistor",
+      "from": [150, 90],
+      "to": [270, 90],
+      "label": "R",
+      "labelPosition": { "at": [210, 125] },
+      "value": { "path": "resistance", "sourceUnit": "Ω", "unit": "Ω", "significantDigits": 3 }
+    },
+    {
+      "id": "C",
+      "type": "capacitor",
+      "from": [330, 90],
+      "to": [400, 90],
+      "label": "C",
+      "labelPosition": { "at": [365, 125] },
+      "value": { "path": "capacitance", "sourceUnit": "mF", "unit": "F", "significantDigits": 3 }
+    },
+    {
+      "id": "L",
+      "type": "inductor",
+      "from": [500, 120],
+      "to": [500, 220],
+      "label": "L",
+      "labelPosition": { "at": [535, 155], "anchor": "start" },
+      "value": { "path": "inductance", "sourceUnit": "mH", "unit": "H", "significantDigits": 3 }
+    }
+  ],
+  "annotations": [
+    {
+      "type": "currentArrow",
+      "from": [115, 60],
+      "to": [165, 60],
+      "label": "i(t)",
+      "labelPosition": { "at": [140, 43] }
+    }
+  ]
+}

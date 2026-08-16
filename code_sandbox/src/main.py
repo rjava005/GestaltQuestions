@@ -2,6 +2,7 @@ import os
 from fastapi import FastAPI
 import uvicorn
 from src.web.code_running import router
+from src.web.grading import router as grading_router
 from fastapi.middleware.cors import CORSMiddleware
 
 from src.core.settings import get_settings
@@ -12,6 +13,7 @@ settings = get_settings()
 def get_app():
     app = FastAPI()
     app.include_router(router)
+    app.include_router(grading_router)
     return app
 
 

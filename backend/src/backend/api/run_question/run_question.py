@@ -1,6 +1,7 @@
 import mimetypes
 from pathlib import PurePosixPath
-from typing import Annotated, Literal
+from typing import Annotated, Any, Literal
+from uuid import UUID
 
 from fastapi import APIRouter, Body, HTTPException, Query, Response, status
 from pydantic import BaseModel
@@ -25,6 +26,21 @@ class QuestionRunRequest(BaseModel):
     previousCircuitVariant: Literal["lowPass", "highPass"] | None = None
 
 
+class GradeRequest(BaseModel):
+    answers: dict[str, Any]
+
+
+class SlotGrade(BaseModel):
+    status: Literal["correct", "incorrect", "invalid"]
+    message: str | None = None
+
+
+class GradeResponse(BaseModel):
+    status: Literal["correct", "incorrect", "invalid"]
+    answers: dict[str, SlotGrade]
+    solution_html: str | None = None
+
+
 @router.post("/run", response_model=RenderedQuestionBundle)
 async def run(
     qid: ID,
@@ -36,6 +52,16 @@ async def run(
         request.model_dump(exclude_none=True) if request is not None else None
     )
     return await runtime_service.run(qid, language, generation_context)
+
+
+@router.post("/instances/{instance}/grade", response_model=GradeResponse)
+async def grade(
+    qid: ID,
+    instance: UUID,
+    request: GradeRequest,
+    runtime_service: QuestionRuntimeServiceDependency,
+) -> dict[str, Any]:
+    return await runtime_service.grade(qid, instance, request.answers)
 
 
 @router.get("/assets/{filename:path}", response_class=Response)
@@ -62,9 +88,7 @@ async def read_question_asset(
         media_type, _ = mimetypes.guess_type(path.name)
     else:
         media_type = None
-    if not media_type or (
-        suffix != ".json" and not media_type.startswith("image/")
-    ):
+    if not media_type or (suffix != ".json" and not media_type.startswith("image/")):
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND)
 
     try:

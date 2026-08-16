@@ -1,3 +1,6 @@
+from copy import deepcopy
+from datetime import UTC, datetime
+from typing import Any
 from uuid import UUID, uuid4
 
 from fastapi import HTTPException
@@ -20,6 +23,7 @@ from backend.question_runtime.schema import (
 from backend.sandbox_client import SandboxClient
 from backend.shared import ID
 
+from .instance_db import QuestionInstanceDB, as_utc
 from .runtime_db import QuestionRuntimeDB
 from .runtime_sync import QuestionRunTimeSyncService
 
@@ -29,17 +33,22 @@ class RenderedQuestionBundle(BaseModel):
     qmeta: QuestionRead
     question_html: str
     solution_html: str | None = None
-    logs: list[str] = []
+    logs: list[str] = Field(default_factory=list)
     quiz_data: QuizData | dict | None = None
 
 
 class QuestionRunTimeService:
     def __init__(
-        self, qm: QuestionManager, runtime_db: QuestionRuntimeDB, sandbox: SandboxClient
+        self,
+        qm: QuestionManager,
+        runtime_db: QuestionRuntimeDB,
+        sandbox: SandboxClient,
+        instance_db: QuestionInstanceDB | None = None,
     ) -> None:
         self._qm = qm
         self._runtime_db = runtime_db
         self._sandbox = sandbox
+        self._instance_db = instance_db
         self._sync = QuestionRunTimeSyncService(self._runtime_db)
 
     async def run(
@@ -96,21 +105,76 @@ class QuestionRunTimeService:
                 detail="An unexpected error occurred.",
             ) from exc
         output = data.get("output")
-        if output is None:
+        if not isinstance(output, dict):
             raise MissingRuntimeOutputError(str(qid))
 
         logs = data.get("logs", [])
 
+        public_output = deepcopy(output)
         formatted_question = TemplateParser().render(
-            question_files.question_html, output or {}
+            question_files.question_html, output
         )
         formatted_solution = TemplateParser().render(
-            question_files.solution_html or "", output or {}
+            question_files.solution_html or "", output
         )
+        public_solution: str | None = formatted_solution
+        instance_id = uuid4()
+        if output.get("secure_grading") is True:
+            if self._instance_db is None:
+                raise RuntimeExecutionError(
+                    question_id=str(qid),
+                    detail="Secure grading storage is unavailable.",
+                )
+            answer_specs = output.get("answer_specs")
+            correct_answers = output.get("correct_answers")
+            if not isinstance(answer_specs, dict) or not isinstance(
+                correct_answers, dict
+            ):
+                raise RuntimeExecutionError(
+                    question_id=str(qid),
+                    detail=(
+                        "Secure output requires answer_specs and "
+                        "correct_answers objects."
+                    ),
+                )
+            await self._instance_db.cleanup_expired()
+            stored = await self._instance_db.create(
+                qid,
+                {
+                    "answer_specs": answer_specs,
+                    "correct_answers": correct_answers,
+                    "solution_html": formatted_solution,
+                },
+            )
+            instance_id = stored.id
+            public_output.pop("correct_answers", None)
+            public_solution = None
         return RenderedQuestionBundle(
+            instance=instance_id,
             qmeta=question,
             question_html=formatted_question,
-            solution_html=formatted_solution,
+            solution_html=public_solution,
             logs=logs,
-            quiz_data=output,
+            quiz_data=public_output,
         )
+
+    async def grade(
+        self, qid: ID, instance_id: UUID, answers: dict[str, Any]
+    ) -> dict[str, Any]:
+        if self._instance_db is None:
+            raise HTTPException(status_code=404, detail="Question instance not found.")
+        instance = await self._instance_db.get(instance_id)
+        if instance is None or str(instance.question_id) != str(qid):
+            raise HTTPException(status_code=404, detail="Question instance not found.")
+        if as_utc(instance.expires_at) <= datetime.now(UTC):
+            await self._instance_db.delete(instance)
+            raise HTTPException(
+                status_code=410, detail="Question instance has expired."
+            )
+        private_data = dict(instance.private_grading_data)
+        solution_html = private_data.pop("solution_html", None)
+        result = await self._sandbox.grade(answers=answers, private_data=private_data)
+        if isinstance(solution_html, str):
+            result["solution_html"] = solution_html
+        await self._instance_db.cleanup_expired()
+        return result

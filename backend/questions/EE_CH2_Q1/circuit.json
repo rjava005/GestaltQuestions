@@ -1,0 +1,89 @@
+{
+  "version": 1,
+  "viewBox": [0, 0, 700, 400],
+  "ariaLabel": "AC nodal-analysis circuit with two essential nodes",
+  "wires": [
+    { "points": [[90, 130], [90, 65], [550, 65]] },
+    { "points": [[90, 245], [90, 310]] },
+    { "points": [[90, 310], [550, 310]] },
+    { "points": [[300, 65], [300, 95]] },
+    { "points": [[300, 190], [300, 210]] },
+    { "points": [[300, 190], [360, 190]] },
+    { "points": [[480, 190], [550, 190]] },
+    { "points": [[550, 65], [550, 95]] },
+    { "points": [[550, 185], [550, 220]] }
+  ],
+  "elements": [
+    {
+      "id": "Vs",
+      "type": "voltageSource",
+      "from": [90, 245],
+      "to": [90, 130],
+      "label": "Vₛ",
+      "labelPosition": { "at": [45, 170], "anchor": "end" },
+      "value": {
+        "template": "{magnitude}∠{angle}° V",
+        "bindings": {
+          "magnitude": { "path": "V_source", "significantDigits": 3, "engineering": false },
+          "angle": { "path": "angle", "significantDigits": 3, "engineering": false }
+        }
+      }
+    },
+    {
+      "id": "L",
+      "type": "inductor",
+      "from": [300, 95],
+      "to": [300, 190],
+      "label": "Zᴸ",
+      "labelPosition": { "at": [265, 125], "anchor": "end" },
+      "value": { "path": "L", "sourceUnit": "Ω", "unit": "Ω", "prefix": "j", "significantDigits": 3 }
+    },
+    {
+      "id": "R2",
+      "type": "resistor",
+      "from": [300, 210],
+      "to": [300, 310],
+      "label": "R₂",
+      "labelPosition": { "at": [265, 240], "anchor": "end" },
+      "value": { "path": "R2", "sourceUnit": "Ω", "unit": "Ω", "significantDigits": 3 }
+    },
+    {
+      "id": "R3",
+      "type": "resistor",
+      "from": [360, 190],
+      "to": [480, 190],
+      "label": "R₃",
+      "labelPosition": { "at": [420, 225] },
+      "value": { "path": "R3", "sourceUnit": "Ω", "unit": "Ω", "significantDigits": 3 }
+    },
+    {
+      "id": "R1",
+      "type": "resistor",
+      "from": [550, 95],
+      "to": [550, 185],
+      "label": "R₁",
+      "labelPosition": { "at": [585, 120], "anchor": "start" },
+      "value": { "path": "R1", "sourceUnit": "Ω", "unit": "Ω", "significantDigits": 3 }
+    },
+    {
+      "id": "C",
+      "type": "capacitor",
+      "from": [550, 220],
+      "to": [550, 310],
+      "label": "Z꜀",
+      "labelPosition": { "at": [585, 245], "anchor": "start" },
+      "value": { "path": "C", "sourceUnit": "Ω", "unit": "Ω", "prefix": "−j", "significantDigits": 3 }
+    }
+  ],
+  "annotations": [
+    { "type": "node", "at": [300, 190] },
+    { "type": "node", "at": [550, 190] },
+    {
+      "type": "currentArrow",
+      "from": [320, 165],
+      "to": [365, 165],
+      "label": "Iₒ",
+      "labelPosition": { "at": [342, 145] }
+    }
+  ]
+}
