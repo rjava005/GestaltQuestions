@@ -91,8 +91,14 @@ class CodeRunner(ABC):
         stderr = raw_results.stderr.strip()
 
         # Convention: last stdout line is JSON result, previous lines are logs.
-        last_line = stdout.splitlines()[-1] or ""
-        print_statements = stdout.splitlines()[:-1]
+        stdout_lines = stdout.splitlines()
+        if not stdout_lines:
+            raise ExecutionError(
+                f"{self.language} execution produced no output. "
+                f"'{self.runtime_config.entry}' must print its JSON result to stdout."
+            )
+        last_line = stdout_lines[-1]
+        print_statements = stdout_lines[:-1]
 
         try:
             parsed = json.loads(last_line)

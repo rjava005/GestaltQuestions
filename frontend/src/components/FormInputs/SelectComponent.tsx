@@ -47,7 +47,7 @@ export function SelectComponent({
         )}
       >
         {options.map((v) => (
-          <option className="text-black" value={v}>
+          <option key={v} className="text-black" value={v}>
             {v}
           </option>
         ))}

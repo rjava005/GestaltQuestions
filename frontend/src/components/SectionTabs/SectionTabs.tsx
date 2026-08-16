@@ -4,7 +4,10 @@ export type SectionItem<K extends string = string> = {
   key: K;
   label: string;
 };
-export type SectionTabProps = SectionItem & {
+// `key` is omitted deliberately: React reserves it as the list key and strips it
+// from props, so a component can never receive one. The list key belongs on the
+// element being iterated over, not here.
+export type SectionTabProps = Omit<SectionItem, "key"> & {
   selected: boolean;
   setSelected: (val: string) => void;
   onClick?: () => void;

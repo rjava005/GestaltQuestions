@@ -36,9 +36,8 @@ export default function SectionToolBar({
       {/* LEFT: Section Tabs */}
       <div className="flex items-center gap-6 overflow-x-auto">
         {sections.map((s) => (
-          <div className="" onClick={(e) => onClick?.(e, s.key)}>
+          <div key={s.key} className="" onClick={(e) => onClick?.(e, s.key)}>
             <SectionTab
-              key={s.key}
               label={s.label}
               selected={s.key === selected}
               setSelected={() => setSelected(s.key)}
