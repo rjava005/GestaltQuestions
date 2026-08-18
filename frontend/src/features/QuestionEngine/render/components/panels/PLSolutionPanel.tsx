@@ -38,13 +38,13 @@ const PLSolutionPanel: React.FC<PLSolutionPanelProps> = ({
   const [stepIndex, setStepIndex] = useState<number>(0);
   const steps = React.Children.toArray(children);
   const handleShowNext = () => {
-    setStepIndex((prev) => Math.min(prev + 1, steps.length));
+    setStepIndex((prev) => Math.min(prev + 1, steps.length - 1));
   };
   const handleReset = () => {
     setStepIndex(0);
   };
 
-  const visibleSteps = autoShowAll ? steps : steps.slice(0, stepIndex);
+  const visibleSteps = autoShowAll ? steps : steps.slice(0, stepIndex + 1);
 
   return (
     <MathJax>

@@ -46,4 +46,39 @@ describe("question variant regeneration context", () => {
     expect(store.getState().solution_html).toBe("<p>solution</p>");
     expect(store.getState().hasSubmitted).toBe(true);
   });
+
+  it("keeps an incorrect secure answer editable for another submission", async () => {
+    vi.spyOn(QuestionRuntimeApi, "gradeQuestion").mockResolvedValue({
+      status: "incorrect",
+      answers: { transfer: { status: "incorrect" } },
+      solution_html: "<p>private solution</p>",
+    });
+    const store = createQuestionInstanceStore({
+      instance: "instance-1",
+      qmeta: { id: "question-1" } as never,
+      quiz_data: { params: {}, secure_grading: true, answer_specs: {} },
+      answers: { transfer: { latex: "s", mathjson: "s" } },
+    });
+
+    await store.getState().submitAnswers();
+
+    expect(store.getState().grading?.status).toBe("incorrect");
+    expect(store.getState().solution_html).toBe("<p>private solution</p>");
+    expect(store.getState().hasSubmitted).toBe(false);
+  });
+
+  it("hides a previously open solution when loading a new variant", () => {
+    const store = createQuestionInstanceStore({ showSolution: true });
+
+    store.getState().setRunTimeContent({
+      instance: "instance-2",
+      qmeta: { id: "question-1" } as never,
+      question_html: "<p>new question</p>",
+      solution_html: null,
+      logs: [],
+      quiz_data: { params: {} },
+    });
+
+    expect(store.getState().showSolution).toBe(false);
+  });
 });

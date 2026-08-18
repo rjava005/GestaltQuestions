@@ -1,7 +1,10 @@
 import { describe, expect, it } from "vitest";
 
 import { validateBlockDiagramDefinition } from "./blockDiagramDefinition";
-import { validateSignalPlotDefinition } from "./signalPlotDefinition";
+import {
+  traceRegionPoints,
+  validateSignalPlotDefinition,
+} from "./signalPlotDefinition";
 
 describe("signal-plot asset contract", () => {
   it("accepts all v1 trace kinds and interactions", () => {
@@ -24,6 +27,7 @@ describe("signal-plot asset contract", () => {
       intervals: [
         { id: "r", answerName: "r", start: 0, end: 1, draggable: true },
       ],
+      shadedRegions: [{ x1: -0.5, x2: 0.5, traceId: "p" }],
       interactions: { cursor: true, zoomPan: true, traceToggles: true },
     });
     expect(definition.traces.map((trace) => trace.kind)).toEqual([
@@ -55,6 +59,62 @@ describe("signal-plot asset contract", () => {
         traces: [{ id: "x", kind: "continuous", x: [0, 1], y: [0] }],
       }),
     ).toThrow("equal finite x/y");
+  });
+
+  it("validates under-trace regions and preserves rectangular regions", () => {
+    const definition = validateSignalPlotDefinition({
+      version: 1,
+      ariaLabel: "Area",
+      axes: { x: { min: 0, max: 3 }, y: { min: -1, max: 4 } },
+      traces: [{ id: "ramp", kind: "continuous", x: [0, 1, 3], y: [0, 2, 3] }],
+      shadedRegions: [
+        { x1: 0.5, x2: 2, traceId: "ramp", baseline: -1 },
+        { x1: 0, x2: 1, y1: 0, y2: 1 },
+      ],
+    });
+    expect(definition.shadedRegions?.[0].baseline).toBe(-1);
+    expect(definition.shadedRegions?.[1].traceId).toBeUndefined();
+  });
+
+  it("interpolates authored region boundaries", () => {
+    expect(traceRegionPoints([0, 1, 3], [0, 2, 3], 0.5, 2)).toEqual([
+      [0.5, 1],
+      [1, 2],
+      [2, 2.5],
+    ]);
+  });
+
+  it("rejects malformed and unsupported under-trace regions", () => {
+    const make = (region: Record<string, unknown>) => ({
+      version: 1,
+      ariaLabel: "Area",
+      axes: { x: { min: 0, max: 2 }, y: { min: 0, max: 2 } },
+      traces: [
+        { id: "line", kind: "continuous", x: [0, 2], y: [0, 2] },
+        { id: "samples", kind: "discrete", x: [0, 2], y: [0, 2] },
+      ],
+      shadedRegions: [region],
+    });
+    expect(() =>
+      validateSignalPlotDefinition(make({ x1: 0, x2: 1, traceId: "missing" })),
+    ).toThrow("unknown trace");
+    expect(() =>
+      validateSignalPlotDefinition(make({ x1: 0, x2: 1, traceId: "samples" })),
+    ).toThrow("continuous or piecewise");
+    expect(() =>
+      validateSignalPlotDefinition(make({ x1: 1, x2: 0, traceId: "line" })),
+    ).toThrow("malformed shaded region");
+    expect(() =>
+      validateSignalPlotDefinition(
+        make({ x1: 0, x2: 1, traceId: "line", baseline: Infinity }),
+      ),
+    ).toThrow("malformed shaded region");
+    expect(() =>
+      validateSignalPlotDefinition(make({ x1: 0, x2: 1, y2: NaN })),
+    ).toThrow("malformed shaded region");
+    expect(() =>
+      validateSignalPlotDefinition(make({ x1: -1, x2: 1, traceId: "line" })),
+    ).toThrow("bounds");
   });
 });
 

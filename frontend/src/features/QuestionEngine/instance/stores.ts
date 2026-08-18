@@ -22,6 +22,7 @@ export function createQuestionInstanceStore(
         grading: undefined,
         gradingError: undefined,
         isGrading: false,
+        showSolution: false,
       })),
     setRefreshKey: () =>
       set((state) => {
@@ -63,7 +64,7 @@ export function createQuestionInstanceStore(
         set(() => ({
           grading,
           solution_html: grading.solution_html ?? state.solution_html,
-          hasSubmitted: true,
+          hasSubmitted: grading.status === "correct",
           isGrading: false,
         }));
       } catch (error) {

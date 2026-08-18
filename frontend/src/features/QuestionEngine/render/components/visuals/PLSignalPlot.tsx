@@ -14,6 +14,7 @@ import {
   type AxisDefinition,
   type SignalPlotDefinition,
   type SignalTrace,
+  traceRegionPoints,
   validateSignalPlotDefinition,
 } from "./signalPlotDefinition";
 import { useQuestionJsonAsset } from "./useQuestionAsset";
@@ -26,6 +27,7 @@ const WIDTH = 800,
   TOP = 28,
   BOTTOM = 60;
 const colors = ["#2563eb", "#dc2626", "#059669", "#9333ea", "#ea580c"];
+const plotText = "var(--color-text, currentColor)";
 
 function resolveTrace(
   trace: SignalTrace,
@@ -112,6 +114,7 @@ export function SignalPlotSvg({
       })),
     [definition.traces, params],
   );
+  const resolvedById = new Map(resolved.map((item) => [item.trace.id, item]));
 
   const move = (event: PointerEvent<SVGSVGElement>) => {
     const rect = event.currentTarget.getBoundingClientRect();
@@ -237,31 +240,57 @@ export function SignalPlotSvg({
           fill="var(--color-surface-strong, white)"
           stroke="var(--color-border, #bbb)"
         />
-        {definition.shadedRegions?.map((region, index) => (
-          <g key={index}>
-            <rect
-              x={xMap(region.x1)}
-              y={yMap(region.y2 ?? definition.axes.y.max)}
-              width={xMap(region.x2) - xMap(region.x1)}
-              height={
-                yMap(region.y1 ?? definition.axes.y.min) -
-                yMap(region.y2 ?? definition.axes.y.max)
-              }
-              fill={region.color ?? "#93c5fd"}
-              opacity={0.28}
-            />
-            {region.label && (
-              <text
-                x={xMap((region.x1 + region.x2) / 2)}
-                y={TOP + 18}
-                textAnchor="middle"
-                fontSize={12}
-              >
-                {region.label}
-              </text>
-            )}
-          </g>
-        ))}
+        {definition.shadedRegions?.map((region, index) => {
+          const trace = region.traceId
+            ? resolvedById.get(region.traceId)
+            : undefined;
+          const curve = trace
+            ? traceRegionPoints(
+                trace.data.x,
+                trace.data.y,
+                region.x1,
+                region.x2,
+              )
+            : undefined;
+          return (
+            <g key={index} data-shaded-trace={region.traceId}>
+              {curve ? (
+                <polygon
+                  points={[
+                    `${xMap(region.x1)},${yMap(region.baseline ?? 0)}`,
+                    ...curve.map(([x, y]) => `${xMap(x)},${yMap(y)}`),
+                    `${xMap(region.x2)},${yMap(region.baseline ?? 0)}`,
+                  ].join(" ")}
+                  fill={region.color ?? "#93c5fd"}
+                  opacity={0.28}
+                />
+              ) : (
+                <rect
+                  x={xMap(region.x1)}
+                  y={yMap(region.y2 ?? definition.axes.y.max)}
+                  width={xMap(region.x2) - xMap(region.x1)}
+                  height={
+                    yMap(region.y1 ?? definition.axes.y.min) -
+                    yMap(region.y2 ?? definition.axes.y.max)
+                  }
+                  fill={region.color ?? "#93c5fd"}
+                  opacity={0.28}
+                />
+              )}
+              {region.label && (
+                <text
+                  x={xMap((region.x1 + region.x2) / 2)}
+                  y={TOP + 18}
+                  textAnchor="middle"
+                  fontSize={12}
+                  fill={plotText}
+                >
+                  {region.label}
+                </text>
+              )}
+            </g>
+          );
+        })}
         {ticks(xAxis).map((value) => (
           <g key={`x${value}`}>
             <line
@@ -277,6 +306,7 @@ export function SignalPlotSvg({
               y={HEIGHT - BOTTOM + 22}
               textAnchor="middle"
               fontSize={12}
+              fill={plotText}
             >
               {Number(value.toPrecision(4))}
             </text>
@@ -297,6 +327,7 @@ export function SignalPlotSvg({
               y={yMap(value) + 4}
               textAnchor="end"
               fontSize={12}
+              fill={plotText}
             >
               {Number(value.toPrecision(4))}
             </text>
@@ -306,12 +337,14 @@ export function SignalPlotSvg({
           x={(LEFT + WIDTH - RIGHT) / 2}
           y={HEIGHT - 12}
           textAnchor="middle"
+          fill={plotText}
         >
           {xAxis.label}
         </text>
         <text
           transform={`translate(18 ${(TOP + HEIGHT - BOTTOM) / 2}) rotate(-90)`}
           textAnchor="middle"
+          fill={plotText}
         >
           {definition.axes.y.label}
         </text>
@@ -404,7 +437,12 @@ export function SignalPlotSvg({
                 strokeDasharray="6 4"
               />
               <circle cx={xMap(value)} cy={TOP + 10} r={7} fill="#e11d48" />
-              <text x={xMap(value) + 9} y={TOP + 15} fontSize={12}>
+              <text
+                x={xMap(value) + 9}
+                y={TOP + 15}
+                fontSize={12}
+                fill={plotText}
+              >
                 {marker.label}
               </text>
             </g>
@@ -465,6 +503,7 @@ export function SignalPlotSvg({
               x={Math.min(xMap(cursor.x) + 8, WIDTH - 145)}
               y={TOP + 18}
               fontSize={12}
+              fill={plotText}
             >{`x=${cursor.x.toPrecision(4)}, y=${cursor.y.toPrecision(4)}`}</text>
           </g>
         )}

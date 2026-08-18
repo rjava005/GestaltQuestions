@@ -111,6 +111,19 @@ sinks, integrators, delays, labels, directed wires/feedback paths, parameter
 bindings, and overlaid numeric or structured-math slots. Neither schema performs
 automatic layout or routing.
 
+SVG labels use the active theme's `--color-text` token in both signal plots and
+block diagrams. A shaded region remains rectangular when authored with
+`x1`/`x2` and optional `y1`/`y2`. Add `traceId` to fill under that continuous or
+piecewise trace instead; `baseline` is optional and defaults to zero. The
+interval boundaries are interpolated from the trace and remain data-aligned
+during zooming and panning.
+
+Block-diagram answer slots render as visible, accent-outlined blocks centered at
+their authored `at` coordinate. The authored `width` and `height` define the
+entire block, including its label and inset numeric or structured-math field.
+Authors should reserve explicit diagram space around answer blocks; the renderer
+does not automatically route wires or move nodes around them.
+
 MathLive fields show a focus-only, slot-filtered palette (a bottom drawer on
 small/touch screens), while retaining keyboard, LaTeX command, and plain-text
 fallback entry. The browser transports both display LaTeX and MathJSON. Only

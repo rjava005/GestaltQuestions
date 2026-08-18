@@ -11,6 +11,10 @@ import {
 import { useQuestionJsonAsset } from "./useQuestionAsset";
 
 export type PLBlockDiagramProps = { fileName: string; className?: string };
+const diagramText = "var(--color-text, currentColor)";
+const embeddedAnswerStyle =
+  "!min-h-0 h-full w-full border-2 border-[var(--color-accent)] bg-[var(--color-surface-strong)] !px-2 !py-0 text-[var(--color-text)] focus:border-[var(--color-accent)] focus:outline-none focus:ring-2 focus:ring-[var(--color-accent)] focus:ring-offset-1 focus:ring-offset-[var(--color-surface-strong)]";
+const embeddedMathAnswerStyle = `embedded-answer-math-field ${embeddedAnswerStyle}`;
 
 function Node({
   node,
@@ -32,7 +36,7 @@ function Node({
     : node.label;
   if (node.type === "label")
     return (
-      <text x={x} y={y} textAnchor="middle" fill="currentColor">
+      <text x={x} y={y} textAnchor="middle" fill={diagramText}>
         {label}
       </text>
     );
@@ -40,7 +44,7 @@ function Node({
     return (
       <g data-block-node={node.id}>
         <circle cx={x} cy={y} r={5} fill="var(--color-accent, #2563eb)" />
-        <text x={x + 9} y={y - 9}>
+        <text x={x + 9} y={y - 9} fill={diagramText}>
           {label}
         </text>
       </g>
@@ -56,11 +60,22 @@ function Node({
           stroke="var(--color-accent, #2563eb)"
           strokeWidth={2.5}
         />
-        <text x={x} y={y + 5} textAnchor="middle" fontSize={18}>
+        <text
+          x={x}
+          y={y + 5}
+          textAnchor="middle"
+          fontSize={18}
+          fill={diagramText}
+        >
           {node.type === "mixer" ? "×" : "Σ"}
         </text>
         {node.signs && (
-          <text x={x - width / 2 - 10} y={y - width / 2 + 5} fontSize={13}>
+          <text
+            x={x - width / 2 - 10}
+            y={y - width / 2 + 5}
+            fontSize={13}
+            fill={diagramText}
+          >
             {node.signs}
           </text>
         )}
@@ -79,7 +94,7 @@ function Node({
           stroke="var(--color-accent, #2563eb)"
           strokeWidth={2.5}
         />
-        <text x={x} y={y + 5} textAnchor="middle">
+        <text x={x} y={y + 5} textAnchor="middle" fill={diagramText}>
           {label}
         </text>
       </g>
@@ -104,7 +119,12 @@ function Node({
         stroke="var(--color-accent, #2563eb)"
         strokeWidth={2.5}
       />
-      <text x={x} y={y + (symbol?.includes("\n") ? -3 : 5)} textAnchor="middle">
+      <text
+        x={x}
+        y={y + (symbol?.includes("\n") ? -3 : 5)}
+        textAnchor="middle"
+        fill={diagramText}
+      >
         {symbol?.split("\n").map((line, index) => (
           <tspan key={index} x={x} dy={index ? 18 : 0}>
             {line}
@@ -119,6 +139,7 @@ function Node({
             y={port.at[1] - 7}
             textAnchor="middle"
             fontSize={11}
+            fill={diagramText}
           >
             {port.label}
           </text>
@@ -189,6 +210,7 @@ export function BlockDiagramScene({
                 y={(wire.points[0][1] + wire.points[1][1]) / 2 - 8}
                 textAnchor="middle"
                 fontSize={13}
+                fill={diagramText}
               >
                 {wire.label}
               </text>
@@ -203,25 +225,36 @@ export function BlockDiagramScene({
         <div
           key={slot.id}
           data-block-answer={slot.answerName}
-          className="absolute -translate-x-1/2 -translate-y-1/2"
+          className="absolute flex flex-col gap-1 rounded-md border-2 border-[var(--color-accent)] bg-[var(--color-surface-strong)] p-1.5 text-[var(--color-text)] shadow-sm"
           style={{
-            left: `${((slot.at[0] - vx) / vw) * 100}%`,
-            top: `${((slot.at[1] - vy) / vh) * 100}%`,
+            left: `${((slot.at[0] - slot.width / 2 - vx) / vw) * 100}%`,
+            top: `${((slot.at[1] - slot.height / 2 - vy) / vh) * 100}%`,
             width: `${(slot.width / vw) * 100}%`,
-            minWidth: slot.kind === "math" ? 110 : 70,
+            height: `${(slot.height / vh) * 100}%`,
           }}
         >
+          <div
+            className="shrink-0 truncate text-center text-xs font-semibold leading-none text-[var(--color-accent)]"
+            title={slot.label ?? slot.answerName}
+          >
+            {slot.label ?? slot.answerName}
+          </div>
           {slot.kind === "math" ? (
-            <StructuredMathInput
-              answerName={slot.answerName}
-              label={slot.label ?? slot.answerName}
-              compact
-            />
+            <div className="min-h-0 flex-1">
+              <StructuredMathInput
+                answerName={slot.answerName}
+                label={slot.label ?? slot.answerName}
+                compact
+                className="h-full"
+                fieldClassName={embeddedMathAnswerStyle}
+              />
+            </div>
           ) : (
-            <label className="block">
+            <label className="min-h-0 flex-1">
               <span className="sr-only">{slot.label ?? slot.answerName}</span>
               <input
                 type="number"
+                inputMode="decimal"
                 disabled={submitted}
                 value={
                   typeof answers[slot.answerName] === "string" ||
@@ -232,7 +265,7 @@ export function BlockDiagramScene({
                 onChange={(event) =>
                   setAnswer(slot.answerName, event.target.value)
                 }
-                className="h-9 w-full rounded border border-[var(--color-border-strong)] bg-[var(--color-surface-strong)] px-2 text-center focus:outline-none focus:ring-2 focus:ring-[var(--color-accent)]"
+                className={`rounded text-center ${embeddedAnswerStyle}`}
               />
             </label>
           )}

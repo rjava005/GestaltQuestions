@@ -562,6 +562,15 @@ Technology documentation:
 
 ## Signal/control framework
 
+Signal plots and block diagrams explicitly fill SVG text with the theme-aware
+`--color-text` token. Version-1 signal `shadedRegions` accept optional `traceId`
+and `baseline` fields: `traceId` fills under a referenced continuous/piecewise
+trace between `x1` and `x2` (with interpolated boundary values), while omitting
+it preserves rectangular `y1`/`y2` regions; `baseline` defaults to zero.
+Block-diagram answer slots use their authored `width` and `height` as the full
+accent-outlined block dimensions, with a visible label and an inset answer field.
+Their centers remain the explicit `at` coordinates; no automatic layout occurs.
+
 `code_sandbox/src/gestalt_signal_systems` is the shared numerical boundary.
 Its signal, control, and serialization modules produce bounded, finite visual
 data. The grading module recursively validates slot-specific MathJSON before

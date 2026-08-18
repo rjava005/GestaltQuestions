@@ -39,6 +39,8 @@ export type SignalPlotDefinition = {
   shadedRegions?: {
     x1: number;
     x2: number;
+    traceId?: string;
+    baseline?: number;
     y1?: number;
     y2?: number;
     color?: string;
@@ -59,6 +61,42 @@ const finite = (value: unknown): value is number =>
   typeof value === "number" && Number.isFinite(value);
 const numbers = (value: unknown): value is number[] =>
   Array.isArray(value) && value.length <= 10_000 && value.every(finite);
+
+export function traceRegionPoints(
+  x: number[],
+  y: number[],
+  x1: number,
+  x2: number,
+): [number, number][] {
+  if (
+    x.length !== y.length ||
+    x.length < 2 ||
+    x1 < x[0] ||
+    x2 > x[x.length - 1] ||
+    x2 <= x1 ||
+    x.some((value, index) => index > 0 && value <= x[index - 1])
+  )
+    throw new Error(
+      "Shaded region bounds must lie within an increasing resolved trace.",
+    );
+  const interpolate = (value: number): [number, number] => {
+    const exact = x.indexOf(value);
+    if (exact >= 0) return [value, y[exact]];
+    const upper = x.findIndex((candidate) => candidate > value);
+    const lower = upper - 1;
+    const ratio = (value - x[lower]) / (x[upper] - x[lower]);
+    return [value, y[lower] + ratio * (y[upper] - y[lower])];
+  };
+  return [
+    interpolate(x1),
+    ...x.flatMap((value, index) =>
+      value > x1 && value < x2
+        ? ([[value, y[index]]] as [number, number][])
+        : [],
+    ),
+    interpolate(x2),
+  ];
+}
 
 export function validateSignalPlotDefinition(
   value: unknown,
@@ -113,5 +151,51 @@ export function validateSignalPlotDefinition(
   for (const key of ["markers", "intervals", "shadedRegions"] as const)
     if (value[key] !== undefined && !Array.isArray(value[key]))
       throw new Error(`Signal plot ${key} must be an array.`);
+  if (Array.isArray(value.shadedRegions)) {
+    for (const region of value.shadedRegions) {
+      if (
+        !record(region) ||
+        !finite(region.x1) ||
+        !finite(region.x2) ||
+        region.x2 <= region.x1 ||
+        (region.baseline !== undefined && !finite(region.baseline)) ||
+        (region.y1 !== undefined && !finite(region.y1)) ||
+        (region.y2 !== undefined && !finite(region.y2))
+      )
+        throw new Error("Signal plot contains a malformed shaded region.");
+      if (region.traceId !== undefined) {
+        if (typeof region.traceId !== "string" || !ids.has(region.traceId))
+          throw new Error(
+            "Signal plot shaded region references an unknown trace.",
+          );
+        const trace = value.traces.find(
+          (candidate) => record(candidate) && candidate.id === region.traceId,
+        );
+        if (
+          !trace ||
+          !record(trace) ||
+          !["continuous", "piecewise"].includes(String(trace.kind))
+        )
+          throw new Error(
+            "Signal plot shaded regions require a continuous or piecewise trace.",
+          );
+        if (numbers(trace.x)) {
+          const xs = trace.x;
+          const increasing = xs.every(
+            (x, index) => index === 0 || x > xs[index - 1],
+          );
+          if (
+            xs.length < 2 ||
+            !increasing ||
+            region.x1 < xs[0] ||
+            region.x2 > xs[xs.length - 1]
+          )
+            throw new Error(
+              "Signal plot shaded region bounds must lie within an increasing trace.",
+            );
+        }
+      }
+    }
+  }
   return value as unknown as SignalPlotDefinition;
 }

@@ -137,6 +137,7 @@ export type StructuredMathInputProps = {
   spec?: AnswerSpec;
   className?: string;
   compact?: boolean;
+  fieldClassName?: string;
 };
 
 export default function StructuredMathInput({
@@ -145,6 +146,7 @@ export default function StructuredMathInput({
   spec: suppliedSpec,
   className,
   compact,
+  fieldClassName,
 }: StructuredMathInputProps) {
   const fieldRef = useRef<MathfieldElement | null>(null);
   const setAnswer = useQuestionInstance((state) => state.setAnswer);
@@ -243,7 +245,10 @@ export default function StructuredMathInput({
           value={latex}
           onChange={(event) => synchronize(event.target.value)}
           onFocus={() => setFocused(true)}
-          className="w-full rounded-md border border-[var(--color-border-strong)] bg-transparent px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[var(--color-accent)]"
+          className={clsx(
+            "w-full rounded-md border border-[var(--color-border-strong)] bg-transparent px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[var(--color-accent)]",
+            fieldClassName,
+          )}
           placeholder="Enter LaTeX"
         />
       ) : (
@@ -257,6 +262,7 @@ export default function StructuredMathInput({
           className={clsx(
             "block min-h-11 w-full rounded-md border border-[var(--color-border-strong)] bg-[var(--color-surface-strong)] px-3 py-2 text-lg focus-within:ring-2 focus-within:ring-[var(--color-accent)]",
             compact && "min-h-9 px-2 py-1 text-sm",
+            fieldClassName,
           )}
         />
       )}

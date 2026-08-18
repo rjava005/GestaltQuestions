@@ -7,7 +7,7 @@
     {"id": "samples", "label": "x[n]", "kind": "discrete", "xBinding": {"path": "samples.x"}, "yBinding": {"path": "samples.y"}, "color": "#dc2626"},
     {"id": "event", "label": "delta(t-1.5)", "kind": "impulse", "x": [1.5], "y": [1.8], "color": "#059669"}
   ],
-  "shadedRegions": [{"x1": 0, "x2": 2, "y1": 0, "y2": 2, "label": "integration region"}],
+  "shadedRegions": [{"x1": 0, "x2": 2, "traceId": "continuous", "baseline": 0, "label": "integration region"}],
   "markers": [{"id": "marker", "answerName": "marker", "x": 0.5, "label": "drag to t=1", "draggable": true}],
   "interactions": {"cursor": true, "zoomPan": true, "traceToggles": true}
 }

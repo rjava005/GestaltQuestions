@@ -49,7 +49,9 @@ class QuestionInstanceDB:
     async def cleanup_expired(self, *, now: datetime | None = None) -> int:
         cutoff = (now or utc_now()).replace(tzinfo=None)
         result = self._session.exec(
-            delete(QuestionInstance).where(QuestionInstance.expires_at <= cutoff)
+            delete(QuestionInstance)
+            .where(QuestionInstance.expires_at <= cutoff)
+            .execution_options(synchronize_session="fetch")
         )
         self._session.commit()
         return int(getattr(result, "rowcount", 0) or 0)

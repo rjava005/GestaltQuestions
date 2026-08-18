@@ -93,7 +93,8 @@ async def test_secure_run_keeps_answers_and_solution_private(db_session):
 
     result = await service.grade(qid, bundle.instance, {"gain": 2})
 
-    assert result["overall"] == "correct"
+    assert result["status"] == "correct"
+    assert result["answers"] == {"gain": {"status": "correct"}}
     assert result["solution_html"] == "<p>The gain is 2.</p>"
     assert sandbox.private_data["correct_answers"] == {"gain": 2}
     assert "solution_html" not in sandbox.private_data
@@ -137,4 +138,20 @@ async def test_lazy_cleanup_removes_only_expired_instances(db_session):
 
     assert removed == 1
     assert await instance_db.get(expired.id) is None
+    assert await instance_db.get(current.id) is not None
+
+
+@pytest.mark.asyncio
+async def test_cleanup_does_not_compare_loaded_aware_instances(db_session):
+    question = Question(title="Loaded cleanup demo", isAdaptive=True)
+    db_session.add(question)
+    db_session.commit()
+    db_session.refresh(question)
+    instance_db = QuestionInstanceDB(db_session)
+    current = await instance_db.create(question.id, {})
+    current.expires_at = datetime.now(UTC) + timedelta(hours=1)
+
+    removed = await instance_db.cleanup_expired(now=datetime.now(UTC))
+
+    assert removed == 0
     assert await instance_db.get(current.id) is not None

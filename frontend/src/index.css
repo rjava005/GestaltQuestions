@@ -2,6 +2,11 @@
 @import url("https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500&display=swap");
 @custom-variant dark (&:where([data-theme=dark], [data-theme=dark] *));
 
+math-field.embedded-answer-math-field::part(virtual-keyboard-toggle),
+math-field.embedded-answer-math-field::part(menu-toggle) {
+  display: none;
+}
+
 @theme {
   --font-sans: "Manrope", sans-serif;
   --font-mono: "IBM Plex Mono", monospace;
@@ -615,11 +620,7 @@ pl-matrix-latex {
 
   font-size: 0.84em;
 
-  font-family:
-    "SFMono-Regular",
-    Consolas,
-    "Liberation Mono",
-    monospace;
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
 
   color: #f9fafb;
 }
@@ -644,8 +645,7 @@ pl-matrix-latex {
 
   margin: 0.25rem 0;
 
-  box-shadow:
-    0 2px 10px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
 }
 
 .markdown-content pre code {

@@ -15,6 +15,15 @@ export default function QuestionRenderShell({
   qpayload,
 }: QuestionRenderShellProps) {
   const showSolution = useQuestionInstance((s) => s.showSolution);
+  const solutionHtml = useQuestionInstance((s) => s.solution_html);
+  const secureGrading = useQuestionInstance(
+    (s) => s.quiz_data?.secure_grading === true,
+  );
+  const grading = useQuestionInstance((s) => s.grading);
+  const unavailableSolutionMessage =
+    secureGrading && !grading
+      ? "Submit an answer to unlock the solution."
+      : "No Solution Available for Question";
 
   return (
     <PanelGroup direction="horizontal" className="min-h-[520px] w-full gap-3">
@@ -35,9 +44,7 @@ export default function QuestionRenderShell({
           <Panel order={2} defaultSize={42} minSize={25} className="min-w-0">
             <SolutionPanel>
               <QuestionHTMLToReact
-                html={
-                  qpayload.solution_html ?? "No Solution Available for Question"
-                }
+                html={solutionHtml ?? unavailableSolutionMessage}
               />
             </SolutionPanel>
           </Panel>

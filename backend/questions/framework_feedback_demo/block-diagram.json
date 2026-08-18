@@ -1,7 +1,7 @@
 {
   "version": 1,
   "ariaLabel": "Unity negative-feedback control loop",
-  "viewBox": [0, 0, 760, 330],
+  "viewBox": [0, 0, 760, 560],
   "nodes": [
     {"id": "r", "type": "source", "at": [60, 120], "width": 80, "height": 44, "label": "R(s)"},
     {"id": "sum", "type": "sum", "at": [160, 120], "signs": "+ -"},
@@ -18,7 +18,7 @@
     {"points": [[375,250],[160,250],[160,138]], "feedback": true, "label": "-"}
   ],
   "answerSlots": [
-    {"id": "dc", "answerName": "dc_gain", "at": [585,190], "width": 100, "height": 38, "kind": "numeric", "label": "DC gain"},
-    {"id": "tf", "answerName": "closed_loop", "at": [585,270], "width": 230, "height": 42, "kind": "math", "label": "Closed-loop transfer function"}
+    {"id": "dc", "answerName": "dc_gain", "at": [380,365], "width": 220, "height": 72, "kind": "numeric", "label": "DC gain"},
+    {"id": "tf", "answerName": "closed_loop", "at": [380,475], "width": 440, "height": 80, "kind": "math", "label": "Closed-loop transfer function"}
   ]
 }

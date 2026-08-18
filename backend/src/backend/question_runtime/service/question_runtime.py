@@ -173,7 +173,13 @@ class QuestionRunTimeService:
             )
         private_data = dict(instance.private_grading_data)
         solution_html = private_data.pop("solution_html", None)
-        result = await self._sandbox.grade(answers=answers, private_data=private_data)
+        sandbox_result = await self._sandbox.grade(
+            answers=answers, private_data=private_data
+        )
+        result = {
+            "status": sandbox_result.get("status", sandbox_result.get("overall")),
+            "answers": sandbox_result.get("answers", sandbox_result.get("slots")),
+        }
         if isinstance(solution_html, str):
             result["solution_html"] = solution_html
         await self._instance_db.cleanup_expired()
