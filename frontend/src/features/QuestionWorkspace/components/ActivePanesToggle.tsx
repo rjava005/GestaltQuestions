@@ -1,6 +1,6 @@
 import clsx from "clsx";
 import type React from "react";
-import { FiEye, FiFileText } from "react-icons/fi";
+import { FiEye, FiFileText, FiShare2 } from "react-icons/fi";
 import { IoCodeSlash } from "react-icons/io5";
 
 import type { WorkspacePane } from "../instance/types";
@@ -24,6 +24,11 @@ const paneOptions: Array<{
     value: "editor",
     label: "Editor",
     icon: <IoCodeSlash className="h-4 w-4" />,
+  },
+  {
+    value: "diagram",
+    label: "Diagram",
+    icon: <FiShare2 className="h-4 w-4" />,
   },
   {
     value: "metadata",

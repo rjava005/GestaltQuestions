@@ -29,7 +29,11 @@ class WriteFilePayload(BaseModel):
 
 
 GUIDED_REQUIRED_FILES = {"question.html", "solution.html", "server.py", "server.js"}
-GUIDED_ALLOWED_FILES = GUIDED_REQUIRED_FILES | {"circuit.json"}
+# Authored visual definitions the guided creator may attach. Each is explicitly
+# authored geometry validated by the frontend before upload; adding a name here
+# is what makes a new visual type creatable through the guided flow.
+GUIDED_VISUAL_FILES = {"circuit.json", "block-diagram.json", "signal-plot.json"}
+GUIDED_ALLOWED_FILES = GUIDED_REQUIRED_FILES | GUIDED_VISUAL_FILES
 
 
 @router.post("/", status_code=status.HTTP_201_CREATED)

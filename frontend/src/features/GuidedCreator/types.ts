@@ -1,4 +1,5 @@
 import type { CircuitDefinitionV1 } from "../QuestionEngine/render/components/content/circuitDefinition";
+import type { BlockDiagramDefinition } from "../QuestionEngine/render/components/visuals/blockDiagramDefinition";
 
 export type ParameterDefinition = {
   id: string;
@@ -27,10 +28,11 @@ export type GuidedQuestionDraft = {
   answers: NumericAnswerDefinition[];
   circuitEnabled: boolean;
   circuit: CircuitDefinitionV1;
+  blockDiagramEnabled: boolean;
+  blockDiagram: BlockDiagramDefinition;
 };
 
 export type GuidedArtifacts = Record<
   "question.html" | "solution.html" | "server.py" | "server.js",
   string
-> & { "circuit.json"?: string };
-
+> & { "circuit.json"?: string; "block-diagram.json"?: string };

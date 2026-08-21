@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 
+import { EMPTY_BLOCK_DIAGRAM } from "./BlockDiagramEditor";
 import { EMPTY_CIRCUIT } from "./CircuitEditor";
 import { generateGuidedArtifacts, markdownToSafeHtml, validateGuidedDraft } from "./generate";
 import type { GuidedQuestionDraft } from "./types";
@@ -12,6 +13,8 @@ const draft = (changes: Partial<GuidedQuestionDraft> = {}): GuidedQuestionDraft 
   answers: [{ id: "a1", name: "V", formula: "2 * R", inputLabel: "Voltage", unit: "V", significantDigits: 3 }],
   circuitEnabled: false,
   circuit: { ...EMPTY_CIRCUIT, wires: [], elements: [], annotations: [] },
+  blockDiagramEnabled: false,
+  blockDiagram: { ...EMPTY_BLOCK_DIAGRAM, nodes: [], wires: [], answerSlots: [] },
   ...changes,
 });
 
@@ -74,5 +77,41 @@ describe("guided artifact generation", () => {
     }));
     expect(files["server.py"]).toContain("math.pi");
     expect(files["server.js"]).toContain("Math.PI");
+  });
+});
+
+describe("guided block diagrams", () => {
+  const diagram = {
+    ...EMPTY_BLOCK_DIAGRAM,
+    ariaLabel: "Unity feedback loop",
+    nodes: [{ id: "plant", type: "transfer" as const, at: [200, 180] as [number, number], label: "G(s)" }],
+    wires: [{ points: [[100, 180], [200, 180]] as [number, number][] }],
+  };
+  const slot = (answerName: string) => ({ id: "s1", answerName, at: [300, 180] as [number, number], width: 120, height: 60, kind: "numeric" as const });
+
+  it("emits block-diagram.json and the pl-block-diagram tag when enabled", () => {
+    const artifacts = generateGuidedArtifacts(draft({ blockDiagramEnabled: true, blockDiagram: diagram }));
+    expect(JSON.parse(artifacts["block-diagram.json"]!).nodes).toHaveLength(1);
+    expect(artifacts["question.html"]).toContain('<pl-block-diagram file-name="block-diagram.json"></pl-block-diagram>');
+  });
+
+  it("omits the file entirely when the diagram is not enabled", () => {
+    const artifacts = generateGuidedArtifacts(draft());
+    expect(artifacts["block-diagram.json"]).toBeUndefined();
+    expect(artifacts["question.html"]).not.toContain("pl-block-diagram");
+  });
+
+  it("rejects an enabled but empty diagram", () => {
+    expect(validateGuidedDraft(draft({ blockDiagramEnabled: true }))).toContain("Block diagram cannot be empty.");
+  });
+
+  it("rejects an answer slot with no matching numeric answer", () => {
+    const errors = validateGuidedDraft(draft({ blockDiagramEnabled: true, blockDiagram: { ...diagram, answerSlots: [slot("missing")] } }));
+    expect(errors).toContain('Answer slot "missing" has no matching numeric answer.');
+  });
+
+  it("drops the standalone input for an answer already embedded in the diagram", () => {
+    const artifacts = generateGuidedArtifacts(draft({ blockDiagramEnabled: true, blockDiagram: { ...diagram, answerSlots: [slot("V")] } }));
+    expect(artifacts["question.html"]).not.toContain("pl-number-input");
   });
 });

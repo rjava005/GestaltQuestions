@@ -1,6 +1,7 @@
 import { emitFormula, formulaReferences, parseFormula } from "./formula";
 import type { GuidedArtifacts, GuidedQuestionDraft } from "./types";
 import { validateCircuitDefinition } from "../QuestionEngine/render/components/content/circuitDefinition";
+import { validateBlockDiagramDefinition } from "../QuestionEngine/render/components/visuals/blockDiagramDefinition";
 
 export const IDENTIFIER_PATTERN = /^[A-Za-z_][A-Za-z0-9_]*$/;
 export const MAX_DECIMAL_PLACES = 8;
@@ -87,6 +88,19 @@ export function validateGuidedDraft(draft: GuidedQuestionDraft): string[] {
       bindings.forEach(({ path }) => { if (!params.has(path)) errors.push(`Circuit element "${element.id}" references missing parameter "${path}".`); });
     }
   }
+  if (draft.blockDiagramEnabled) {
+    try { validateBlockDiagramDefinition(draft.blockDiagram); } catch (error) { errors.push(error instanceof Error ? error.message : String(error)); }
+    if (!draft.blockDiagram.nodes.length && !draft.blockDiagram.wires.length) errors.push("Block diagram cannot be empty.");
+    for (const node of draft.blockDiagram.nodes) {
+      const bindings = node.value ? ("path" in node.value ? [node.value] : Object.values(node.value.bindings)) : [];
+      bindings.forEach(({ path }) => { if (!params.has(path)) errors.push(`Block "${node.id}" references missing parameter "${path}".`); });
+    }
+    const answerNames = new Set(draft.answers.map((row) => row.name.trim()));
+    for (const slot of draft.blockDiagram.answerSlots ?? []) {
+      if (!slot.answerName.trim()) errors.push(`Answer slot "${slot.id}" needs an answer name.`);
+      else if (!answerNames.has(slot.answerName.trim())) errors.push(`Answer slot "${slot.answerName}" has no matching numeric answer.`);
+    }
+  }
   return [...new Set(errors)];
 }
 
@@ -132,12 +146,17 @@ export function generateGuidedArtifacts(draft: GuidedQuestionDraft): GuidedArtif
     return `<pl-number-input answers-name="${escapeHtml(row.name.trim())}" comparison="sigfig" digits="${row.significantDigits}" label="${escapeHtml(label)}"></pl-number-input>`;
   });
   const circuit = draft.circuitEnabled ? '\n<pl-circuit file-name="circuit.json"></pl-circuit>' : "";
+  const blockDiagram = draft.blockDiagramEnabled ? '\n<pl-block-diagram file-name="block-diagram.json"></pl-block-diagram>' : "";
+  // Answer slots live inside the diagram, so drop the standalone number inputs they duplicate.
+  const slotAnswers = new Set(draft.blockDiagramEnabled ? (draft.blockDiagram.answerSlots ?? []).map((slot) => slot.answerName.trim()) : []);
+  const standaloneInputs = inputs.filter((_, index) => !slotAnswers.has(draft.answers[index].name.trim()));
   const artifacts: GuidedArtifacts = {
-    "question.html": `<pl-question-panel>\n${markdownToSafeHtml(draft.questionBody)}\n</pl-question-panel>${circuit}\n\n${inputs.join("\n")}`,
+    "question.html": `<pl-question-panel>\n${markdownToSafeHtml(draft.questionBody)}\n</pl-question-panel>${circuit}${blockDiagram}\n\n${standaloneInputs.join("\n")}`,
     "solution.html": `<pl-solution-panel>\n${markdownToSafeHtml(draft.solutionBody)}\n</pl-solution-panel>`,
     "server.py": pythonRuntime(draft),
     "server.js": javascriptRuntime(draft),
   };
   if (draft.circuitEnabled) artifacts["circuit.json"] = JSON.stringify(draft.circuit, null, 2);
+  if (draft.blockDiagramEnabled) artifacts["block-diagram.json"] = JSON.stringify(draft.blockDiagram, null, 2);
   return artifacts;
 }

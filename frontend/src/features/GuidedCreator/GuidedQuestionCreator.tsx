@@ -2,6 +2,7 @@ import { useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import { useCreateQuestion } from "../QuestionBuilder/hooks";
+import BlockDiagramEditor, { EMPTY_BLOCK_DIAGRAM } from "./BlockDiagramEditor";
 import CircuitEditor, { EMPTY_CIRCUIT } from "./CircuitEditor";
 import { generateGuidedArtifacts, validateGuidedDraft } from "./generate";
 import type { GuidedQuestionDraft, NumericAnswerDefinition, ParameterDefinition } from "./types";
@@ -18,6 +19,7 @@ export default function GuidedQuestionCreator() {
   const [draft, setDraft] = useState<GuidedQuestionDraft>({
     title: "", questionBody: "", solutionBody: "", parameters: [], answers: [newAnswer()], circuitEnabled: false,
     circuit: { ...EMPTY_CIRCUIT, wires: [], elements: [], annotations: [] },
+    blockDiagramEnabled: false, blockDiagram: { ...EMPTY_BLOCK_DIAGRAM, nodes: [], wires: [], answerSlots: [] },
   });
   const errors = useMemo(() => validateGuidedDraft(draft), [draft]);
   const patchParameter = (id: string, patch: Partial<ParameterDefinition>) => setDraft((value) => ({ ...value, parameters: value.parameters.map((row) => row.id === id ? { ...row, ...patch } : row) }));
@@ -76,6 +78,11 @@ export default function GuidedQuestionCreator() {
     <section className="space-y-4 rounded-xl border border-border bg-surface p-5">
       <label className="flex items-center gap-3 text-lg font-semibold"><input type="checkbox" checked={draft.circuitEnabled} onChange={(event) => setDraft({ ...draft, circuitEnabled: event.target.checked })} /> Include a circuit</label>
       {draft.circuitEnabled ? <CircuitEditor scene={draft.circuit} parameters={draft.parameters} onChange={(circuit) => setDraft((value) => ({ ...value, circuit }))} /> : <p className="text-sm text-text-muted">Enable to author and export a native circuit.json scene.</p>}
+    </section>
+
+    <section className="space-y-4 rounded-xl border border-border bg-surface p-5">
+      <label className="flex items-center gap-3 text-lg font-semibold"><input type="checkbox" checked={draft.blockDiagramEnabled} onChange={(event) => setDraft({ ...draft, blockDiagramEnabled: event.target.checked })} /> Include a block diagram</label>
+      {draft.blockDiagramEnabled ? <BlockDiagramEditor definition={draft.blockDiagram} parameters={draft.parameters} onChange={(blockDiagram) => setDraft((value) => ({ ...value, blockDiagram }))} /> : <p className="text-sm text-text-muted">Enable to author and export a native block-diagram.json scene.</p>}
     </section>
   </div>;
 }

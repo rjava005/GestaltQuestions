@@ -7,6 +7,7 @@ import QuestionFileEditor from "../QuestionCodeEditor/QuestionFileEditor";
 import { QuestionRender } from "../QuestionEngine";
 import { QuestionInstanceProvider } from "../QuestionEngine/instance";
 import { QuestionMetadataWorkspacePanel } from "../QuestionMetadata";
+import DiagramPane from "./components/DiagramPane";
 import { WorkspaceHeader } from "./components/WorkspaceHeader";
 import { WorkspaceToolbar } from "./components/WorkspaceToolbar";
 import { useGetQuestionRunTimes } from "./hooks/hooks";
@@ -27,6 +28,7 @@ const paneRenderMap: Record<WorkspacePane, React.ComponentType<PaneContext>> = {
     />
   ),
   editor: ({ qid }) => <QuestionFileEditor qid={qid} />,
+  diagram: ({ qid }) => <DiagramPane qid={qid} />,
   metadata: ({ qid }) => <QuestionMetadataWorkspacePanel qid={qid} />,
 };
 

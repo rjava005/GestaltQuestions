@@ -1,6 +1,6 @@
 import type { QuestionRuntimeLanguage } from "../../../services/QuestionRuntime";
 
-export type WorkspacePane = "livePreview" | "editor" | "metadata";
+export type WorkspacePane = "livePreview" | "editor" | "diagram" | "metadata";
 export type WorkspaceLayoutMode = "single" | "split";
 
 export type QuestionWorkspaceState = {

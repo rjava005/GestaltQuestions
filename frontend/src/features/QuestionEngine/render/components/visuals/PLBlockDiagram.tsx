@@ -1,9 +1,11 @@
+import type { ReactNode } from "react";
 import { useId } from "react";
 
 import { useQuestionInstance } from "../../../instance";
 import { formatCircuitValue } from "../content/circuitDefinition";
 import StructuredMathInput from "../math/StructuredMathInput";
 import {
+  type BlockAnswerSlot,
   type BlockDiagramDefinition,
   type BlockNode,
   validateBlockDiagramDefinition,
@@ -149,19 +151,42 @@ function Node({
   );
 }
 
-export function BlockDiagramScene({
+/**
+ * Absolute position of an answer slot as percentages of the viewBox, so the HTML
+ * overlay lines up with the SVG underneath it. Shared by the student-facing scene
+ * and the authoring editor so the two cannot drift apart.
+ */
+export function blockSlotBoxStyle(
+  slot: BlockAnswerSlot,
+  viewBox: BlockDiagramDefinition["viewBox"],
+) {
+  const [vx, vy, vw, vh] = viewBox;
+  return {
+    left: `${((slot.at[0] - slot.width / 2 - vx) / vw) * 100}%`,
+    top: `${((slot.at[1] - slot.height / 2 - vy) / vh) * 100}%`,
+    width: `${(slot.width / vw) * 100}%`,
+    height: `${(slot.height / vh) * 100}%`,
+  };
+}
+
+/**
+ * The diagram itself: wires and nodes, with no answer state. Pure, so the authoring
+ * editor can render it without a QuestionInstanceProvider. `children` is overlaid on
+ * top of the SVG for answer slots -- live inputs in a question, inert boxes in the
+ * editor.
+ */
+export function BlockDiagramGeometry({
   definition,
   params,
+  children,
 }: {
   definition: BlockDiagramDefinition;
   params: Record<string, unknown>;
+  children?: ReactNode;
 }) {
   const raw = useId(),
     arrowId = `block-arrow-${raw.replaceAll(":", "")}`;
-  const answers = useQuestionInstance((state) => state.answers),
-    setAnswer = useQuestionInstance((state) => state.setAnswer),
-    submitted = useQuestionInstance((state) => state.hasSubmitted);
-  const [vx, vy, vw, vh] = definition.viewBox;
+  const [, , vw, vh] = definition.viewBox;
   return (
     <div className="relative w-full" style={{ aspectRatio: `${vw}/${vh}` }}>
       <svg
@@ -221,17 +246,29 @@ export function BlockDiagramScene({
           <Node key={node.id} node={node} params={params} />
         ))}
       </svg>
+      {children}
+    </div>
+  );
+}
+
+export function BlockDiagramScene({
+  definition,
+  params,
+}: {
+  definition: BlockDiagramDefinition;
+  params: Record<string, unknown>;
+}) {
+  const answers = useQuestionInstance((state) => state.answers),
+    setAnswer = useQuestionInstance((state) => state.setAnswer),
+    submitted = useQuestionInstance((state) => state.hasSubmitted);
+  return (
+    <BlockDiagramGeometry definition={definition} params={params}>
       {definition.answerSlots?.map((slot) => (
         <div
           key={slot.id}
           data-block-answer={slot.answerName}
           className="absolute flex flex-col gap-1 rounded-md border-2 border-[var(--color-accent)] bg-[var(--color-surface-strong)] p-1.5 text-[var(--color-text)] shadow-sm"
-          style={{
-            left: `${((slot.at[0] - slot.width / 2 - vx) / vw) * 100}%`,
-            top: `${((slot.at[1] - slot.height / 2 - vy) / vh) * 100}%`,
-            width: `${(slot.width / vw) * 100}%`,
-            height: `${(slot.height / vh) * 100}%`,
-          }}
+          style={blockSlotBoxStyle(slot, definition.viewBox)}
         >
           <div
             className="shrink-0 truncate text-center text-xs font-semibold leading-none text-[var(--color-accent)]"
@@ -271,7 +308,7 @@ export function BlockDiagramScene({
           )}
         </div>
       ))}
-    </div>
+    </BlockDiagramGeometry>
   );
 }
 
