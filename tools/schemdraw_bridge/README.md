@@ -31,19 +31,34 @@ The rejected alternative was calling SchemDraw inside `server.py` and returning
 SVG. That would put raw SVG into a closed tag vocabulary, add a dependency to
 the sandbox hot path, and give up per-variant value bindings.
 
-## Setup
+## Setup and use
 
 SchemDraw has **no dependencies** — notably not matplotlib — so a bare venv is
-enough:
+enough. The root `Makefile` wraps it:
 
 ```bash
-python -m venv .venv-schemdraw && .venv-schemdraw/Scripts/python -m pip install schemdraw
+make diagrams-setup
 ```
 
-## Use
+```bash
+make diagrams
+```
 
 ```bash
-python tools/schemdraw_bridge/generate_examples.py --out backend/questions/<bundle>
+make diagrams-check
+```
+
+`diagrams` regenerates the demo bundle's `block-diagram.json` in place;
+`diagrams-check` regenerates into a scratch directory and compares, so a
+committed diagram that no longer matches its connectivity source fails loudly
+instead of surprising the next person to run `diagrams`. `make` is not bundled
+with Git for Windows — install it, or run the commands under each target
+directly, since they are all one-liners.
+
+To point the generator at another bundle:
+
+```bash
+tools/schemdraw_bridge/.venv/Scripts/python tools/schemdraw_bridge/generate_examples.py --out backend/questions/<bundle>
 ```
 
 `generate_examples.py` holds two worked examples — a unity feedback loop and an

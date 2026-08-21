@@ -102,3 +102,4 @@ packages/gdrive_importer/html_data
 packages/gdrive_importer/json_data
 packages/gdrive_importer/data.json
 packages/gdrive_importer/token.json
+tools/schemdraw_bridge/.check/
