@@ -34,6 +34,12 @@ class QuestionRunTimeResolver:
         return runtimes
 
     def _from_conventions(self, files: dict[str, str]) -> list[QuestionRuntimeCreate]:
+        # JavaScript is the preferred default when a question ships both
+        # runtimes, matching the bundle importer. Python must still be the
+        # default when it is the only runtime present -- otherwise a
+        # Python-only question resolves no default at all and a run without an
+        # explicit ?language= fails with "No enabled default runtime found".
+        has_javascript = "server.js" in files
         runtimes: list[QuestionRuntimeCreate] = []
 
         if "server.py" in files:
@@ -43,17 +49,17 @@ class QuestionRunTimeResolver:
                     entry="server.py",
                     func_name="generate",
                     source=RuntimeConfigSource.INFERRED,
-                    is_default=False,
+                    is_default=not has_javascript,
                 )
             )
-        if "server.js" in files:
+        if has_javascript:
             runtimes.append(
                 QuestionRuntimeCreate(
                     language=RuntimeLanguage.JAVASCRIPT,
                     entry="server.js",
                     func_name="generate",
                     source=RuntimeConfigSource.INFERRED,
-                    is_default=not runtimes,
+                    is_default=True,
                 )
             )
         return runtimes

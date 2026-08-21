@@ -28,6 +28,7 @@ DEFAULT_BUNDLES = (
     "EE_CH2_Q2",
     "framework_signal_demo",
     "framework_feedback_demo",
+    "framework_schemdraw_demo",
 )
 IMPORT_NAMESPACE = UUID("bd844591-cc55-4db4-8670-31269c8ffcff")
 IMPORT_USER_ID = uuid5(IMPORT_NAMESPACE, "ee30b-import-user")

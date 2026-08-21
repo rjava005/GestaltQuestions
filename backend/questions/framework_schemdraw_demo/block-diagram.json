@@ -1,0 +1,179 @@
+{
+  "version": 1,
+  "ariaLabel": "Unity feedback loop: reference into a summing junction, then controller C of s, then plant G of s, with the output fed back",
+  "viewBox": [
+    0,
+    0,
+    980,
+    360
+  ],
+  "nodes": [
+    {
+      "id": "sum1",
+      "type": "sum",
+      "at": [
+        190,
+        200
+      ],
+      "width": 60,
+      "height": 60,
+      "signs": "+-"
+    },
+    {
+      "id": "controller",
+      "type": "transfer",
+      "at": [
+        400,
+        200
+      ],
+      "width": 120,
+      "height": 80,
+      "label": "C(s)",
+      "value": {
+        "path": "params.controller",
+        "significantDigits": 3
+      }
+    },
+    {
+      "id": "plant",
+      "type": "transfer",
+      "at": [
+        640,
+        200
+      ],
+      "width": 120,
+      "height": 80,
+      "label": "G(s)",
+      "value": {
+        "path": "params.plant",
+        "significantDigits": 3
+      }
+    },
+    {
+      "id": "pickoff",
+      "type": "pickoff",
+      "at": [
+        820,
+        200
+      ]
+    }
+  ],
+  "wires": [
+    {
+      "points": [
+        [
+          40,
+          200
+        ],
+        [
+          160,
+          200
+        ]
+      ],
+      "label": "R(s)"
+    },
+    {
+      "points": [
+        [
+          220,
+          200
+        ],
+        [
+          340,
+          200
+        ]
+      ],
+      "label": "E(s)"
+    },
+    {
+      "points": [
+        [
+          460,
+          200
+        ],
+        [
+          580,
+          200
+        ]
+      ]
+    },
+    {
+      "points": [
+        [
+          700,
+          200
+        ],
+        [
+          820,
+          200
+        ]
+      ]
+    },
+    {
+      "points": [
+        [
+          820,
+          200
+        ],
+        [
+          940,
+          200
+        ]
+      ],
+      "label": "Y(s)"
+    },
+    {
+      "points": [
+        [
+          820,
+          200
+        ],
+        [
+          820,
+          320
+        ]
+      ],
+      "feedback": true
+    },
+    {
+      "points": [
+        [
+          820,
+          320
+        ],
+        [
+          200,
+          320
+        ]
+      ],
+      "feedback": true
+    },
+    {
+      "points": [
+        [
+          200,
+          320
+        ],
+        [
+          220,
+          200
+        ]
+      ],
+      "feedback": true
+    }
+  ],
+  "answerSlots": [
+    {
+      "id": "slot_closed_loop",
+      "answerName": "closed_loop",
+      "at": [
+        820,
+        80
+      ],
+      "width": 200,
+      "height": 90,
+      "kind": "math",
+      "label": "T(s)"
+    }
+  ]
+}
