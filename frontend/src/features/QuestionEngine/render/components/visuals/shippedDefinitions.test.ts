@@ -94,6 +94,28 @@ describe("shipped question visual definitions", () => {
     }
   });
 
+  it("keeps every wire segment axis-aligned, in every shipped diagram", () => {
+    // Every diagram in this repo is Manhattan-routed by convention -- no
+    // diagonal wires -- so a segment that is neither horizontal nor vertical
+    // is always a bug, not a stylistic choice. A wire's own polyline can
+    // legitimately turn a corner (an L-shaped run across several points), so
+    // this checks each *consecutive pair* of points, not the wire's overall
+    // start-to-end direction.
+    for (const [name, raw] of bundlesWith("block-diagram.json")) {
+      const definition = validateBlockDiagramDefinition(raw);
+      for (const wire of definition.wires) {
+        for (let i = 0; i < wire.points.length - 1; i += 1) {
+          const [x1, y1] = wire.points[i];
+          const [x2, y2] = wire.points[i + 1];
+          expect(
+            x1 === x2 || y1 === y2,
+            `${name}: segment [${x1},${y1}] -> [${x2},${y2}] is diagonal`,
+          ).toBe(true);
+        }
+      }
+    }
+  });
+
   it("binds only parameters the runtime actually emits", () => {
     const [, raw] = bundlesWith("block-diagram.json").find(
       ([name]) => name === "framework_schemdraw_demo",

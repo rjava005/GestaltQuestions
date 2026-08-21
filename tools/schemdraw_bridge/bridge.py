@@ -136,6 +136,29 @@ class BlockDiagramBuilder:
         width = _snap((bbox.xmax - bbox.xmin) * SCALE + 2 * MARGIN)
         height = _snap((bbox.ymax - bbox.ymin) * SCALE + 2 * MARGIN)
 
+        # Continuous anchor coordinate -> already-derived port coordinate, kept
+        # per axis rather than per point. A routed wire often turns a corner
+        # away from any node (e.g. a feedback path that drops, runs sideways,
+        # then rises into a port): that corner shares only one coordinate with
+        # the node it is ultimately headed for, not the full point, so an
+        # x/y-only match is what lets the whole run resolve consistently.
+        #
+        # Re-snapping a wire endpoint independently, instead of reusing the
+        # node's own derived coordinate, is not merely redundant -- it is
+        # wrong in a specific, reproducible case: a node's centre can land
+        # exactly halfway between two grid lines (e.g. a circle whose radius
+        # is an odd multiple of half the grid unit). That is a genuine tie
+        # with no correct rounding -- Python's round() breaks it toward the
+        # nearest even multiple, which need not match the position implied by
+        # the node's own edges. A wire built from that same raw centre value
+        # hits the identical tie and can break it the other way, landing a
+        # full grid step off from a port that is otherwise rendered
+        # correctly, which is what produced a visibly tilted feedback wire
+        # here. Reusing the node's already-decided coordinate sidesteps the
+        # tie rather than trying to predict which way it breaks.
+        x_lookup: list[tuple[float, int]] = []
+        y_lookup: list[tuple[float, int]] = []
+
         nodes: list[dict[str, Any]] = []
         for element, meta in self._nodes:
             anchors = element.absanchors
@@ -169,13 +192,42 @@ class BlockDiagramBuilder:
                 node["value"] = {"path": meta["value_path"], "significantDigits": 3}
             nodes.append(node)
 
+            at = node["at"]
+            half_w = node.get("width", 0) // 2
+            half_h = node.get("height", 0) // 2
+            for anchor_name, port_x, port_y in (
+                ("W", at[0] - half_w, at[1]),
+                ("E", at[0] + half_w, at[1]),
+                ("N", at[0], at[1] - half_h),
+                ("S", at[0], at[1] + half_h),
+                ("center", at[0], at[1]),
+                ("xy", at[0], at[1]),
+            ):
+                raw = anchors.get(anchor_name)
+                if raw is None:
+                    continue
+                x_lookup.append((float(raw[0]), port_x))
+                y_lookup.append((float(raw[1]), port_y))
+
+        def _resolve_axis(raw_value: float, lookup: list[tuple[float, int]]) -> int | None:
+            for raw_anchor, resolved in lookup:
+                if abs(raw_anchor - raw_value) < 1e-6:
+                    return resolved
+            return None
+
+        def _resolve(raw_point: Any) -> list[int]:
+            snapped = transform.point(raw_point)
+            x = _resolve_axis(float(raw_point[0]), x_lookup)
+            y = _resolve_axis(float(raw_point[1]), y_lookup)
+            return [x if x is not None else snapped[0], y if y is not None else snapped[1]]
+
         wires: list[dict[str, Any]] = []
         for element, meta in self._wires:
             anchors = element.absanchors
             start, end = anchors.get("start"), anchors.get("end")
             if start is None or end is None:
                 continue
-            points = [transform.point(start), transform.point(end)]
+            points = [_resolve(start), _resolve(end)]
             if points[0] == points[1]:
                 continue
             wire: dict[str, Any] = {"points": points}
@@ -184,32 +236,6 @@ class BlockDiagramBuilder:
             if meta["feedback"]:
                 wire["feedback"] = True
             wires.append(wire)
-
-        # Independent rounding of a wire end and the block it targets can leave
-        # them a grid step apart, which reads as a wire that stops just short of
-        # its block. Pull any endpoint that is within one step onto the exact
-        # port -- the same rule the visual editor applies while drawing.
-        node_ports: list[list[int]] = []
-        for node in nodes:
-            x, y = node["at"]
-            half_w = node.get("width", 0) // 2
-            half_h = node.get("height", 0) // 2
-            if half_w:
-                node_ports += [[x - half_w, y], [x + half_w, y]]
-            if half_h:
-                node_ports += [[x, y - half_h], [x, y + half_h]]
-            if not half_w and not half_h:
-                node_ports.append([x, y])
-        for wire in wires:
-            for index, point in enumerate(wire["points"]):
-                for port in node_ports:
-                    if (
-                        abs(port[0] - point[0]) <= GRID
-                        and abs(port[1] - point[1]) <= GRID
-                        and port != point
-                    ):
-                        wire["points"][index] = list(port)
-                        break
 
         slots: list[dict[str, Any]] = []
         for slot in self._slots:

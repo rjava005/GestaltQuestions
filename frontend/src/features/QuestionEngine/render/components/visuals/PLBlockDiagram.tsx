@@ -71,16 +71,28 @@ function Node({
         >
           {node.type === "mixer" ? "×" : "Σ"}
         </text>
-        {node.signs && (
-          <text
-            x={x - width / 2 - 10}
-            y={y - width / 2 + 5}
-            fontSize={13}
-            fill={diagramText}
-          >
-            {node.signs}
-          </text>
-        )}
+        {node.signs &&
+          [...node.signs.replace(/\s+/g, "")].map((sign, index, signs) => {
+            // Stack signs top-to-bottom in authored order (so "+-" reads as
+            // plus-above-minus) rather than side by side as one text run,
+            // which read as both signs sitting on the same side of the node.
+            const spread = width - 20;
+            const offset =
+              signs.length > 1
+                ? (index / (signs.length - 1) - 0.5) * spread
+                : 0;
+            return (
+              <text
+                key={index}
+                x={x - width / 2 - 10}
+                y={y + offset + 5}
+                fontSize={13}
+                fill={diagramText}
+              >
+                {sign}
+              </text>
+            );
+          })}
       </g>
     );
   if (node.type === "source" || node.type === "sink")
