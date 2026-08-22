@@ -208,4 +208,29 @@ describe("shipped question visual definitions", () => {
       }
     }
   });
+
+  it("gives every labelled circuit element a labelPosition", () => {
+    // PLCircuit's Label component silently renders nothing without a
+    // position -- a label or bound value with no labelPosition isn't a type
+    // error, it's just invisible. That's exactly the bug this guards
+    // against: it slipped past every other check here because nothing
+    // failed, the label just never appeared.
+    for (const [name, raw] of bundlesWith("circuit.json")) {
+      const definition = validateCircuitDefinition(raw);
+      const scenes =
+        definition.version === 1
+          ? [definition]
+          : Object.values(definition.variants);
+      for (const scene of scenes) {
+        for (const element of scene.elements) {
+          if (!("label" in element)) continue;
+          if (!element.label && !("value" in element && element.value)) continue;
+          expect(
+            "labelPosition" in element && element.labelPosition,
+            `${name}: ${element.id} has a label or value but no labelPosition`,
+          ).toBeTruthy();
+        }
+      }
+    }
+  });
 });

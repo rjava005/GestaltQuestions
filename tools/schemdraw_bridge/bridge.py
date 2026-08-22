@@ -303,14 +303,23 @@ def extract_circuit(
     bbox = drawing.get_bbox()
     transform = _Transform(xmin=bbox.xmin, ymax=bbox.ymax)
 
+    # A label with no labelPosition is not merely unpositioned -- PLCircuit's
+    # Label component refuses to render at all without one, so the label
+    # simply vanishes. Compute a default here, perpendicular to the element's
+    # own run, since nothing upstream will supply one.
+    LABEL_OFFSET = 22
+    scene_center_x = _snap((bbox.xmax - bbox.xmin) * SCALE / 2 + MARGIN)
+
     elements: list[dict[str, Any]] = []
     for element, meta in tagged:
         anchors = element.absanchors
+        start = transform.point(anchors["start"])
+        end = transform.point(anchors["end"])
         entry: dict[str, Any] = {
             "id": meta["id"],
             "type": meta["type"],
-            "from": transform.point(anchors["start"]),
-            "to": transform.point(anchors["end"]),
+            "from": start,
+            "to": end,
         }
         if meta.get("label"):
             entry["label"] = meta["label"]
@@ -320,6 +329,20 @@ def extract_circuit(
                 "sourceUnit": meta.get("unit"),
                 "significantDigits": 3,
             }
+        if entry.get("label") or entry.get("value"):
+            mid_x, mid_y = (start[0] + end[0]) // 2, (start[1] + end[1]) // 2
+            if start[1] == end[1]:
+                # Horizontal run: label above it, matching the visual editor's
+                # own default for a newly placed horizontal element.
+                entry["labelPosition"] = {"at": [mid_x, mid_y - LABEL_OFFSET]}
+            else:
+                # Vertical run: offset sideways, away from the centre of the
+                # whole scene so two vertical rails (e.g. a source and a
+                # shunt element) push their labels apart rather than both
+                # toward the middle of the circuit.
+                dx = LABEL_OFFSET if mid_x >= scene_center_x else -LABEL_OFFSET
+                anchor = "end" if dx < 0 else "start"
+                entry["labelPosition"] = {"at": [mid_x + dx, mid_y], "anchor": anchor}
         elements.append(entry)
 
     polylines: list[dict[str, Any]] = []
