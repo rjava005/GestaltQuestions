@@ -1,0 +1,76 @@
+{
+  "version": 1,
+  "ariaLabel": "Series resistor feeding a shunt capacitor across the output",
+  "viewBox": [
+    0,
+    0,
+    320,
+    280
+  ],
+  "wires": [
+    {
+      "points": [
+        [
+          260,
+          240
+        ],
+        [
+          120,
+          240
+        ]
+      ]
+    }
+  ],
+  "elements": [
+    {
+      "id": "V1",
+      "type": "voltageSource",
+      "from": [
+        120,
+        240
+      ],
+      "to": [
+        120,
+        80
+      ],
+      "label": "Vin"
+    },
+    {
+      "id": "R1",
+      "type": "resistor",
+      "from": [
+        120,
+        80
+      ],
+      "to": [
+        260,
+        80
+      ],
+      "label": "R",
+      "value": {
+        "path": "R",
+        "sourceUnit": "ohm",
+        "significantDigits": 3
+      }
+    },
+    {
+      "id": "C1",
+      "type": "capacitor",
+      "from": [
+        260,
+        80
+      ],
+      "to": [
+        260,
+        240
+      ],
+      "label": "C",
+      "value": {
+        "path": "C",
+        "sourceUnit": "F",
+        "significantDigits": 3
+      }
+    }
+  ],
+  "annotations": []
+}

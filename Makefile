@@ -12,7 +12,6 @@
 # tools/schemdraw_bridge/.venv is already covered by the **/.venv ignore rule.
 DIAGRAM_DIR  := tools/schemdraw_bridge
 DIAGRAM_VENV := $(DIAGRAM_DIR)/.venv
-DEMO_BUNDLE  := backend/questions/framework_schemdraw_demo
 # Pinned so a regenerated diagram is reproducible, matching how the sandbox
 # pins sympy and control.
 SCHEMDRAW_VERSION := 0.23
@@ -34,8 +33,8 @@ help:
 	@echo "  make run_emulators    Start the Firebase emulators"
 	@echo ""
 	@echo "  make diagrams-setup   Create the SchemDraw venv (schemdraw $(SCHEMDRAW_VERSION))"
-	@echo "  make diagrams         Regenerate $(DEMO_BUNDLE)/block-diagram.json"
-	@echo "  make diagrams-check   Verify the committed diagram still matches its source"
+	@echo "  make diagrams         Generate any missing question diagram from its own connectivity script"
+	@echo "  make diagrams-check   Verify every committed diagram still matches its source"
 	@echo "  make diagrams-clean   Remove the SchemDraw venv"
 
 run_dev:
@@ -47,6 +46,10 @@ run_emulators:
 # --- SchemDraw diagram generation -------------------------------------------
 # SchemDraw solves the layout offline; the committed JSON is the artifact. See
 # tools/schemdraw_bridge/README.md for why it does not run at request time.
+#
+# There is no per-bundle target here on purpose: regenerate.py discovers every
+# backend/questions/*/generate_diagram.py itself, so adding a new question's
+# diagram never means editing this file.
 
 $(VENV_PY):
 	$(BASE_PY) -m venv $(DIAGRAM_VENV)
@@ -57,16 +60,10 @@ diagrams-setup: $(VENV_PY)
 	@$(VENV_PY) -c "import schemdraw; print('schemdraw', schemdraw.__version__, 'ready')"
 
 diagrams: $(VENV_PY)
-	$(VENV_PY) $(DIAGRAM_DIR)/generate_examples.py --out $(DEMO_BUNDLE)
-	@rm -f $(DEMO_BUNDLE)/circuit.json
+	PYTHONPATH=$(DIAGRAM_DIR) $(VENV_PY) $(DIAGRAM_DIR)/regenerate.py
 
-# Regenerates into a scratch directory and compares. Catches a committed diagram
-# that no longer matches the connectivity it claims to come from -- which would
-# otherwise only surface as a surprise the next time someone runs `make diagrams`.
 diagrams-check: $(VENV_PY)
-	@$(VENV_PY) $(DIAGRAM_DIR)/generate_examples.py --out $(DIAGRAM_DIR)/.check >/dev/null
-	@$(VENV_PY) $(DIAGRAM_DIR)/check_drift.py $(DEMO_BUNDLE)/block-diagram.json $(DIAGRAM_DIR)/.check/block-diagram.json
-	@rm -rf $(DIAGRAM_DIR)/.check
+	PYTHONPATH=$(DIAGRAM_DIR) $(VENV_PY) $(DIAGRAM_DIR)/regenerate.py --check
 
 diagrams-clean:
-	rm -rf $(DIAGRAM_VENV) $(DIAGRAM_DIR)/.check
+	rm -rf $(DIAGRAM_VENV)

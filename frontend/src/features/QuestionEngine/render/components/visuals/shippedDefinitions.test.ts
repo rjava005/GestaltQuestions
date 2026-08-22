@@ -3,6 +3,7 @@ import { join } from "node:path";
 
 import { describe, expect, it } from "vitest";
 
+import { validateCircuitDefinition } from "../content/circuitDefinition";
 import { validateBlockDiagramDefinition } from "./blockDiagramDefinition";
 import { validateSignalPlotDefinition } from "./signalPlotDefinition";
 
@@ -10,7 +11,8 @@ import { validateSignalPlotDefinition } from "./signalPlotDefinition";
  * The checked-in question bundles are imported at backend startup and rendered
  * by these validators. A bundle whose JSON no longer validates would only fail
  * at request time, so assert it here instead -- this also covers the
- * SchemDraw-generated geometry in framework_schemdraw_demo.
+ * SchemDraw-generated geometry in framework_schemdraw_demo and
+ * framework_schemdraw_circuit_demo.
  */
 const QUESTIONS_DIR = join(process.cwd(), "..", "backend", "questions");
 
@@ -41,6 +43,14 @@ describe("shipped question visual definitions", () => {
   it("validates every signal-plot.json in backend/questions", () => {
     for (const [name, definition] of bundlesWith("signal-plot.json")) {
       expect(() => validateSignalPlotDefinition(definition), name).not.toThrow();
+    }
+  });
+
+  it("validates every circuit.json in backend/questions", () => {
+    const bundles = bundlesWith("circuit.json");
+    expect(bundles.length).toBeGreaterThan(0);
+    for (const [name, definition] of bundles) {
+      expect(() => validateCircuitDefinition(definition), name).not.toThrow();
     }
   });
 
@@ -116,6 +126,41 @@ describe("shipped question visual definitions", () => {
     }
   });
 
+  it("keeps every circuit wire and two-terminal element axis-aligned", () => {
+    // Same Manhattan convention as block diagrams. Only resistor/capacitor/
+    // inductor/voltageSource are drawn as a straight run between two
+    // terminals -- opAmp/ground/terminal are point or box elements, not
+    // line segments, so they are outside what this checks.
+    for (const [name, raw] of bundlesWith("circuit.json")) {
+      const definition = validateCircuitDefinition(raw);
+      const scenes =
+        definition.version === 1
+          ? [definition]
+          : Object.values(definition.variants);
+      for (const scene of scenes) {
+        for (const wire of scene.wires) {
+          for (let i = 0; i < wire.points.length - 1; i += 1) {
+            const [x1, y1] = wire.points[i];
+            const [x2, y2] = wire.points[i + 1];
+            expect(
+              x1 === x2 || y1 === y2,
+              `${name}: wire segment [${x1},${y1}] -> [${x2},${y2}] is diagonal`,
+            ).toBe(true);
+          }
+        }
+        for (const element of scene.elements) {
+          if (!("from" in element)) continue;
+          const [x1, y1] = element.from;
+          const [x2, y2] = element.to;
+          expect(
+            x1 === x2 || y1 === y2,
+            `${name}: element ${element.id} runs [${x1},${y1}] -> [${x2},${y2}] diagonally`,
+          ).toBe(true);
+        }
+      }
+    }
+  });
+
   it("binds only parameters the runtime actually emits", () => {
     const [, raw] = bundlesWith("block-diagram.json").find(
       ([name]) => name === "framework_schemdraw_demo",
@@ -129,8 +174,38 @@ describe("shipped question visual definitions", () => {
     for (const node of definition.nodes) {
       const value = node.value;
       if (!value || !("path" in value)) continue;
-      const name = value.path.replace(/^params\./, "");
-      expect(server, `${node.id} binds params.${name}`).toContain(`"${name}"`);
+      // The renderer is handed quiz_data.params directly, so a binding path
+      // is a bare key into that dict -- never prefixed with "params.". That
+      // prefix is a silent failure mode (the field renders as "-" instead of
+      // erroring), which is exactly how it slipped into two shipped bundles
+      // undetected: this same check used to strip the prefix before looking
+      // the key up, which validated the wrong thing.
+      expect(value.path, `${node.id} binds "${value.path}"`).not.toMatch(
+        /^params\./,
+      );
+      expect(server, `${node.id} binds "${value.path}"`).toContain(
+        `"${value.path}"`,
+      );
+    }
+  });
+
+  it("binds circuit values as bare keys, never prefixed with params.", () => {
+    for (const [name, raw] of bundlesWith("circuit.json")) {
+      const definition = validateCircuitDefinition(raw);
+      const scenes =
+        definition.version === 1
+          ? [definition]
+          : Object.values(definition.variants);
+      for (const scene of scenes) {
+        for (const element of scene.elements) {
+          const value = "value" in element ? element.value : undefined;
+          if (!value || !("path" in value)) continue;
+          expect(
+            value.path,
+            `${name}: ${element.id} binds "${value.path}"`,
+          ).not.toMatch(/^params\./);
+        }
+      }
     }
   });
 });

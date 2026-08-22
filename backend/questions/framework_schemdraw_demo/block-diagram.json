@@ -30,7 +30,7 @@
       "height": 80,
       "label": "C(s)",
       "value": {
-        "path": "params.controller",
+        "path": "controller",
         "significantDigits": 3
       }
     },
@@ -45,7 +45,7 @@
       "height": 80,
       "label": "G(s)",
       "value": {
-        "path": "params.plant",
+        "path": "plant",
         "significantDigits": 3
       }
     },

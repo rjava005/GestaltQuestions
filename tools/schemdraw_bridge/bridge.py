@@ -17,6 +17,7 @@ flipped and rescaled into the viewBox below.
 from __future__ import annotations
 
 import json
+from collections.abc import Callable
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any, Literal
@@ -347,3 +348,20 @@ def write_json(definition: dict[str, Any], path: str | Path) -> Path:
     target = Path(path)
     target.write_text(json.dumps(definition, indent=2) + "\n", encoding="utf-8")
     return target
+
+
+def generate_if_missing(path: str | Path, build_fn: Callable[[], dict[str, Any]]) -> bool:
+    """Build and write ``path`` only if it does not already exist.
+
+    This is the guard that keeps regenerating a question's diagram from ever
+    clobbering hand-edits made afterward in the visual editor: once a file is
+    committed, re-running the generator is a no-op. Delete the file first to
+    intentionally rebuild the layout from its connectivity source.
+    """
+    target = Path(path)
+    if target.exists():
+        print(f"{target} already exists -- skipping (delete it to regenerate)")
+        return False
+    write_json(build_fn(), target)
+    print(f"wrote {target}")
+    return True
